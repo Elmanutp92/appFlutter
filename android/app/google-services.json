@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1022657305934",
+    "project_id": "nuevadb-2b0a3",
+    "storage_bucket": "nuevadb-2b0a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1022657305934:android:d21db7e59bc7e1662c521f",
+        "android_client_info": {
+          "package_name": "com.example.new_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1022657305934-1kn3s1hapli0p3clpt366qposf5fktp7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHo7K8tLoNrAsW6RDJm1_KVa7wUdE81Zc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1022657305934-1kn3s1hapli0p3clpt366qposf5fktp7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
