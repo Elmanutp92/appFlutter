@@ -129,16 +129,7 @@ class _DataPageState extends State<DataPage> {
       child: Scaffold(
         body: Stack(children: [
           Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  colorCuatro,
-                  colorCinco,
-                ],
-              ),
-            ),
+            decoration: const BoxDecoration(),
             padding: const EdgeInsets.all(30),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -148,7 +139,7 @@ class _DataPageState extends State<DataPage> {
                   style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: colorUno),
+                      color: azulClaro),
                 ),
                 SizedBox(height: 50),
                 Form(
@@ -163,16 +154,16 @@ class _DataPageState extends State<DataPage> {
                           return null;
                         },
                         controller: nameController,
-                        style: TextStyle(color: colorUno),
-                        cursorColor: colorUno,
+                        style: TextStyle(color: azulClaro),
+                        cursorColor: azulClaro,
                         decoration: const InputDecoration(
-                          hintStyle: TextStyle(color: colorUno),
-                          labelStyle: TextStyle(color: colorUno),
+                          hintStyle: TextStyle(color: azulClaro),
+                          labelStyle: TextStyle(color: azulClaro),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorUno),
+                            borderSide: BorderSide(color: azulClaro),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorCinco),
+                            borderSide: BorderSide(color: azulClaro),
                           ),
                           labelText: 'Nombres',
                           hintText: 'Ingresa tu nombre completo',
@@ -187,16 +178,16 @@ class _DataPageState extends State<DataPage> {
                           return null;
                         },
                         controller: apellidoController,
-                        style: TextStyle(color: colorUno),
-                        cursorColor: colorUno,
+                        style: TextStyle(color: azulClaro),
+                        cursorColor: azulClaro,
                         decoration: const InputDecoration(
-                          hintStyle: TextStyle(color: colorUno),
-                          labelStyle: TextStyle(color: colorUno),
+                          hintStyle: TextStyle(color: azulClaro),
+                          labelStyle: TextStyle(color: azulClaro),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorUno),
+                            borderSide: BorderSide(color: azulClaro),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorCinco),
+                            borderSide: BorderSide(color: azulClaro),
                           ),
                           labelText: 'Apellidos',
                           hintText: 'Ingresa sus apellidos completos',
@@ -217,16 +208,16 @@ class _DataPageState extends State<DataPage> {
                           return null;
                         },
                         controller: telefonoController,
-                        style: TextStyle(color: colorUno),
-                        cursorColor: colorUno,
+                        style: TextStyle(color: azulClaro),
+                        cursorColor: azulClaro,
                         decoration: const InputDecoration(
-                          hintStyle: TextStyle(color: colorUno),
-                          labelStyle: TextStyle(color: colorUno),
+                          hintStyle: TextStyle(color: azulClaro),
+                          labelStyle: TextStyle(color: azulClaro),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorUno),
+                            borderSide: BorderSide(color: azulClaro),
                           ),
                           enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: colorCinco),
+                            borderSide: BorderSide(color: azulClaro),
                           ),
                           labelText: 'Telefono',
                           hintText: 'Ingresa tu telefono',
@@ -239,7 +230,7 @@ class _DataPageState extends State<DataPage> {
                             const Size(double.infinity, 50),
                           ),
                           backgroundColor:
-                              MaterialStateProperty.all<Color>(colorUno),
+                              MaterialStateProperty.all<Color>(azulClaro),
                         ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {

@@ -55,16 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: EdgeInsets.all(30),
         height: double.infinity,
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              colorCuatro,
-              colorCinco,
-            ],
-          ),
-        ),
+        decoration: const BoxDecoration(),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,11 +64,13 @@ class _ProfilePageState extends State<ProfilePage> {
               const Text(
                 'Perfil de Usuario',
                 style: TextStyle(
-                    fontSize: 34, fontWeight: FontWeight.bold, color: colorUno),
+                    fontSize: 34,
+                    fontWeight: FontWeight.bold,
+                    color: azulClaro),
               ),
               const SizedBox(height: 56),
               const Text('Nombres',
-                  style: TextStyle(fontSize: 18, color: colorUno)),
+                  style: TextStyle(fontSize: 18, color: azulClaro)),
               const SizedBox(height: 8),
               Card(
                 elevation: 13,
@@ -86,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: colorCinco,
+                    color: azulClaro,
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                   ),
                   width: 400,
@@ -103,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 16),
               const Text('Apellidos',
-                  style: TextStyle(fontSize: 18, color: colorUno)),
+                  style: TextStyle(fontSize: 18, color: azulClaro)),
               const SizedBox(height: 8),
               Card(
                 elevation: 13,
@@ -112,7 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: colorCinco,
+                    color: azulClaro,
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                   ),
                   width: 400,
@@ -129,7 +122,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 16),
               const Text('Telefono',
-                  style: TextStyle(fontSize: 18, color: colorUno)),
+                  style: TextStyle(fontSize: 18, color: azulClaro)),
               const SizedBox(height: 8),
               Card(
                 elevation: 13,
@@ -138,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: colorCinco,
+                    color: azulClaro,
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                   ),
                   width: 400,
@@ -155,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 16),
               const Text('Correo Electronico',
-                  style: TextStyle(fontSize: 18, color: colorUno)),
+                  style: TextStyle(fontSize: 18, color: azulClaro)),
               const SizedBox(height: 8),
               Card(
                 elevation: 13,
@@ -164,7 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: colorCinco,
+                    color: azulClaro,
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                   ),
                   width: 400,
@@ -184,7 +177,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: ButtonStyle(
                     minimumSize:
                         MaterialStateProperty.all<Size>(const Size(400, 50)),
-                    backgroundColor: MaterialStateProperty.all<Color>(colorUno),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(azulClaro),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50.0),
@@ -205,9 +199,9 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-          fixedColor: colorCuatro,
+          fixedColor: azulClaro,
           elevation: 6,
-          backgroundColor: colorUno,
+          backgroundColor: azulClaro,
           currentIndex: 2,
           onTap: (index) {
             if (index == 0) {

@@ -78,16 +78,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         body: Stack(children: [
           Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    colorCuatro,
-                    colorCinco,
-                  ],
-                ),
-              ),
+              decoration: const BoxDecoration(),
               padding: EdgeInsets.all(30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -97,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: colorUno),
+                        color: azulClaro),
                   ),
                   const SizedBox(
                     height: 50,
@@ -116,15 +107,15 @@ class _LoginPageState extends State<LoginPage> {
                               return null;
                             },
                             controller: emailController,
-                            style: TextStyle(color: colorUno),
-                            cursorColor: colorUno,
+                            style: TextStyle(color: azulClaro),
+                            cursorColor: azulClaro,
                             decoration: const InputDecoration(
-                              labelStyle: TextStyle(color: colorUno),
+                              labelStyle: TextStyle(color: azulClaro),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: colorUno),
+                                borderSide: BorderSide(color: azulClaro),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: colorCinco),
+                                borderSide: BorderSide(color: azulClaro),
                               ),
                               labelText: 'Correo',
                               hintText: 'Ingresa tu correo',
@@ -143,11 +134,11 @@ class _LoginPageState extends State<LoginPage> {
                               return null;
                             },
                             controller: passwordController,
-                            style: TextStyle(color: colorUno),
-                            cursorColor: colorUno,
+                            style: TextStyle(color: azulClaro),
+                            cursorColor: azulClaro,
                             decoration: InputDecoration(
                               suffixIcon: IconButton(
-                                color: colorUno,
+                                color: azulClaro,
                                 icon: Icon(obscureText
                                     ? Icons.visibility
                                     : Icons.visibility_off),
@@ -157,12 +148,12 @@ class _LoginPageState extends State<LoginPage> {
                                   });
                                 },
                               ),
-                              labelStyle: TextStyle(color: colorUno),
+                              labelStyle: TextStyle(color: azulClaro),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: colorUno),
+                                borderSide: BorderSide(color: azulClaro),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: colorCinco),
+                                borderSide: BorderSide(color: azulClaro),
                               ),
                               labelText: 'Contraseña',
                               hintText: 'Ingresa tu contraseña',
@@ -176,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                               minimumSize: MaterialStateProperty.all<Size>(
                                   const Size(double.infinity, 50)),
                               backgroundColor:
-                                  MaterialStateProperty.all<Color>(colorUno),
+                                  MaterialStateProperty.all<Color>(azulClaro),
                             ),
                             child: const Text('Entrar',
                                 style: TextStyle(
@@ -200,7 +191,8 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               child: const Text(
                                 'Cancelar',
-                                style: TextStyle(color: colorUno, fontSize: 20),
+                                style:
+                                    TextStyle(color: azulClaro, fontSize: 20),
                               ))
                         ],
                       ))

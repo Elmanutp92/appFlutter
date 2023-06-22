@@ -52,6 +52,7 @@ class _PageTareasState extends State<PageTareas> {
         );
       } else {
         // La nota no se eliminó correctamente
+        // ignore: use_build_context_synchronously
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -134,16 +135,7 @@ class _PageTareasState extends State<PageTareas> {
       body: Container(
         width: double.infinity,
         height: double.maxFinite,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              colorCuatro,
-              colorCinco,
-            ],
-          ),
-        ),
+        decoration: const BoxDecoration(),
         child: Padding(
           padding: const EdgeInsets.all(100.0),
           child: Column(
@@ -154,7 +146,7 @@ class _PageTareasState extends State<PageTareas> {
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.bold,
-                  color: colorUno,
+                  color: azulClaro,
                 ),
               ),
               const SizedBox(height: 50),
@@ -168,29 +160,12 @@ class _PageTareasState extends State<PageTareas> {
                       itemCount: notas.length,
                       itemBuilder: (context, index) {
                         return Container(
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                colorUno,
-                                colorCinco,
-                                colorUno,
-                                colorCinco,
-                                colorUno,
-                                colorUno,
-                                colorCinco,
-                                colorUno,
-                                colorCinco,
-                                colorUno,
-                              ],
-                            ),
-                          ),
+                          decoration: const BoxDecoration(),
                           margin: const EdgeInsets.only(bottom: 20),
                           height: 100,
                           child: Card(
                             elevation: 15,
-                            color: colorTres,
+                            color: azulClaro,
                             child: ListTile(
                               trailing: IconButton(
                                 onPressed: () {
@@ -223,14 +198,14 @@ class _PageTareasState extends State<PageTareas> {
                     const Text('Actualmente No tienes notas',
                         style: TextStyle(fontSize: 20)),
                     const SizedBox(height: 20),
-                    Icon(Icons.error, size: 100, color: colorTres)
+                    Icon(Icons.error, size: 100, color: azulClaro)
                   ],
                 ),
               const SizedBox(height: 5),
               ElevatedButton(
                 style: ButtonStyle(
                   minimumSize: MaterialStateProperty.all(const Size(200, 50)),
-                  backgroundColor: MaterialStateProperty.all(colorUno),
+                  backgroundColor: MaterialStateProperty.all(azulClaro),
                 ),
                 onPressed: () {
                   Navigator.pushNamed(context, '/createNote');
@@ -247,9 +222,9 @@ class _PageTareasState extends State<PageTareas> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        fixedColor: colorCuatro,
+        fixedColor: azulClaro,
         elevation: 6,
-        backgroundColor: colorUno,
+        backgroundColor: azulClaro,
         currentIndex: 1,
         onTap: (index) {
           if (index == 0) {

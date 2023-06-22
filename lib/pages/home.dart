@@ -58,16 +58,7 @@ class _HomeState extends State<Home> {
           body: SingleChildScrollView(
             child: Container(
               padding: EdgeInsets.all(30),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    colorCuatro,
-                    colorCinco,
-                  ],
-                ),
-              ),
+              decoration: const BoxDecoration(),
               child: Center(
                 child: Container(
                   margin: EdgeInsets.only(top: 30),
@@ -87,7 +78,7 @@ class _HomeState extends State<Home> {
                               'Hola, $nombre',
                               style: TextStyle(
                                   fontSize: 38,
-                                  color: colorUno,
+                                  color: azulClaro,
                                   fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 16),
@@ -98,7 +89,7 @@ class _HomeState extends State<Home> {
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 18,
-                                    color: colorUno,
+                                    color: azulClaro,
                                     fontWeight: FontWeight.bold),
                               ),
                             ),
@@ -114,14 +105,14 @@ class _HomeState extends State<Home> {
                                 child: Container(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      color: colorCinco),
+                                      color: azulClaro),
                                   width: 300,
                                   height: 200,
                                   child: const Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(Icons.note,
-                                          color: colorUno, size: 130),
+                                          color: azulClaro, size: 130),
                                       SizedBox(width: 20),
                                     ],
                                   ),
@@ -140,14 +131,14 @@ class _HomeState extends State<Home> {
                                 child: Container(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      color: colorCinco),
+                                      color: azulClaro),
                                   width: 300,
                                   height: 200,
                                   child: const Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Icon(Icons.person,
-                                          color: colorUno, size: 130),
+                                          color: azulClaro, size: 130),
                                       SizedBox(width: 20),
                                     ],
                                   ),
@@ -165,9 +156,9 @@ class _HomeState extends State<Home> {
             ),
           ),
           bottomNavigationBar: BottomNavigationBar(
-              fixedColor: colorCuatro,
+              fixedColor: azulClaro,
               elevation: 6,
-              backgroundColor: colorUno,
+              backgroundColor: azulClaro,
               currentIndex: 0,
               onTap: (index) {
                 if (index == 1) {

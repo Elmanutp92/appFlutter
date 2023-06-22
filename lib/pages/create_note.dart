@@ -139,16 +139,7 @@ class _CreateNoteState extends State<CreateNote> {
       child: Scaffold(
         body: Stack(children: [
           Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    colorCuatro,
-                    colorCinco,
-                  ],
-                ),
-              ),
+              decoration: const BoxDecoration(),
               padding: EdgeInsets.all(30),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -158,7 +149,7 @@ class _CreateNoteState extends State<CreateNote> {
                     style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
-                        color: colorUno),
+                        color: azulClaro),
                   ),
                   const SizedBox(
                     height: 50,
@@ -175,15 +166,15 @@ class _CreateNoteState extends State<CreateNote> {
                               return null;
                             },
                             controller: tituloController,
-                            style: TextStyle(color: colorUno),
-                            cursorColor: colorUno,
+                            style: TextStyle(color: azulClaro),
+                            cursorColor: azulClaro,
                             decoration: const InputDecoration(
-                              labelStyle: TextStyle(color: colorUno),
+                              labelStyle: TextStyle(color: azulClaro),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: colorUno),
+                                borderSide: BorderSide(color: azulClaro),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: colorCinco),
+                                borderSide: BorderSide(color: azulClaro),
                               ),
                               labelText: 'titulo',
                               hintText: 'Ingresa el titulo de la nota',
@@ -200,15 +191,15 @@ class _CreateNoteState extends State<CreateNote> {
                               return null;
                             },
                             controller: descripcionController,
-                            style: TextStyle(color: colorUno),
-                            cursorColor: colorUno,
+                            style: TextStyle(color: azulClaro),
+                            cursorColor: azulClaro,
                             decoration: const InputDecoration(
-                              labelStyle: TextStyle(color: colorUno),
+                              labelStyle: TextStyle(color: azulClaro),
                               focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: colorUno),
+                                borderSide: BorderSide(color: azulClaro),
                               ),
                               enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: colorCinco),
+                                borderSide: BorderSide(color: azulClaro),
                               ),
                               labelText: 'Descripción',
                               hintText: 'Ingresa la descripción de la nota',
@@ -222,7 +213,7 @@ class _CreateNoteState extends State<CreateNote> {
                               minimumSize: MaterialStateProperty.all<Size>(
                                   const Size(double.infinity, 50)),
                               backgroundColor:
-                                  MaterialStateProperty.all<Color>(colorUno),
+                                  MaterialStateProperty.all<Color>(azulClaro),
                             ),
                             child: const Text('Guardar nota',
                                 style: TextStyle(
@@ -243,7 +234,8 @@ class _CreateNoteState extends State<CreateNote> {
                               },
                               child: const Text(
                                 'Cancelar',
-                                style: TextStyle(color: colorUno, fontSize: 20),
+                                style:
+                                    TextStyle(color: azulClaro, fontSize: 20),
                               ))
                         ],
                       ))
