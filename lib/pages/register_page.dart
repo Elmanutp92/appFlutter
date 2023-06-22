@@ -133,6 +133,7 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Stack(
             children: [
               Container(
+                  height: MediaQuery.of(context).size.height,
                   decoration: const BoxDecoration(color: azulBackground),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -217,6 +218,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                   style: const TextStyle(color: negro),
                                   cursorColor: negro,
                                   decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: blanco,
                                       labelStyle: TextStyle(color: negro),
                                       focusedBorder: OutlineInputBorder(
                                         borderSide: BorderSide(color: negro),
@@ -276,6 +279,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                   style: const TextStyle(color: negro),
                                   cursorColor: negro,
                                   decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: blanco,
                                       suffixIcon: IconButton(
                                         color: negro,
                                         icon: Icon(obscureText
@@ -302,22 +307,39 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ),
                               const SizedBox(
-                                height: 50,
+                                height: 20,
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.1,
+                                child: Text(
+                                  'Al registrarte aceptas nuestros términos y condiciones y políticas de privacidad',
+                                  style: GoogleFonts.poppins(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width *
+                                              0.05),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                               ElevatedButton(
                                 style: ButtonStyle(
-                                    minimumSize:
-                                        MaterialStateProperty.all<Size>(
-                                            const Size(double.infinity, 50)),
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            azulClaro)),
-                                child: const Text(
-                                  'Continuar',
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                    amarilloGolden,
+                                  ),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                  ),
+                                  minimumSize: MaterialStateProperty.all<Size>(
+                                    Size(
+                                        MediaQuery.of(context).size.width * 0.8,
+                                        MediaQuery.of(context).size.height *
+                                            0.09),
+                                  ),
                                 ),
                                 onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
@@ -325,34 +347,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                         passwordController.text, context);
                                   }
                                 },
+                                child: Text(
+                                  'Continuar',
+                                  style: GoogleFonts.poppins(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width *
+                                              0.1,
+                                      fontWeight: FontWeight.w500,
+                                      color: negro),
+                                ),
                               ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.pushNamed(context, '/');
-                                      },
-                                      child: const Text(
-                                        'Cancelar',
-                                        style: TextStyle(
-                                            color: azulClaro, fontSize: 20),
-                                      )),
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.pushNamed(context, '/login');
-                                      },
-                                      child: const Text(
-                                        'Inicia sesión',
-                                        style: TextStyle(
-                                            color: azulClaro, fontSize: 20),
-                                      )),
-                                ],
-                              )
                             ],
                           ))
                     ],

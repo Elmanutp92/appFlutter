@@ -120,7 +120,7 @@ class MyApp extends StatelessWidget {
                         'Let\'s Note',
                         style: GoogleFonts.poppins(
                             fontSize: MediaQuery.of(context).size.width * 0.1,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w500,
                             color: negro),
                       ),
                     ),
