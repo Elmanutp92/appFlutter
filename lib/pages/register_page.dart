@@ -13,8 +13,9 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  bool obscureText = true;
   bool isLoading = false;
+
+  bool obscureText = true;
 
   bool containsUppercase(String value) {
     return RegExp(r'[A-Z]').hasMatch(value);
@@ -42,6 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
+
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       userId = user.uid;
@@ -59,59 +61,90 @@ class _RegisterPageState extends State<RegisterPage> {
         email: emailAddress,
         password: password,
       );
-      setState(() {
-        isLoading = false;
-      });
+
       if (credential.user != null) {
         showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text('Registro exitoso'),
-                  content: Text('El usuario se ha registrado correctamente.'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/datapage');
-                        },
-                        child: Text('Siguiente'))
-                  ],
-                ));
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Registro exitoso'),
+            content: Text('El usuario se ha registrado correctamente.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/datapage');
+                },
+                child: Text('Siguiente'),
+              ),
+            ],
+          ),
+        );
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text('Contraseña debil'),
-                  content:
-                      Text('La contraseña debe tener al menos 6 caracteres.'),
-                  actions: [
-                    TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: Text('Ok'))
-                  ],
-                ));
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Contraseña débil'),
+            content: Text('La contraseña debe tener al menos 6 caracteres.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Ok'),
+              ),
+            ],
+          ),
+        );
       } else if (e.code == 'email-already-in-use') {
         showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-                  title: Text('Correo ya en uso'),
-                  content: Text('El correo ya esta en uso.'),
-                  actions: [
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          setState(() {
-                            isLoading = false;
-                          });
-                        },
-                        child: Text('Ok'))
-                  ],
-                ));
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Correo ya en uso'),
+            content: Text('El correo ya está en uso.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Error'),
+            content: Text('Ocurrió un error durante el registro.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Ok'),
+              ),
+            ],
+          ),
+        );
       }
     } catch (e) {
       print(e);
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Error'),
+          content: Text('Ocurrió un error durante el registro.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Ok'),
+            ),
+          ],
+        ),
+      );
     }
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
 // AGREGAR DATOS A LA BASE DE DATOS
@@ -130,263 +163,293 @@ class _RegisterPageState extends State<RegisterPage> {
       onWillPop: () async => false,
       child: Scaffold(
         body: SingleChildScrollView(
-          child: Stack(
-            children: [
-              Container(
-                  height: MediaQuery.of(context).size.height,
-                  decoration: const BoxDecoration(color: azulBackground),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Stack(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Stack(
+              children: [
+                if (!isLoading)
+                  Container(
+                      height: MediaQuery.of(context).size.height,
+                      decoration: const BoxDecoration(color: azulBackground),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Container(
-                            child: Column(
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(
-                                      left: MediaQuery.of(context).size.width *
-                                          0.5),
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.2,
-                                  color: rosaClaroDegrade,
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(
-                                      right: MediaQuery.of(context).size.width *
-                                          0.5),
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.2,
-                                  color: amarillogoldenDegrade,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            //color: blanco,
-                            width: MediaQuery.of(context).size.width * 0.65,
-                            height: MediaQuery.of(context).size.height * 0.3,
-                            margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.width * 0.2,
-                                left: MediaQuery.of(context).size.width * 0.18),
-                            child: Image.asset(
-                              'assets/letsLogo.png',
-                              alignment: Alignment.center,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.05,
-                      ),
-                      Form(
-                          key: _formKey,
-                          child: Column(
+                          Stack(
                             children: [
-                              Text(
-                                '¡Regístrate!',
-                                style: GoogleFonts.poppins(
-                                    fontSize:
-                                        MediaQuery.of(context).size.width *
-                                            0.095,
-                                    fontWeight: FontWeight.bold,
-                                    color: negro),
-                              ),
-                              const SizedBox(
-                                height: 60,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                child: TextFormField(
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Por favor ingresa un correo';
-                                    }
-                                    final RegExp emailRegex = RegExp(
-                                        r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$');
-                                    if (!emailRegex.hasMatch(value)) {
-                                      return 'Ingresa un correo electrónico válido';
-                                    }
-                                    return null;
-                                  },
-                                  controller: emailController,
-                                  style: const TextStyle(color: negro),
-                                  cursorColor: negro,
-                                  decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: blanco,
-                                      labelStyle: TextStyle(color: negro),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderSide: BorderSide(color: negro),
-                                        borderRadius: BorderRadius.circular(
-                                            20), // Redondear el borde cuando está enfocado
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                        borderSide: BorderSide.none,
-                                        borderRadius: BorderRadius.circular(
-                                            20), // Redondear el borde cuando está habilitado
-                                      ),
-                                      labelText: 'Correo electrónico',
-                                      hintText: 'Ingresa tu correo',
-                                      border: InputBorder.none),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
+                              Column(
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        left:
+                                            MediaQuery.of(context).size.width *
+                                                0.5),
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.5,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.2,
+                                    color: rosaClaroDegrade,
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                        right:
+                                            MediaQuery.of(context).size.width *
+                                                0.5),
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.5,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.2,
+                                    color: amarillogoldenDegrade,
+                                  ),
+                                ],
                               ),
                               Container(
-                                width: MediaQuery.of(context).size.width * 0.9,
-                                child: TextFormField(
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Por favor ingresa una contraseña';
-                                    }
-
-                                    // Validar longitud de 6 a 8 caracteres
-                                    if (value.length < 6 || value.length > 8) {
-                                      return 'La contraseña debe tener entre 6 y 8 caracteres';
-                                    }
-
-                                    // Validar al menos una letra mayúscula
-                                    if (!containsUppercase(value)) {
-                                      return 'La contraseña debe contener al menos una letra mayúscula';
-                                    }
-
-                                    // Validar al menos una letra minúscula
-                                    if (!containsLowercase(value)) {
-                                      return 'La contraseña debe contener al menos una letra minúscula';
-                                    }
-
-                                    // Validar al menos un número
-                                    if (!containsNumber(value)) {
-                                      return 'La contraseña debe contener al menos un número';
-                                    }
-
-                                    // Validar que no contenga caracteres especiales
-                                    if (containsSpecialCharacters(value)) {
-                                      return 'La contraseña no debe contener caracteres especiales';
-                                    }
-
-                                    return null; // La validación pasó exitosamente
-                                  },
-                                  obscureText: obscureText,
-                                  controller: passwordController,
-                                  style: const TextStyle(color: negro),
-                                  cursorColor: negro,
-                                  decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: blanco,
-                                      suffixIcon: IconButton(
-                                        color: negro,
-                                        icon: Icon(obscureText
-                                            ? Icons.visibility
-                                            : Icons.visibility_off),
-                                        onPressed: () {
-                                          setState(() {
-                                            obscureText = !obscureText;
-                                          });
-                                        },
-                                      ),
-                                      labelStyle: TextStyle(color: negro),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(20),
-                                        borderSide: BorderSide(color: negro),
-                                      ),
-                                      enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          borderSide: BorderSide.none),
-                                      labelText: 'Contraseña',
-                                      hintText: 'Ingresa tu contraseña',
-                                      border: InputBorder.none),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.9,
+                                //color: blanco,
+                                width: MediaQuery.of(context).size.width * 0.65,
                                 height:
-                                    MediaQuery.of(context).size.height * 0.1,
-                                child: Text(
-                                  'Al registrarte aceptas nuestros términos y condiciones y políticas de privacidad',
-                                  style: GoogleFonts.poppins(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width *
-                                              0.05),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                    amarilloGolden,
-                                  ),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                  ),
-                                  minimumSize: MaterialStateProperty.all<Size>(
-                                    Size(
-                                        MediaQuery.of(context).size.width * 0.8,
-                                        MediaQuery.of(context).size.height *
-                                            0.09),
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    await register(emailController.text,
-                                        passwordController.text, context);
-                                  }
-                                },
-                                child: Text(
-                                  'Continuar',
-                                  style: GoogleFonts.poppins(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width *
-                                              0.1,
-                                      fontWeight: FontWeight.w500,
-                                      color: negro),
+                                    MediaQuery.of(context).size.height * 0.3,
+                                margin: EdgeInsets.only(
+                                    top:
+                                        MediaQuery.of(context).size.width * 0.2,
+                                    left: MediaQuery.of(context).size.width *
+                                        0.18),
+                                child: Image.asset(
+                                  'assets/letsLogo.png',
+                                  alignment: Alignment.center,
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                             ],
-                          ))
-                    ],
-                  )),
-              if (isLoading)
-                Container(
-                  color: Colors.black54,
-                  child: const Center(
-                    child: Column(
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                          ),
+                          Form(
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '¡Regístrate!',
+                                    style: GoogleFonts.poppins(
+                                        fontSize:
+                                            MediaQuery.of(context).size.width *
+                                                0.095,
+                                        fontWeight: FontWeight.bold,
+                                        color: negro),
+                                  ),
+                                  const SizedBox(
+                                    height: 60,
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.9,
+                                    child: TextFormField(
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Por favor ingresa un correo';
+                                        }
+                                        final RegExp emailRegex = RegExp(
+                                            r'^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$');
+                                        if (!emailRegex.hasMatch(value)) {
+                                          return 'Ingresa un correo electrónico válido';
+                                        }
+                                        return null;
+                                      },
+                                      controller: emailController,
+                                      style: const TextStyle(color: negro),
+                                      cursorColor: negro,
+                                      decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: blanco,
+                                          labelStyle: TextStyle(color: negro),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: negro),
+                                            borderRadius: BorderRadius.circular(
+                                                20), // Redondear el borde cuando está enfocado
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.circular(
+                                                20), // Redondear el borde cuando está habilitado
+                                          ),
+                                          labelText: 'Correo electrónico',
+                                          hintText: 'Ingresa tu correo',
+                                          border: InputBorder.none),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.9,
+                                    child: TextFormField(
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Por favor ingresa una contraseña';
+                                        }
+
+                                        // Validar longitud de 6 a 8 caracteres
+                                        if (value.length < 6 ||
+                                            value.length > 10) {
+                                          return 'La contraseña debe tener entre 6 y 10 caracteres';
+                                        }
+
+                                        // Validar al menos una letra mayúscula
+                                        if (!containsUppercase(value)) {
+                                          return 'La contraseña debe contener al menos una letra mayúscula';
+                                        }
+
+                                        // Validar al menos una letra minúscula
+                                        if (!containsLowercase(value)) {
+                                          return 'La contraseña debe contener al menos una letra minúscula';
+                                        }
+
+                                        // Validar al menos un número
+                                        if (!containsNumber(value)) {
+                                          return 'La contraseña debe contener al menos un número';
+                                        }
+
+                                        // Validar que no contenga caracteres especiales
+                                        if (containsSpecialCharacters(value)) {
+                                          return 'La contraseña no debe contener caracteres especiales';
+                                        }
+
+                                        return null; // La validación pasó exitosamente
+                                      },
+                                      obscureText: obscureText,
+                                      controller: passwordController,
+                                      style: const TextStyle(color: negro),
+                                      cursorColor: negro,
+                                      decoration: InputDecoration(
+                                          filled: true,
+                                          fillColor: blanco,
+                                          suffixIcon: IconButton(
+                                            color: negro,
+                                            icon: Icon(obscureText
+                                                ? Icons.visibility
+                                                : Icons.visibility_off),
+                                            onPressed: () {
+                                              setState(() {
+                                                obscureText = !obscureText;
+                                              });
+                                            },
+                                          ),
+                                          labelStyle: TextStyle(color: negro),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            borderSide:
+                                                BorderSide(color: negro),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              borderSide: BorderSide.none),
+                                          labelText: 'Contraseña',
+                                          hintText: 'Ingresa tu contraseña',
+                                          border: InputBorder.none),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.9,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.1,
+                                    child: Text(
+                                      'Al registrarte aceptas nuestros términos y condiciones y políticas de privacidad',
+                                      style: GoogleFonts.poppins(
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.05),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    style: ButtonStyle(
+                                      elevation:
+                                          MaterialStateProperty.all<double>(
+                                              6.0),
+                                      backgroundColor:
+                                          MaterialStateProperty.all<Color>(
+                                        amarilloGolden,
+                                      ),
+                                      shape: MaterialStateProperty.all<
+                                          RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
+                                        ),
+                                      ),
+                                      minimumSize:
+                                          MaterialStateProperty.all<Size>(
+                                        Size(
+                                            MediaQuery.of(context).size.width *
+                                                0.8,
+                                            MediaQuery.of(context).size.height *
+                                                0.09),
+                                      ),
+                                    ),
+                                    onPressed: () async {
+                                      if (_formKey.currentState!.validate()) {
+                                        await register(emailController.text,
+                                            passwordController.text, context);
+                                      }
+                                    },
+                                    child: Text(
+                                      'Continuar',
+                                      style: GoogleFonts.poppins(
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.1,
+                                          fontWeight: FontWeight.w500,
+                                          color: negro),
+                                    ),
+                                  ),
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.pushNamed(context, '/');
+                                      },
+                                      child: const Text(
+                                        'CANCELAR',
+                                        style: TextStyle(color: Colors.red),
+                                      ))
+                                ],
+                              ))
+                        ],
+                      )),
+                if (isLoading)
+                  Container(
+                    height: MediaQuery.of(context).size.height,
+                    color: azulBackground, // Cambia el color de fondo aquí
+                    child: const Column(
+                      mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           'Procesando...',
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
+                            color: azulNavy,
+                            fontSize: 30,
                           ),
                         ),
                         SizedBox(
                           height: 30,
                         ),
                         SpinKitCircle(
-                          color: Colors.white,
+                          color: azulNavy,
                           size: 50.0,
                         ),
                       ],
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

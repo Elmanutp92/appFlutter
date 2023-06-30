@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../styles/colors.dart';
 
@@ -30,13 +31,13 @@ class _LoginPageState extends State<LoginPage> {
 
   //  ingresas
   login(emailAddress, password, context) async {
-    isLoading = true;
+    setState(() {
+      isLoading = true;
+    });
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: emailAddress, password: password);
-      setState(() {
-        isLoading = false;
-      });
+      setState(() {});
       if (credential.user != null) {
         Navigator.pushNamed(context, '/home');
       }
@@ -67,6 +68,9 @@ class _LoginPageState extends State<LoginPage> {
                 ));
       }
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -76,148 +80,240 @@ class _LoginPageState extends State<LoginPage> {
         return false;
       },
       child: Scaffold(
-        body: Stack(children: [
-          Container(
-              decoration: const BoxDecoration(),
-              padding: EdgeInsets.all(30),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Iniciar Sesión',
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: azulClaro),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Form(
-                      key: _formKey,
-                      child: Column(
+        body: SingleChildScrollView(
+          child: Stack(children: [
+            if (!isLoading)
+              Container(
+                  height: MediaQuery.of(context).size.height,
+                  decoration: const BoxDecoration(color: azulBackground),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Stack(
                         children: [
-                          TextFormField(
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Por favor ingresa tu correo';
-                              } else if (!value.contains('@')) {
-                                return 'Por favor ingresa un correo valido';
-                              }
-                              return null;
-                            },
-                            controller: emailController,
-                            style: TextStyle(color: azulClaro),
-                            cursorColor: azulClaro,
-                            decoration: const InputDecoration(
-                              labelStyle: TextStyle(color: azulClaro),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: azulClaro),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: azulClaro),
-                              ),
-                              labelText: 'Correo',
-                              hintText: 'Ingresa tu correo',
+                          Container(
+                            child: Column(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      left: MediaQuery.of(context).size.width *
+                                          0.5),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.2,
+                                  color: rosaClaroDegrade,
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      right: MediaQuery.of(context).size.width *
+                                          0.5),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.2,
+                                  color: amarillogoldenDegrade,
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          TextFormField(
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Por favor ingresa tu contraseña';
-                              } else if (value.length < 6) {
-                                return 'Por favor ingresa una contraseña de al menos 6 caracteres';
-                              }
-                              return null;
-                            },
-                            controller: passwordController,
-                            style: TextStyle(color: azulClaro),
-                            cursorColor: azulClaro,
-                            decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                color: azulClaro,
-                                icon: Icon(obscureText
-                                    ? Icons.visibility
-                                    : Icons.visibility_off),
-                                onPressed: () {
-                                  setState(() {
-                                    obscureText = !obscureText;
-                                  });
-                                },
-                              ),
-                              labelStyle: TextStyle(color: azulClaro),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: azulClaro),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: azulClaro),
-                              ),
-                              labelText: 'Contraseña',
-                              hintText: 'Ingresa tu contraseña',
+                          Container(
+                            //color: blanco,
+                            width: MediaQuery.of(context).size.width * 0.65,
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            margin: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.width * 0.2,
+                                left: MediaQuery.of(context).size.width * 0.18),
+                            child: Image.asset(
+                              'assets/letsLogo.png',
+                              alignment: Alignment.center,
+                              fit: BoxFit.contain,
                             ),
                           ),
-                          const SizedBox(
-                            height: 60,
-                          ),
-                          ElevatedButton(
-                            style: ButtonStyle(
-                              minimumSize: MaterialStateProperty.all<Size>(
-                                  const Size(double.infinity, 50)),
-                              backgroundColor:
-                                  MaterialStateProperty.all<Color>(azulClaro),
-                            ),
-                            child: const Text('Entrar',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold)),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                login(
-                                  emailController.text,
-                                  passwordController.text,
-                                  context,
-                                );
-                              }
-                            },
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/');
-                              },
-                              child: const Text(
-                                'Cancelar',
-                                style:
-                                    TextStyle(color: azulClaro, fontSize: 20),
-                              ))
                         ],
-                      ))
-                ],
-              )),
-          isLoading
-              ? Container(
-                  color: Colors.black.withOpacity(0.5),
-                  child: const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Ingresando...',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
-                        SpinKitCircle(
-                          color: Colors.white,
-                          size: 50.0,
-                        ),
-                      ],
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.05,
+                      ),
+                      Text(
+                        '¡Ingresa!',
+                        style: GoogleFonts.poppins(
+                            fontSize: MediaQuery.of(context).size.width * 0.1,
+                            fontWeight: FontWeight.bold,
+                            color: negro),
+                      ),
+                      const SizedBox(
+                        height: 50,
+                      ),
+                      Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                child: TextFormField(
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Por favor ingresa tu correo';
+                                    } else if (!value.contains('@')) {
+                                      return 'Por favor ingresa un correo valido';
+                                    }
+                                    return null;
+                                  },
+                                  controller: emailController,
+                                  style: TextStyle(color: negro),
+                                  cursorColor: negro,
+                                  decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: blanco,
+                                      labelStyle: TextStyle(color: negro),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: negro),
+                                        borderRadius: BorderRadius.circular(
+                                            20), // Redondear el borde cuando está enfocado
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.circular(
+                                            20), // Redondear el borde cuando está habilitado
+                                      ),
+                                      labelText: 'Correo electrónico',
+                                      hintText: 'Ingresa tu Correo electrónico',
+                                      border: InputBorder.none),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 30,
+                              ),
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                child: TextFormField(
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Por favor ingresa tu contraseña';
+                                    }
+                                    return null;
+                                  },
+                                  obscureText: obscureText,
+                                  controller: passwordController,
+                                  style: TextStyle(color: negro),
+                                  cursorColor: negro,
+                                  decoration: InputDecoration(
+                                      suffixIcon: IconButton(
+                                        color: negro,
+                                        icon: Icon(obscureText
+                                            ? Icons.visibility
+                                            : Icons.visibility_off),
+                                        onPressed: () {
+                                          setState(() {
+                                            obscureText = !obscureText;
+                                          });
+                                        },
+                                      ),
+                                      filled: true,
+                                      fillColor: blanco,
+                                      labelStyle: TextStyle(color: negro),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(color: negro),
+                                        borderRadius: BorderRadius.circular(
+                                            20), // Redondear el borde cuando está enfocado
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.circular(
+                                            20), // Redondear el borde cuando está habilitado
+                                      ),
+                                      labelText: 'Correo electrónico',
+                                      hintText: 'Ingresa tu Correo electrónico',
+                                      border: InputBorder.none),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 60,
+                              ),
+                              ElevatedButton(
+                                style: ButtonStyle(
+                                  elevation:
+                                      MaterialStateProperty.all<double>(6.0),
+                                  backgroundColor:
+                                      MaterialStateProperty.all<Color>(
+                                    amarilloGolden,
+                                  ),
+                                  shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                  ),
+                                  minimumSize: MaterialStateProperty.all<Size>(
+                                    Size(
+                                        MediaQuery.of(context).size.width * 0.8,
+                                        MediaQuery.of(context).size.height *
+                                            0.09),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    login(
+                                      emailController.text,
+                                      passwordController.text,
+                                      context,
+                                    );
+                                  }
+                                },
+                                child: Text(
+                                  'Continuar',
+                                  style: GoogleFonts.poppins(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width *
+                                              0.1,
+                                      fontWeight: FontWeight.w500,
+                                      color: negro),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/');
+                                  },
+                                  child: const Text(
+                                    'Cancelar',
+                                    style: TextStyle(
+                                        color: Colors.red, fontSize: 20),
+                                  ))
+                            ],
+                          ))
+                    ],
+                  )),
+            if (isLoading)
+              Container(
+                height: MediaQuery.of(context).size.height,
+                color: azulBackground, // Cambia el color de fondo aquí
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Procesando...',
+                      style: TextStyle(
+                        color: azulNavy,
+                        fontSize: 30,
+                      ),
                     ),
-                  ),
-                )
-              : Container()
-        ]),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    SpinKitCircle(
+                      color: azulNavy,
+                      size: 50.0,
+                    ),
+                  ],
+                ),
+              ),
+          ]),
+        ),
       ),
     );
   }

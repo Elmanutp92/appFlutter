@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../styles/colors.dart';
 
@@ -124,155 +125,262 @@ class _DataPageState extends State<DataPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        return true;
+        return false;
       },
       child: Scaffold(
-        body: Stack(children: [
-          Container(
-            decoration: const BoxDecoration(),
-            padding: const EdgeInsets.all(30),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Queremos conocerte un poco más',
-                  style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: azulClaro),
-                ),
-                SizedBox(height: 50),
-                Form(
-                  key: _formKey,
+        body: SingleChildScrollView(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Stack(children: [
+              if (!isLoading)
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  decoration: const BoxDecoration(color: azulBackground),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Ingrese sus nombres';
-                          }
-                          return null;
-                        },
-                        controller: nameController,
-                        style: TextStyle(color: azulClaro),
-                        cursorColor: azulClaro,
-                        decoration: const InputDecoration(
-                          hintStyle: TextStyle(color: azulClaro),
-                          labelStyle: TextStyle(color: azulClaro),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: azulClaro),
+                      Stack(
+                        children: [
+                          Container(
+                            child: Column(
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      left: MediaQuery.of(context).size.width *
+                                          0.5),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.2,
+                                  color: rosaClaroDegrade,
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      right: MediaQuery.of(context).size.width *
+                                          0.5),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.5,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.2,
+                                  color: amarillogoldenDegrade,
+                                ),
+                              ],
+                            ),
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: azulClaro),
+                          Container(
+                            //color: blanco,
+                            width: MediaQuery.of(context).size.width * 0.65,
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            margin: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.width * 0.2,
+                                left: MediaQuery.of(context).size.width * 0.18),
+                            child: Image.asset(
+                              'assets/letsLogo.png',
+                              alignment: Alignment.center,
+                              fit: BoxFit.contain,
+                            ),
                           ),
-                          labelText: 'Nombres',
-                          hintText: 'Ingresa tu nombre completo',
+                        ],
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.03),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.99,
+                        height: MediaQuery.of(context).size.height * 0.05,
+                        child: Text(
+                          '¡Queremos conocerte!',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                              fontSize: 50,
+                              fontWeight: FontWeight.bold,
+                              color: negro),
                         ),
                       ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Ingrese sus apellidos ';
-                          }
-                          return null;
-                        },
-                        controller: apellidoController,
-                        style: TextStyle(color: azulClaro),
-                        cursorColor: azulClaro,
-                        decoration: const InputDecoration(
-                          hintStyle: TextStyle(color: azulClaro),
-                          labelStyle: TextStyle(color: azulClaro),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: azulClaro),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: azulClaro),
-                          ),
-                          labelText: 'Apellidos',
-                          hintText: 'Ingresa sus apellidos completos',
+                      SizedBox(height: 50),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Ingrese sus nombres';
+                                  }
+                                  return null;
+                                },
+                                controller: nameController,
+                                style: TextStyle(color: negro),
+                                cursorColor: negro,
+                                decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: blanco,
+                                    labelStyle: TextStyle(color: negro),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: negro),
+                                      borderRadius: BorderRadius.circular(
+                                          20), // Redondear el borde cuando está enfocado
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(
+                                          20), // Redondear el borde cuando está habilitado
+                                    ),
+                                    labelText: 'Nombre',
+                                    hintText: 'Ingresa tu Nombre completo',
+                                    border: InputBorder.none),
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Ingrese sus apellidos ';
+                                  }
+                                  return null;
+                                },
+                                controller: apellidoController,
+                                style: TextStyle(color: negro),
+                                cursorColor: negro,
+                                decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: blanco,
+                                    labelStyle: TextStyle(color: negro),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: negro),
+                                      borderRadius: BorderRadius.circular(
+                                          20), // Redondear el borde cuando está enfocado
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(
+                                          20), // Redondear el borde cuando está habilitado
+                                    ),
+                                    labelText: 'Apellido',
+                                    hintText: 'Ingresa tus Apellidos',
+                                    border: InputBorder.none),
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              child: TextFormField(
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Ingrese un número de teléfono';
+                                  }
+                                  if (value.length != 10) {
+                                    return 'Ingrese un número de teléfono válido';
+                                  }
+                                  if (!containsOnlyNumbers(value)) {
+                                    return 'Ingrese un número de teléfono válido';
+                                  }
+                                  return null;
+                                },
+                                controller: telefonoController,
+                                style: TextStyle(color: negro),
+                                cursorColor: azulClaro,
+                                decoration: InputDecoration(
+                                    filled: true,
+                                    fillColor: blanco,
+                                    labelStyle: TextStyle(color: negro),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: negro),
+                                      borderRadius: BorderRadius.circular(
+                                          20), // Redondear el borde cuando está enfocado
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(
+                                          20), // Redondear el borde cuando está habilitado
+                                    ),
+                                    labelText: 'Móvil/ Celular',
+                                    hintText: 'Ingresa tu Móvil/ Celular',
+                                    border: InputBorder.none),
+                              ),
+                            ),
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.width * 0.12),
+                            ElevatedButton(
+                              style: ButtonStyle(
+                                elevation:
+                                    MaterialStateProperty.all<double>(6.0),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                  amarilloGolden,
+                                ),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                ),
+                                minimumSize: MaterialStateProperty.all<Size>(
+                                  Size(
+                                      MediaQuery.of(context).size.width * 0.8,
+                                      MediaQuery.of(context).size.height *
+                                          0.09),
+                                ),
+                              ),
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  addData(
+                                    nameController.text,
+                                    apellidoController.text,
+                                    telefonoController.text,
+                                  );
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                }
+                              },
+                              child: Text(
+                                'Continuar',
+                                style: GoogleFonts.poppins(
+                                    fontSize:
+                                        MediaQuery.of(context).size.width * 0.1,
+                                    fontWeight: FontWeight.w500,
+                                    color: negro),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Ingrese un número de teléfono';
-                          }
-                          if (value.length != 10) {
-                            return 'Ingrese un número de teléfono válido';
-                          }
-                          if (!containsOnlyNumbers(value)) {
-                            return 'Ingrese un número de teléfono válido';
-                          }
-                          return null;
-                        },
-                        controller: telefonoController,
-                        style: TextStyle(color: azulClaro),
-                        cursorColor: azulClaro,
-                        decoration: const InputDecoration(
-                          hintStyle: TextStyle(color: azulClaro),
-                          labelStyle: TextStyle(color: azulClaro),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: azulClaro),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: azulClaro),
-                          ),
-                          labelText: 'Telefono',
-                          hintText: 'Ingresa tu telefono',
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          minimumSize: MaterialStateProperty.all<Size>(
-                            const Size(double.infinity, 50),
-                          ),
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(azulClaro),
-                        ),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            addData(
-                              nameController.text,
-                              apellidoController.text,
-                              telefonoController.text,
-                            );
-                          }
-                        },
-                        child: const Text('Guardar'),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
-          if (isLoading)
-            Container(
-              color: Colors.black.withOpacity(0.5),
-              child: const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Guardando datos...',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
+              if (isLoading)
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  color: azulBackground, // Cambia el color de fondo aquí
+                  child: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Procesando...',
+                        style: TextStyle(
+                          color: azulNavy,
+                          fontSize: 30,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 30),
-                    SpinKitCircle(
-                      color: Colors.white,
-                      size: 50.0,
-                    ),
-                  ],
+                      SizedBox(
+                        height: 30,
+                      ),
+                      SpinKitCircle(
+                        color: azulNavy,
+                        size: 50.0,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-        ]),
+            ]),
+          ),
+        ),
       ),
     );
   }

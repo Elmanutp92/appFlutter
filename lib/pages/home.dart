@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../styles/colors.dart';
 
@@ -12,6 +13,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool todos = true;
+  bool favoritos = false;
+  bool tareas = false;
+
   String? email;
   String userId = '';
   String nombre = '';
@@ -50,132 +55,192 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
-      child: Container(
-        child: Scaffold(
-          body: SingleChildScrollView(
-            child: Container(
-              padding: EdgeInsets.all(30),
-              decoration: const BoxDecoration(),
-              child: Center(
+        onWillPop: () async {
+          return false;
+        },
+        child: Container(
+          child: Scaffold(
+            body: SingleChildScrollView(
                 child: Container(
-                  margin: EdgeInsets.only(top: 30),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.only(bottom: 46, top: 0),
-                        margin: const EdgeInsets.only(
-                          top: 0,
+              margin: EdgeInsets.only(top: 30),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(color: azulBackground),
+              child: Column(
+                children: [
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Row(
+                      children: [
+                        const CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.white,
+                          child: Icon(
+                            Icons.person,
+                            color: Colors.black,
+                            size: 40,
+                          ),
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(height: 16),
-                            Text(
-                              'Hola, $nombre',
-                              style: TextStyle(
-                                  fontSize: 38,
-                                  color: azulClaro,
-                                  fontWeight: FontWeight.bold),
+                        const SizedBox(width: 20),
+                        Text(
+                          '¡Hola, $nombre!',
+                          style: GoogleFonts.poppins(
+                              color: Colors.black,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.05,
+                              fontWeight: FontWeight.normal),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: negro,
+                          ),
+                          filled: true,
+                          fillColor: blanco,
+                          labelStyle: TextStyle(color: negro),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: negro),
+                            borderRadius: BorderRadius.circular(
+                                20), // Redondear el borde cuando está enfocado
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(
+                                20), // Redondear el borde cuando está habilitado
+                          ),
+                          labelText: 'Buscar',
+                          hintText: 'Ejemplo: "Mercado"',
+                          border: InputBorder.none),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 6,
+                  ),
+                  Container(
+                    child: Text(
+                      'Let\'s Note',
+                      style: GoogleFonts.poppins(
+                        fontSize: MediaQuery.of(context).size.width * 0.2,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              side: BorderSide(
+                                  color: Colors
+                                      .white), // Define el color de los bordes
                             ),
-                            const SizedBox(height: 16),
-                            const SizedBox(
-                              width: 300,
-                              child: Text(
-                                'Bienvenido a tu aplicación de gestión de tareas',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: azulClaro,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            const SizedBox(height: 66),
-                            InkWell(
-                              onTap: () =>
-                                  Navigator.pushNamed(context, '/tareas'),
-                              child: Card(
-                                elevation: 15,
-                                shape: BeveledRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: azulClaro),
-                                  width: 300,
-                                  height: 200,
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.note,
-                                          color: azulClaro, size: 130),
-                                      SizedBox(width: 20),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 26),
-                            InkWell(
-                              onTap: () =>
-                                  Navigator.pushNamed(context, '/profile'),
-                              child: Card(
-                                elevation: 15,
-                                shape: BeveledRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: azulClaro),
-                                  width: 300,
-                                  height: 200,
-                                  child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.person,
-                                          color: azulClaro, size: 130),
-                                      SizedBox(width: 20),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
+                          ),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              azulClaro), // Define el color de fondo transparente
+                          overlayColor: MaterialStateProperty.all<Color>(
+                              Colors.white.withOpacity(
+                                  0.1)), // Define el color del overlay al presionar
+                        ),
+                        onPressed: () {
+                          // Acción del botón
+                        },
+                        child: const Text(
+                          'Todos',
+                          style: TextStyle(color: negro),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              side: const BorderSide(
+                                  color: Colors
+                                      .white), // Define el color de los bordes
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              azulNavy), // Define el color de fondo transparente
+                          overlayColor: MaterialStateProperty.all<Color>(
+                              Colors.white.withOpacity(
+                                  0.1)), // Define el color del overlay al presionar
+                        ),
+                        onPressed: () {
+                          // Acción del botón
+                        },
+                        child: const Text(
+                          'Favoritos',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              side: const BorderSide(
+                                  color: Colors
+                                      .white), // Define el color de los bordes
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              rosaClaro), // Define el color de fondo transparente
+                          overlayColor: MaterialStateProperty.all<Color>(
+                              Colors.white.withOpacity(
+                                  0.1)), // Define el color del overlay al presionar
+                        ),
+                        onPressed: () {
+                          // Acción del botón
+                        },
+                        child: const Text(
+                          'Tareas',
+                          style: TextStyle(color: negro),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              side: const BorderSide(
+                                  color: Colors
+                                      .white), // Define el color de los bordes
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              amarilloGolden), // Define el color de fondo transparente
+                          overlayColor: MaterialStateProperty.all<Color>(
+                              Colors.white.withOpacity(
+                                  0.1)), // Define el color del overlay al presionar
+                        ),
+                        onPressed: () {
+                          // Acción del botón
+                        },
+                        child: const Text(
+                          'Notas',
+                          style: TextStyle(color: negro),
+                        ),
+                      ),
                     ],
-                  ),
-                ),
+                  )
+                ],
               ),
-            ),
+            )),
           ),
-          bottomNavigationBar: BottomNavigationBar(
-              fixedColor: azulClaro,
-              elevation: 6,
-              backgroundColor: azulClaro,
-              currentIndex: 0,
-              onTap: (index) {
-                if (index == 1) {
-                  Navigator.pushNamed(context, '/tareas');
-                } else if (index == 2) {
-                  Navigator.pushNamed(context, '/profile');
-                }
-              },
-              items: const [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.home), label: 'Inicio'),
-                BottomNavigationBarItem(icon: Icon(Icons.note), label: 'Notas'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.person), label: 'Perfil'),
-              ]),
-        ),
-      ),
-    );
+        ));
   }
 }

@@ -73,6 +73,7 @@ class MyApp extends StatelessWidget {
                       height: MediaQuery.of(context).size.height * 0.05,
                       child: AutoSizeText(
                         '¿Tienes cosas por recordar?',
+                        textAlign: TextAlign.center,
 
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.w600,
@@ -84,13 +85,13 @@ class MyApp extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.95,
+                      width: MediaQuery.of(context).size.width * 0.8,
                       height: MediaQuery.of(context).size.height * 0.09,
                       child: AutoSizeText(
                         'Podrás organizar, planear y hacer anotaciones rápidas',
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
-                            fontSize: MediaQuery.of(context).size.width * 0.07,
+                            fontSize: MediaQuery.of(context).size.width * 0.06,
                             fontWeight: FontWeight.w300),
                       ),
                     ),
@@ -99,6 +100,7 @@ class MyApp extends StatelessWidget {
                     ),
                     ElevatedButton(
                       style: ButtonStyle(
+                        elevation: MaterialStateProperty.all<double>(6.0),
                         backgroundColor: MaterialStateProperty.all<Color>(
                           amarilloGolden,
                         ),
@@ -124,6 +126,11 @@ class MyApp extends StatelessWidget {
                             color: negro),
                       ),
                     ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/login');
+                        },
+                        child: const Text('login'))
                   ]),
             ),
           ),
