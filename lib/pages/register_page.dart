@@ -411,14 +411,38 @@ class _RegisterPageState extends State<RegisterPage> {
                                           color: negro),
                                     ),
                                   ),
-                                  TextButton(
-                                      onPressed: () {
-                                        Navigator.pushNamed(context, '/');
-                                      },
-                                      child: const Text(
-                                        'CANCELAR',
-                                        style: TextStyle(color: Colors.red),
-                                      ))
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pushNamed(context, '/');
+                                          },
+                                          child: const Text(
+                                            'CANCELAR',
+                                            style: TextStyle(color: Colors.red),
+                                          )),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pushNamed(
+                                                context, '/login');
+                                          },
+                                          child: Text(
+                                            'Ya soy usuario',
+                                            style: TextStyle(
+                                                color: azulNavy,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.04),
+                                          ))
+                                    ],
+                                  )
                                 ],
                               ))
                         ],

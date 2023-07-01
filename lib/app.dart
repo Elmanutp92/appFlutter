@@ -126,11 +126,6 @@ class MyApp extends StatelessWidget {
                             color: negro),
                       ),
                     ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/login');
-                        },
-                        child: const Text('login'))
                   ]),
             ),
           ),
