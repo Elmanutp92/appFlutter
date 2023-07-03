@@ -162,15 +162,15 @@ class _RegisterPageState extends State<RegisterPage> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            child: Stack(
-              children: [
-                if (!isLoading)
-                  Container(
-                      height: MediaQuery.of(context).size.height,
-                      decoration: const BoxDecoration(color: azulBackground),
+        body: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            children: [
+              if (!isLoading)
+                Container(
+                    height: MediaQuery.of(context).size.height,
+                    decoration: const BoxDecoration(color: azulBackground),
+                    child: SingleChildScrollView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -358,7 +358,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     width:
                                         MediaQuery.of(context).size.width * 0.9,
                                     height: MediaQuery.of(context).size.height *
-                                        0.1,
+                                        0.11,
                                     child: Text(
                                       'Al registrarte aceptas nuestros términos y condiciones y políticas de privacidad',
                                       style: GoogleFonts.poppins(
@@ -369,6 +369,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
+                                  SizedBox(height: 20),
                                   ElevatedButton(
                                     style: ButtonStyle(
                                       elevation:
@@ -446,34 +447,34 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ],
                               ))
                         ],
-                      )),
-                if (isLoading)
-                  Container(
-                    height: MediaQuery.of(context).size.height,
-                    color: azulBackground, // Cambia el color de fondo aquí
-                    child: const Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Procesando...',
-                          style: TextStyle(
-                            color: azulNavy,
-                            fontSize: 30,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        SpinKitCircle(
+                      ),
+                    )),
+              if (isLoading)
+                Container(
+                  height: MediaQuery.of(context).size.height,
+                  color: azulBackground, // Cambia el color de fondo aquí
+                  child: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Procesando...',
+                        style: TextStyle(
                           color: azulNavy,
-                          size: 50.0,
+                          fontSize: 30,
                         ),
-                      ],
-                    ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      SpinKitCircle(
+                        color: azulNavy,
+                        size: 50.0,
+                      ),
+                    ],
                   ),
-              ],
-            ),
+                ),
+            ],
           ),
         ),
       ),
