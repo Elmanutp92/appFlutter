@@ -2,11 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:new_app/pages/page_tareas.dart';
+import 'package:new_app/pages/profile.dart';
+
 import 'package:new_app/widgets/buscar.dart';
 import 'package:new_app/widgets/header_home.dart';
-import 'package:new_app/widgets/stack/favoritos.dart';
 import 'package:new_app/widgets/stack/info_app.dart';
-import 'package:new_app/widgets/stack/notas.dart';
+
 import 'package:new_app/widgets/stack/tareas.dart';
 
 import '../styles/colors.dart';
@@ -24,6 +27,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool crearTarea = false;
+  bool crearNota = false;
+  // *******************************
   bool todos = true;
   bool favoritos = false;
   bool tareas = false;
@@ -80,75 +86,114 @@ class _HomeState extends State<Home> {
             child: ListTileDrawer(),
           ),
           body: Builder(builder: (context) {
-            return Container(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).size.height * 0.05,
-              ),
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(color: azulBackground),
-              child: Column(
-                children: [
-                  HeaderHome(
-                    nombre: nombre,
-                    apellido: apellido,
-                  ),
-                  const SearchHome(),
-                  const SizedBox(
-                    height: 6,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: FittedBox(
-                      fit: BoxFit.fitWidth,
-                      child: Text(
-                        'Let\'s Note',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          fontSize:
-                              5, // Utiliza un valor relativo como referencia
-                          fontWeight: FontWeight.bold,
+            return SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.05,
+                ),
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                decoration: const BoxDecoration(color: azulBackground),
+                child: Column(
+                  children: [
+                    HeaderHome(
+                      nombre: nombre,
+                      apellido: apellido,
+                    ),
+                    const SearchHome(),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text(
+                          'Let\'s Note',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontSize:
+                                5, // Utiliza un valor relativo como referencia
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  SwitchButtons(
-                    todos: todos,
-                    favoritos: favoritos,
-                    tareas: tareas,
-                    notas: notas,
-                    cambiarFavoritos: cambiarFavoritos,
-                    cambiarNotas: cambiarNotas,
-                    cambiarTareas: cambiarTareas,
-                    cambiarTodos: cambiarTodos,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const Divider(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.56,
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: Stack(
-                      children: [
-                        // Lista se Todos
-                        if (todos)
-                          TodosHome(
-                            nombre: nombre,
-                          ),
-                        if (tareas) TareasHome(nombre: nombre),
-                        if (favoritos) FavoritosHome(nombre: nombre),
-                        if (notas) NotasHome(nombre: nombre),
-                        if (!notas && !favoritos && !tareas && !todos)
-                          const InfoApp(),
-                      ],
+                    const SizedBox(height: 20),
+                    SwitchButtons(
+                      todos: todos,
+                      favoritos: favoritos,
+                      tareas: tareas,
+                      notas: notas,
+                      cambiarFavoritos: cambiarFavoritos,
+                      cambiarNotas: cambiarNotas,
+                      cambiarTareas: cambiarTareas,
+                      cambiarTodos: cambiarTodos,
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Divider(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.56,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      child: Stack(
+                        children: [
+                          // Lista se Todos
+                          if (todos)
+                            TodosHome(
+                              nombre: nombre,
+                            ),
+                          if (tareas) TareasHome(nombre: nombre),
+                          if (favoritos) ProfilePage(),
+                          if (notas)
+                            PageTareas(
+                              crearNota: crearNotaSet,
+                              pageTareas: pageTareas,
+                            ),
+
+                          // NotasHome(nombre: nombre),
+                          if (!notas &&
+                              !favoritos &&
+                              !tareas &&
+                              !todos &&
+                              !crearNota)
+                            const InfoApp(),
+                        ],
+                      ),
+                    ),
+                    /* Container(
+                      margin: EdgeInsets.only(
+                        top: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      height: MediaQuery.of(context).size.height * 0.06,
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      child: Stack(
+                        children: [
+                          if (tareas)
+                            ButtonHome(
+                                btntxt: 'Crear Tarea',
+                                color: rosaClaro,
+                                onPressed: cambiarTareas),
+                          if (notas)
+                            ButtonHome(
+                              btntxt: 'Crear Nota',
+                              color: amarilloGolden,
+                              onPressed: () {
+                                setState(() {
+                                  crearNota = true;
+                                  crearTarea = false;
+                                });
+                              },
+                            )
+                        ],
+                      ),
+                    ),*/
+                  ],
+                ),
               ),
             );
           }),
@@ -168,6 +213,7 @@ class _HomeState extends State<Home> {
 
   void cambiarTareas() {
     setState(() {
+      crearNota = false;
       todos = false;
       favoritos = false;
       !tareas ? tareas = true : tareas = false;
@@ -177,6 +223,7 @@ class _HomeState extends State<Home> {
 
   void cambiarNotas() {
     setState(() {
+      crearTarea = false;
       todos = false;
       favoritos = false;
       tareas = false;
@@ -190,6 +237,18 @@ class _HomeState extends State<Home> {
       !favoritos ? favoritos = true : favoritos = false;
       tareas = false;
       notas = false;
+    });
+  }
+
+  void crearNotaSet() {
+    setState(() {
+      !crearNota ? crearNota = true : crearNota = false;
+    });
+  }
+
+  void pageTareas() {
+    setState(() {
+      !notas ? notas = true : notas = false;
     });
   }
 }

@@ -33,96 +33,103 @@ class _SwitchButtonsState extends State<SwitchButtons> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
+        Container(
+            width: MediaQuery.of(context).size.width * 0.55,
+            //color: Colors.amber,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  style: ButtonStyle(
+                    elevation: widget.todos
+                        ? MaterialStateProperty.all<double>(0)
+                        : MaterialStateProperty.all<double>(15),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        side: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(azulClaro),
+                    overlayColor: MaterialStateProperty.all<Color>(
+                      Colors.white.withOpacity(0.1),
+                    ),
+                  ),
+                  onPressed: widget.cambiarTodos,
+                  child: const Text(
+                    'Todos',
+                    style: TextStyle(color: negro),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    elevation: widget.tareas
+                        ? MaterialStateProperty.all<double>(0)
+                        : MaterialStateProperty.all<double>(15),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        side: const BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(rosaClaro),
+                    overlayColor: MaterialStateProperty.all<Color>(
+                      Colors.white.withOpacity(0.1),
+                    ),
+                  ),
+                  onPressed: widget.cambiarTareas,
+                  child: const Text(
+                    'Tareas',
+                    style: TextStyle(color: negro),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    elevation: widget.notas
+                        ? MaterialStateProperty.all<double>(0)
+                        : MaterialStateProperty.all<double>(15),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        side: const BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(amarilloGolden),
+                    overlayColor: MaterialStateProperty.all<Color>(
+                      Colors.white.withOpacity(0.1),
+                    ),
+                  ),
+                  onPressed: widget.cambiarNotas,
+                  child: const Text(
+                    'Notas',
+                    style: TextStyle(color: negro),
+                  ),
+                ),
+              ],
+            )),
         ElevatedButton(
-          style: ButtonStyle(
-            elevation: widget.todos
-                ? MaterialStateProperty.all<double>(0)
-                : MaterialStateProperty.all<double>(15),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                side: BorderSide(color: Colors.white),
+            style: ButtonStyle(
+              elevation: widget.favoritos
+                  ? MaterialStateProperty.all<double>(0)
+                  : MaterialStateProperty.all<double>(15),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                  side: const BorderSide(color: Colors.white),
+                ),
+              ),
+              backgroundColor: MaterialStateProperty.all<Color>(azulNavy),
+              overlayColor: MaterialStateProperty.all<Color>(
+                Colors.white.withOpacity(0.1),
               ),
             ),
-            backgroundColor: MaterialStateProperty.all<Color>(azulClaro),
-            overlayColor: MaterialStateProperty.all<Color>(
-              Colors.white.withOpacity(0.1),
-            ),
-          ),
-          onPressed: widget.cambiarTodos,
-          child: const Text(
-            'Todos',
-            style: TextStyle(color: negro),
-          ),
-        ),
-        ElevatedButton(
-          style: ButtonStyle(
-            elevation: widget.favoritos
-                ? MaterialStateProperty.all<double>(0)
-                : MaterialStateProperty.all<double>(15),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                side: const BorderSide(color: Colors.white),
-              ),
-            ),
-            backgroundColor: MaterialStateProperty.all<Color>(azulNavy),
-            overlayColor: MaterialStateProperty.all<Color>(
-              Colors.white.withOpacity(0.1),
-            ),
-          ),
-          onPressed: widget.cambiarFavoritos,
-          child: const Text(
-            'Favoritos',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-        ElevatedButton(
-          style: ButtonStyle(
-            elevation: widget.tareas
-                ? MaterialStateProperty.all<double>(0)
-                : MaterialStateProperty.all<double>(15),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                side: const BorderSide(color: Colors.white),
-              ),
-            ),
-            backgroundColor: MaterialStateProperty.all<Color>(rosaClaro),
-            overlayColor: MaterialStateProperty.all<Color>(
-              Colors.white.withOpacity(0.1),
-            ),
-          ),
-          onPressed: widget.cambiarTareas,
-          child: const Text(
-            'Tareas',
-            style: TextStyle(color: negro),
-          ),
-        ),
-        ElevatedButton(
-          style: ButtonStyle(
-            elevation: widget.notas
-                ? MaterialStateProperty.all<double>(0)
-                : MaterialStateProperty.all<double>(15),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                side: const BorderSide(color: Colors.white),
-              ),
-            ),
-            backgroundColor: MaterialStateProperty.all<Color>(amarilloGolden),
-            overlayColor: MaterialStateProperty.all<Color>(
-              Colors.white.withOpacity(0.1),
-            ),
-          ),
-          onPressed: widget.cambiarNotas,
-          child: const Text(
-            'Notas',
-            style: TextStyle(color: negro),
-          ),
-        ),
+            onPressed: widget.cambiarFavoritos,
+            child: const Icon(Icons.person_2)),
       ],
     );
   }

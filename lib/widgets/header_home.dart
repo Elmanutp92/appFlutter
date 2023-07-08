@@ -17,16 +17,13 @@ class HeaderHome extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              GestureDetector(
-                onTap: () => Navigator.pushNamed(context, '/profile'),
-                child: const CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.person,
-                    color: Colors.black,
-                    size: 40,
-                  ),
+              const CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.person,
+                  color: Colors.black,
+                  size: 40,
                 ),
               ),
               const SizedBox(width: 20),

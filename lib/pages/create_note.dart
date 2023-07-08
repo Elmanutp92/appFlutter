@@ -3,9 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../styles/colors.dart';
+import '../widgets/listtile_drawer.dart';
 
 class CreateNote extends StatefulWidget {
-  const CreateNote({super.key});
+  const CreateNote({
+    super.key,
+  });
 
   @override
   State<CreateNote> createState() => _CreateNoteState();
@@ -78,10 +81,10 @@ class _CreateNoteState extends State<CreateNote> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Éxito'),
-            content: const Text('La nota se agregó correctamente.'),
+            content: const Text('Nota registrada correctamente'),
             actions: [
               TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/tareas'),
+                onPressed: () => Navigator.pushNamed(context, '/home'),
                 child: const Text('Ok'),
               ),
             ],
@@ -136,133 +139,212 @@ class _CreateNoteState extends State<CreateNote> {
       onWillPop: () async {
         return false;
       },
-      child: Scaffold(
-        body: Stack(children: [
-          Container(
-              decoration: const BoxDecoration(),
-              padding: EdgeInsets.all(30),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Crear nota',
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: azulClaro),
-                  ),
-                  const SizedBox(
-                    height: 50,
-                  ),
-                  Form(
-                      key: _formKey,
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Builder(builder: (context) {
+          return Scaffold(
+            endDrawer: const Drawer(
+              backgroundColor: amarilloGolden,
+              // Agrega el contenido del drawer aquí
+              child: ListTileDrawer(),
+            ),
+            body: Builder(builder: (context) {
+              return Stack(children: [
+                SingleChildScrollView(
+                  child: Container(
+                      color: azulBackground,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          TextFormField(
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Por favor ingresa un titulo';
-                              }
-                              return null;
-                            },
-                            controller: tituloController,
-                            style: TextStyle(color: azulClaro),
-                            cursorColor: azulClaro,
-                            decoration: const InputDecoration(
-                              labelStyle: TextStyle(color: azulClaro),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: azulClaro),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: azulClaro),
-                              ),
-                              labelText: 'titulo',
-                              hintText: 'Ingresa el titulo de la nota',
+                          Container(
+                            margin: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height * 0.05),
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.07,
+                            //color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: Row(
+                                    children: [
+                                      IconButton(
+                                          onPressed: () {
+                                            if (_formKey.currentState!
+                                                .validate()) {
+                                              addDataNote(tituloController.text,
+                                                  descripcionController.text);
+                                            }
+                                          },
+                                          icon: Icon(
+                                            Icons.check,
+                                            color: Colors.blue,
+                                            size: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.1,
+                                          )),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.05,
+                                      ),
+                                      IconButton(
+                                          onPressed: () {
+                                            Navigator.pushNamed(
+                                                context, '/home');
+                                          },
+                                          icon: Icon(
+                                            Icons.cancel_sharp,
+                                            color: Colors.red,
+                                            size: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.1,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.menu),
+                                  onPressed: () {
+                                    Scaffold.of(context).openEndDrawer();
+                                  },
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(
-                            height: 30,
+                            height: 40,
                           ),
-                          TextFormField(
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Por favor ingresa tu contraseña';
-                              }
-                              return null;
-                            },
-                            controller: descripcionController,
-                            style: TextStyle(color: azulClaro),
-                            cursorColor: azulClaro,
-                            decoration: const InputDecoration(
-                              labelStyle: TextStyle(color: azulClaro),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: azulClaro),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: azulClaro),
-                              ),
-                              labelText: 'Descripción',
-                              hintText: 'Ingresa la descripción de la nota',
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 60,
-                          ),
-                          ElevatedButton(
-                            style: ButtonStyle(
-                              minimumSize: MaterialStateProperty.all<Size>(
-                                  const Size(double.infinity, 50)),
-                              backgroundColor:
-                                  MaterialStateProperty.all<Color>(azulClaro),
-                            ),
-                            child: const Text('Guardar nota',
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold)),
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                addDataNote(tituloController.text,
-                                    descripcionController.text);
-                              }
-                            },
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/home');
-                              },
-                              child: const Text(
-                                'Cancelar',
-                                style:
-                                    TextStyle(color: azulClaro, fontSize: 20),
+                          Form(
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    //color: Colors.white,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.95,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.15,
+                                    child: TextFormField(
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Por favor ingresa un titulo';
+                                        }
+                                        return null;
+                                      },
+                                      controller: tituloController,
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.2),
+                                      cursorColor: Colors.black,
+                                      maxLines: 1,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        labelStyle: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.2),
+                                        hintText: 'Titulo',
+                                        hintStyle: TextStyle(
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.2),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    // color: Colors.white,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.95,
+                                    height: MediaQuery.of(context).size.height,
+                                    child: TextFormField(
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return 'Por favor ingresa una descripción';
+                                        }
+                                        return null;
+                                      },
+                                      controller: descripcionController,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                          fontSize: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.05),
+                                      cursorColor: Colors.black,
+                                      maxLines: null,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        labelStyle: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.05),
+                                        hintText: 'Descripción',
+                                        hintStyle: TextStyle(
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.05),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 60,
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                ],
                               ))
                         ],
-                      ))
-                ],
-              )),
-          if (isLoading)
-            Container(
-              color: Colors.black.withOpacity(0.5),
-              child: const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Guardando nota...',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    CircularProgressIndicator(
-                      color: Colors.white,
-                    ),
-                  ],
+                      )),
                 ),
-              ),
-            ),
-        ]),
+                if (isLoading)
+                  Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Guardando nota...',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ]);
+            }),
+          );
+        }),
       ),
     );
   }

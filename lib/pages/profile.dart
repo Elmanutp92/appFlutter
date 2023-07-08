@@ -52,133 +52,122 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.all(30),
-        height: double.infinity,
-        width: double.infinity,
-        decoration: const BoxDecoration(),
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width * 0.9,
+        decoration: const BoxDecoration(
+          color: azulBackground,
+        ),
         child: Center(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Perfil de Usuario',
-                style: TextStyle(
-                    fontSize: 34,
-                    fontWeight: FontWeight.bold,
-                    color: azulClaro),
-              ),
-              const SizedBox(height: 56),
-              const Text('Nombres',
-                  style: TextStyle(fontSize: 18, color: azulClaro)),
-              const SizedBox(height: 8),
               Card(
-                elevation: 13,
+                elevation: 6,
                 shape: BeveledRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: azulClaro,
+                    color: azulNavy,
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                   ),
-                  width: 400,
-                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.79,
+                  height: MediaQuery.of(context).size.height * 0.05,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
-                      ' $nombre',
+                      nombre.isNotEmpty ? nombre : 'Cargando...',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * 0.05,
+                          color: Colors.white),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text('Apellidos',
-                  style: TextStyle(fontSize: 18, color: azulClaro)),
-              const SizedBox(height: 8),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
               Card(
-                elevation: 13,
+                elevation: 6,
                 shape: BeveledRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: azulClaro,
+                    color: azulNavy,
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                   ),
-                  width: 400,
-                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.79,
+                  height: MediaQuery.of(context).size.height * 0.05,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
-                      ' $apellido',
+                      apellido.isNotEmpty ? apellido : 'Cargando...',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * 0.05,
+                          color: Colors.white),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text('Telefono',
-                  style: TextStyle(fontSize: 18, color: azulClaro)),
-              const SizedBox(height: 8),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
               Card(
-                elevation: 13,
+                elevation: 6,
                 shape: BeveledRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: azulClaro,
+                    color: azulNavy,
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                   ),
-                  width: 400,
-                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.79,
+                  height: MediaQuery.of(context).size.height * 0.05,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
-                      ' $telefono',
+                      telefono.isNotEmpty ? telefono : 'Cargando...',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * 0.05,
+                          color: Colors.white),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text('Correo Electronico',
-                  style: TextStyle(fontSize: 18, color: azulClaro)),
-              const SizedBox(height: 8),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
               Card(
-                elevation: 13,
+                elevation: 6,
                 shape: BeveledRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Container(
                   decoration: const BoxDecoration(
-                    color: azulClaro,
+                    color: azulNavy,
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                   ),
-                  width: 400,
-                  height: 50,
+                  width: MediaQuery.of(context).size.width * 0.79,
+                  height: MediaQuery.of(context).size.height * 0.05,
                   child: Padding(
                     padding: const EdgeInsets.all(14.0),
                     child: Text(
-                      ' $email',
+                      email!.isNotEmpty ? email! : 'Cargando...',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * 0.05,
+                          color: Colors.white),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 56),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.09),
               ElevatedButton(
                   style: ButtonStyle(
-                    minimumSize:
-                        MaterialStateProperty.all<Size>(const Size(400, 50)),
+                    minimumSize: MaterialStateProperty.all<Size>(Size(
+                        MediaQuery.of(context).size.width * 0.79,
+                        MediaQuery.of(context).size.height * 0.04)),
                     backgroundColor:
-                        MaterialStateProperty.all<Color>(azulClaro),
+                        MaterialStateProperty.all<Color>(Colors.red),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(50.0),
@@ -198,23 +187,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-          fixedColor: azulClaro,
-          elevation: 6,
-          backgroundColor: azulClaro,
-          currentIndex: 2,
-          onTap: (index) {
-            if (index == 0) {
-              Navigator.pushNamed(context, '/home');
-            } else if (index == 1) {
-              Navigator.pushNamed(context, '/tareas');
-            }
-          },
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Inicio'),
-            BottomNavigationBarItem(icon: Icon(Icons.note), label: 'Notas'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
-          ]),
     );
   }
 }
