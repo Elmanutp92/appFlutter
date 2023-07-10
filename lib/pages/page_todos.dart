@@ -1,100 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import 'package:google_fonts/google_fonts.dart';
-import 'package:new_app/styles/button.dart';
 
+import '../styles/button.dart';
 import '../styles/colors.dart';
 
-class PageTareas extends StatefulWidget {
-  const PageTareas({
-    Key? key,
-  }) : super(key: key);
+class PageTodos extends StatefulWidget {
+  const PageTodos({super.key});
 
   @override
-  State<PageTareas> createState() => _PageTareasState();
+  State<PageTodos> createState() => _PageTodosState();
 }
 
-class _PageTareasState extends State<PageTareas> {
+class _PageTodosState extends State<PageTodos> {
   String nombre = '';
   String userId = '';
-  String noteId = '';
+  String tareaId = '';
+  String notaFavoritaId = '';
+  List<Map<String, dynamic>> tareas = [];
+  List<Map<String, dynamic>> tareasFavoritas = [];
   List<Map<String, dynamic>> notas = [];
-
-  Future<void> deleteDataNote(String noteId) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userId)
-          .collection('notas')
-          .doc(noteId)
-          .delete();
-
-      // Verificar si la nota se eliminó correctamente
-      DocumentSnapshot snapshot = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userId)
-          .collection('notas')
-          .doc(noteId)
-          .get();
-
-      if (!snapshot.exists) {
-        // La nota se eliminó correctamente
-        // ignore: use_build_context_synchronously
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Éxito'),
-            content: const Text('La nota se eliminó correctamente.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  //widget.crearNota();
-
-                  Navigator.pop(context);
-                },
-                child: const Text('Ok'),
-              ),
-            ],
-          ),
-        );
-      } else {
-        // La nota no se eliminó correctamente
-        // ignore: use_build_context_synchronously
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Error'),
-            content: const Text('Ha ocurrido un error al eliminar la nota'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Ok'),
-              ),
-            ],
-          ),
-        );
-      }
-    } catch (e) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Error'),
-          content: Text('Ha ocurrido un error al eliminar la nota: $e'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Ok'),
-            ),
-          ],
-        ),
-      );
-      print(e);
-    }
-  }
-
-  // obtener datos
+  List<Map<String, dynamic>> notasFavoritas = [];
+  List<Map<String, dynamic>> todos = [];
 
   Future<void> fetchData() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -114,21 +42,22 @@ class _PageTareasState extends State<PageTareas> {
         });
       }
 
-      QuerySnapshot snapshotNote = await FirebaseFirestore.instance
+      QuerySnapshot snapshotTF = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('notas')
+          .collection('notasFavoritas')
           .get();
-      if (snapshotNote.docs.isNotEmpty) {
+      if (snapshotTF.docs.isNotEmpty) {
         setState(() {
-          notas = snapshotNote.docs.map((doc) {
+          notasFavoritas = snapshotTF.docs.map((doc) {
             final data = doc.data() as Map<String, dynamic>;
-            data['notaId'] =
+            data['notaFavoritaId'] =
                 doc.id; // Agregar el ID de la nota al mapa de datos
             return data;
           }).toList();
         });
       }
+      print(notasFavoritas.length);
     }
   }
 
@@ -149,14 +78,14 @@ class _PageTareasState extends State<PageTareas> {
           children: [
             Stack(
               children: [
-                if (notas.isNotEmpty)
+                if (notasFavoritas.isNotEmpty)
                   SingleChildScrollView(
                     child: Column(
                       children: [
                         Container(
                           child: Center(
                               child: Text(
-                            'Hola $nombre, Estas son tus notas.',
+                            'Hola $nombre, Estas son tus notas Favoritas.',
                             style: GoogleFonts.poppins(
                                 fontSize:
                                     MediaQuery.of(context).size.width * 0.05),
@@ -164,10 +93,10 @@ class _PageTareasState extends State<PageTareas> {
                         ),
                         Container(
                           //color: Colors.white,
-                          height: MediaQuery.of(context).size.height * 0.45,
+                          height: MediaQuery.of(context).size.height * 0.43,
                           width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
-                            itemCount: notas.length,
+                            itemCount: notasFavoritas.length,
                             itemBuilder: (context, index) {
                               return Container(
                                 //color: Colors.red,
@@ -184,7 +113,7 @@ class _PageTareasState extends State<PageTareas> {
                                             ),
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                  color: amarilloGolden,
+                                                  color: Colors.white,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           20)),
@@ -213,7 +142,8 @@ class _PageTareasState extends State<PageTareas> {
                                                                 .height *
                                                             0.06,
                                                     child: Text(
-                                                      notas[index]['titulo'],
+                                                      notasFavoritas[index]
+                                                          ['titulo'],
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -250,7 +180,7 @@ class _PageTareasState extends State<PageTareas> {
                                                                   .height *
                                                               0.32,
                                                       child: Text(
-                                                        notas[index]
+                                                        notasFavoritas[index]
                                                             ['descripcion'],
                                                         style: TextStyle(
                                                           fontSize: 16.0,
@@ -280,24 +210,20 @@ class _PageTareasState extends State<PageTareas> {
                                       },
                                       child: Card(
                                         elevation: 6,
-                                        color: amarilloGolden,
+                                        color: Colors.white,
                                         child: ListTile(
-                                          trailing: IconButton(
-                                            onPressed: () {
-                                              deleteDataNote(
-                                                  notas[index]['notaId']);
-                                            },
-                                            icon: const Icon(Icons.delete),
-                                          ),
+                                          trailing: Icon(Icons.star,
+                                              color: amarilloGolden, size: 40),
                                           title: Flexible(
                                             child: Text(
-                                              notas[index]['titulo'],
+                                              notasFavoritas[index]['titulo'],
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                           subtitle: Flexible(
                                             child: Text(
-                                              notas[index]['descripcion'],
+                                              notasFavoritas[index]
+                                                  ['descripcion'],
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
@@ -317,7 +243,7 @@ class _PageTareasState extends State<PageTareas> {
                       ],
                     ),
                   ),
-                if (notas.isEmpty)
+                if (notasFavoritas.isEmpty)
                   Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -8,6 +10,16 @@ class HeaderHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color getRandomColor() {
+      Random random = Random();
+      return Color.fromRGBO(
+        random.nextInt(256),
+        random.nextInt(256),
+        random.nextInt(256),
+        1.0,
+      );
+    }
+
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.1,
       width: MediaQuery.of(context).size.width * 0.95,
@@ -17,14 +29,17 @@ class HeaderHome extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 30,
                 backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.person,
-                  color: Colors.black,
-                  size: 40,
-                ),
+                child: Text(
+                    (nombre.isNotEmpty ? nombre[0] : '?') +
+                        (apellido.isNotEmpty ? apellido[0] : '?'),
+                    style: GoogleFonts.poppins(
+                      color: Colors.black,
+                      fontSize: MediaQuery.of(context).size.width * 0.05,
+                      fontWeight: FontWeight.normal,
+                    )),
               ),
               const SizedBox(width: 20),
               Text(

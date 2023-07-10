@@ -2,19 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:new_app/pages/page_tarea_pink.dart';
 
 import 'package:new_app/pages/page_tareas.dart';
+import 'package:new_app/pages/page_todos.dart';
 import 'package:new_app/pages/profile.dart';
 
 import 'package:new_app/widgets/buscar.dart';
 import 'package:new_app/widgets/header_home.dart';
 import 'package:new_app/widgets/stack/info_app.dart';
 
-import 'package:new_app/widgets/stack/tareas.dart';
-
 import '../styles/colors.dart';
 import '../widgets/listtile_drawer.dart';
-import '../widgets/stack/todos.dart';
+
 import '../widgets/switch_buttons.dart';
 
 class Home extends StatefulWidget {
@@ -30,8 +30,8 @@ class _HomeState extends State<Home> {
   bool crearTarea = false;
   bool crearNota = false;
   // *******************************
-  bool todos = true;
-  bool favoritos = false;
+  bool todos = false;
+  bool perfil = false;
   bool tareas = false;
   bool notas = false;
 
@@ -122,10 +122,10 @@ class _HomeState extends State<Home> {
                     const SizedBox(height: 20),
                     SwitchButtons(
                       todos: todos,
-                      favoritos: favoritos,
+                      favoritos: perfil,
                       tareas: tareas,
                       notas: notas,
-                      cambiarFavoritos: cambiarFavoritos,
+                      cambiarFavoritos: cambiarPerfil,
                       cambiarNotas: cambiarNotas,
                       cambiarTareas: cambiarTareas,
                       cambiarTodos: cambiarTodos,
@@ -138,26 +138,19 @@ class _HomeState extends State<Home> {
                       height: 20,
                     ),
                     Container(
-                      height: MediaQuery.of(context).size.height * 0.56,
+                      height: MediaQuery.of(context).size.height * 0.55,
                       width: MediaQuery.of(context).size.width * 0.9,
                       child: Stack(
                         children: [
                           // Lista se Todos
-                          if (todos)
-                            TodosHome(
-                              nombre: nombre,
-                            ),
-                          if (tareas) TareasHome(nombre: nombre),
-                          if (favoritos) ProfilePage(),
-                          if (notas)
-                            PageTareas(
-                              crearNota: crearNotaSet,
-                              pageTareas: pageTareas,
-                            ),
+                          if (todos) const PageTodos(),
+                          if (tareas) const PageTareaPink(),
+                          if (perfil) const ProfilePage(),
+                          if (notas) const PageTareas(),
 
                           // NotasHome(nombre: nombre),
                           if (!notas &&
-                              !favoritos &&
+                              !perfil &&
                               !tareas &&
                               !todos &&
                               !crearNota)
@@ -205,7 +198,7 @@ class _HomeState extends State<Home> {
   void cambiarTodos() {
     setState(() {
       !todos ? todos = true : todos = false;
-      favoritos = false;
+      perfil = false;
       tareas = false;
       notas = false;
     });
@@ -215,7 +208,7 @@ class _HomeState extends State<Home> {
     setState(() {
       crearNota = false;
       todos = false;
-      favoritos = false;
+      perfil = false;
       !tareas ? tareas = true : tareas = false;
       notas = false;
     });
@@ -225,16 +218,16 @@ class _HomeState extends State<Home> {
     setState(() {
       crearTarea = false;
       todos = false;
-      favoritos = false;
+      perfil = false;
       tareas = false;
       !notas ? notas = true : notas = false;
     });
   }
 
-  void cambiarFavoritos() {
+  void cambiarPerfil() {
     setState(() {
       todos = false;
-      !favoritos ? favoritos = true : favoritos = false;
+      !perfil ? perfil = true : perfil = false;
       tareas = false;
       notas = false;
     });

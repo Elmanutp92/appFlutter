@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:new_app/firebase_options.dart';
 import 'package:new_app/pages/create_note.dart';
+import 'package:new_app/pages/create_tarea.dart';
 
 import 'package:new_app/pages/data_page.dart';
 import 'package:new_app/pages/home.dart';
@@ -29,6 +30,7 @@ void main() async {
       '/datapage': (context) => const DataPage(),
       '/profile': (context) => const ProfilePage(),
       '/createNota': (context) => const CreateNote(),
+      '/createTarea': (context) => const CreateTarea(),
     },
   ));
 }

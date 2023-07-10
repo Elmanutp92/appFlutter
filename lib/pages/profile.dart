@@ -51,30 +51,29 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width * 0.9,
-        decoration: const BoxDecoration(
-          color: azulBackground,
-        ),
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Card(
-                elevation: 6,
-                shape: BeveledRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: azulNavy,
-                    borderRadius: BorderRadius.all(Radius.circular(50)),
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width * 0.9,
+          decoration: const BoxDecoration(
+            color: azulBackground,
+          ),
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Card(
+                  elevation: 6,
+                  shape: BeveledRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
                   ),
-                  width: MediaQuery.of(context).size.width * 0.79,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: azulNavy,
+                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.79,
+                    height: MediaQuery.of(context).size.height * 0.05,
                     child: Text(
                       nombre.isNotEmpty ? nombre : 'Cargando...',
                       textAlign: TextAlign.center,
@@ -84,22 +83,19 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-              Card(
-                elevation: 6,
-                shape: BeveledRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: azulNavy,
-                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                Card(
+                  elevation: 6,
+                  shape: BeveledRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
                   ),
-                  width: MediaQuery.of(context).size.width * 0.79,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: azulNavy,
+                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.79,
+                    height: MediaQuery.of(context).size.height * 0.05,
                     child: Text(
                       apellido.isNotEmpty ? apellido : 'Cargando...',
                       textAlign: TextAlign.center,
@@ -109,22 +105,19 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-              Card(
-                elevation: 6,
-                shape: BeveledRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: azulNavy,
-                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                Card(
+                  elevation: 6,
+                  shape: BeveledRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
                   ),
-                  width: MediaQuery.of(context).size.width * 0.79,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: azulNavy,
+                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.79,
+                    height: MediaQuery.of(context).size.height * 0.05,
                     child: Text(
                       telefono.isNotEmpty ? telefono : 'Cargando...',
                       textAlign: TextAlign.center,
@@ -134,22 +127,19 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-              Card(
-                elevation: 6,
-                shape: BeveledRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: azulNavy,
-                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                Card(
+                  elevation: 6,
+                  shape: BeveledRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
                   ),
-                  width: MediaQuery.of(context).size.width * 0.79,
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  child: Padding(
-                    padding: const EdgeInsets.all(14.0),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: azulNavy,
+                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                    ),
+                    width: MediaQuery.of(context).size.width * 0.79,
+                    height: MediaQuery.of(context).size.height * 0.05,
                     child: Text(
                       email!.isNotEmpty ? email! : 'Cargando...',
                       textAlign: TextAlign.center,
@@ -159,31 +149,31 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                 ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.09),
-              ElevatedButton(
-                  style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all<Size>(Size(
-                        MediaQuery.of(context).size.width * 0.79,
-                        MediaQuery.of(context).size.height * 0.04)),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.red),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.0),
+                SizedBox(height: MediaQuery.of(context).size.height * 0.09),
+                ElevatedButton(
+                    style: ButtonStyle(
+                      minimumSize: MaterialStateProperty.all<Size>(Size(
+                          MediaQuery.of(context).size.width * 0.79,
+                          MediaQuery.of(context).size.height * 0.04)),
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.red),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50.0),
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () {
-                    logout(context);
-                  },
-                  child: const Text(
-                    'Cerrar sesión',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ))
-            ],
+                    onPressed: () {
+                      logout(context);
+                    },
+                    child: const Text(
+                      'Cerrar sesión',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ))
+              ],
+            ),
           ),
         ),
       ),

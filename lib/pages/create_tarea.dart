@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 import '../styles/colors.dart';
 import '../widgets/listtile_drawer.dart';
 
-class CreateNote extends StatefulWidget {
-  const CreateNote({
+class CreateTarea extends StatefulWidget {
+  const CreateTarea({
     super.key,
   });
 
   @override
-  State<CreateNote> createState() => _CreateNoteState();
+  State<CreateTarea> createState() => _CreateTareaState();
 }
 
-class _CreateNoteState extends State<CreateNote> {
+class _CreateTareaState extends State<CreateTarea> {
   bool isFavorite = false;
   bool isLoading = false;
   TextEditingController tituloController = TextEditingController();
@@ -32,8 +32,8 @@ class _CreateNoteState extends State<CreateNote> {
   String nombre = '';
   String userId = '';
   String email = '';
-  String noteId = '';
-  String notaFavoritaId = '';
+  String tareaId = '';
+  String tareaFavoritaId = '';
 
   @override
   void initState() {
@@ -46,22 +46,22 @@ class _CreateNoteState extends State<CreateNote> {
   }
 
 // agregar nota
-  Future<void> addDataNote(String titulo, String descripcion) async {
+  Future<void> addDataTarea(String titulo, String descripcion) async {
     setState(() {
       isLoading = true;
     });
-    final dataNote = {
+    final dataTarea = {
       'titulo': titulo,
       'descripcion': descripcion,
-      'noteId': noteId
+      'tareaId': tareaId
     };
 
     try {
       DocumentReference noteRef = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('notas')
-          .add(dataNote);
+          .collection('tareas')
+          .add(dataTarea);
 
       setState(() {
         isLoading = false;
@@ -73,7 +73,7 @@ class _CreateNoteState extends State<CreateNote> {
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('notas')
+          .collection('tareas')
           .doc(noteId)
           .get();
 
@@ -83,7 +83,7 @@ class _CreateNoteState extends State<CreateNote> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Éxito'),
-            content: const Text('Nota registrada correctamente'),
+            content: const Text('Tarea registrada correctamente'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pushNamed(context, '/home'),
@@ -98,7 +98,7 @@ class _CreateNoteState extends State<CreateNote> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Error'),
-            content: const Text('Ha ocurrido un error al registrar la nota'),
+            content: const Text('Ha ocurrido un error al registrar la Tarea'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -113,7 +113,7 @@ class _CreateNoteState extends State<CreateNote> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: Text('Ha ocurrido un error al registrar la nota: $e'),
+          content: Text('Ha ocurrido un error al registrar la Tarea: $e'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -127,35 +127,35 @@ class _CreateNoteState extends State<CreateNote> {
   }
 
   // Agregar nota favorita
-  Future<void> addDataNoteFavorite(String titulo, String descripcion) async {
+  Future<void> addDataTareaFavorite(String titulo, String descripcion) async {
     setState(() {
       isLoading = true;
     });
-    final dataNoteFavorite = {
+    final dataTareaFavorite = {
       'titulo': titulo,
       'descripcion': descripcion,
-      'notaFavoritaId': notaFavoritaId
+      'tareaFavoritaId': tareaFavoritaId
     };
 
     try {
       DocumentReference noteRef = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('notasFavoritas')
-          .add(dataNoteFavorite);
+          .collection('tareasFavoritas')
+          .add(dataTareaFavorite);
 
       setState(() {
         isLoading = false;
       });
 
-      String notaFavoritaId = noteRef.id;
+      String tareaFavoriteId = noteRef.id;
 
       // Verificar si los datos se agregaron correctamente
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('notasFavoritas')
-          .doc(notaFavoritaId)
+          .collection('tareasFavoritas')
+          .doc(tareaFavoriteId)
           .get();
 
       if (snapshot.exists) {
@@ -164,7 +164,7 @@ class _CreateNoteState extends State<CreateNote> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Éxito'),
-            content: const Text('Nota registrada correctamente en FAVORITOS'),
+            content: const Text('Tarea registrada correctamente en FAVORITOS'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pushNamed(context, '/home'),
@@ -180,7 +180,7 @@ class _CreateNoteState extends State<CreateNote> {
           builder: (context) => AlertDialog(
             title: const Text('Error'),
             content: const Text(
-                'Ha ocurrido un error al registrar la nota en FAVORITOS'),
+                'Ha ocurrido un error al registrar la tarea en FAVORITOS'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -196,7 +196,7 @@ class _CreateNoteState extends State<CreateNote> {
         builder: (context) => AlertDialog(
           title: const Text('Error'),
           content: Text(
-              'Ha ocurrido un error al registrar la nota en FAVORITOS: $e'),
+              'Ha ocurrido un error al registrar la tarea en FAVORITOS: $e'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -225,7 +225,8 @@ class _CreateNoteState extends State<CreateNote> {
       onWillPop: () async {
         return false;
       },
-      child: SizedBox(
+      child: Container(
+        color: azulBackground,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Builder(builder: (context) {
@@ -248,12 +249,12 @@ class _CreateNoteState extends State<CreateNote> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: amarilloGolden,
+                              color: rosaClaro,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             height: MediaQuery.of(context).size.height * 0.02,
                             width: MediaQuery.of(context).size.width * 0.20,
-                            child: const Text('Nota',
+                            child: const Text('Tarea',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
@@ -298,9 +299,10 @@ class _CreateNoteState extends State<CreateNote> {
                                     onPressed: () {
                                       if (_formKey.currentState!.validate()) {
                                         !isFavorite
-                                            ? addDataNote(tituloController.text,
+                                            ? addDataTarea(
+                                                tituloController.text,
                                                 descripcionController.text)
-                                            : addDataNoteFavorite(
+                                            : addDataTareaFavorite(
                                                 tituloController.text,
                                                 descripcionController.text);
                                       }
@@ -427,7 +429,7 @@ class _CreateNoteState extends State<CreateNote> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Guardando nota...',
+                            'Guardando tarea...',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
