@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:new_app/styles/button.dart';
+import 'package:new_app/pages/edit_tarea.dart';
 
 import '../styles/colors.dart';
 
@@ -17,17 +17,18 @@ class PageTareaPink extends StatefulWidget {
 }
 
 class _PageTareaPinkState extends State<PageTareaPink> {
+  bool isLoading = false;
   String nombre = '';
   String userId = '';
   String tareaId = '';
   List<Map<String, dynamic>> tareas = [];
 
-  Future<void> deleteDataNote(String tareaId) async {
+  Future<void> deleteDataTarea(String tareaId) async {
     try {
       await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('notas')
+          .collection('tareas')
           .doc(tareaId)
           .delete();
 
@@ -159,19 +160,21 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                           Container(
                             child: Center(
                                 child: Text(
-                              'Hola $nombre, Estas son tus tareas.',
+                              'Hola $nombre, Estas son tus notas.',
                               style: GoogleFonts.poppins(
                                   fontSize:
                                       MediaQuery.of(context).size.width * 0.05),
                             )),
                           ),
                           Container(
-                            height: MediaQuery.of(context).size.height * 0.4,
+                            //color: Colors.white,
+                            height: MediaQuery.of(context).size.height * 0.45,
                             width: MediaQuery.of(context).size.width,
                             child: ListView.builder(
                               itemCount: tareas.length,
                               itemBuilder: (context, index) {
                                 return Container(
+                                  //color: Colors.red,
                                   child: Column(
                                     children: [
                                       GestureDetector(
@@ -185,7 +188,7 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                                               ),
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                    color: rosaClaro,
+                                                    color: amarilloGolden,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             20)),
@@ -282,30 +285,98 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                                           );
                                         },
                                         child: Card(
-                                          elevation: 6,
-                                          color: rosaClaro,
-                                          child: ListTile(
-                                            trailing: IconButton(
-                                              onPressed: () {
-                                                deleteDataNote(
-                                                    tareas[index]['notaId']);
-                                              },
-                                              icon: const Icon(Icons.delete),
-                                            ),
-                                            title: Flexible(
-                                              child: Text(
-                                                tareas[index]['titulo'],
-                                                overflow: TextOverflow.ellipsis,
+                                            elevation: 6,
+                                            color: rosaClaro,
+                                            child: ListTile(
+                                              trailing: Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.2,
+                                                child: Row(
+                                                  children: [
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    EditTarea(
+                                                              tareaId: tareas[
+                                                                      index]
+                                                                  ['tareaId'],
+                                                              titulo: tareas[
+                                                                      index]
+                                                                  ['titulo'],
+                                                              descripcion: tareas[
+                                                                      index][
+                                                                  'descripcion'],
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.edit),
+                                                    ),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        showDialog(
+                                                            context: context,
+                                                            builder:
+                                                                (context) =>
+                                                                    AlertDialog(
+                                                                      title: Text(isLoading
+                                                                          ? 'Espera un momento'
+                                                                          : '¿Estas seguro?'),
+                                                                      content: Text(isLoading
+                                                                          ? 'Estamos eliminando tu tarea...'
+                                                                          : '¿Quieres eliminar esta tarea?'),
+                                                                      actions: [
+                                                                        TextButton(
+                                                                            onPressed:
+                                                                                () {
+                                                                              Navigator.pop(context);
+                                                                            },
+                                                                            child:
+                                                                                const Text('Cancelar')),
+                                                                        TextButton(
+                                                                            onPressed:
+                                                                                () {
+                                                                              Navigator.pop(context);
+
+                                                                              deleteDataTarea(tareas[index]['tareaId']);
+
+                                                                              setState(() {
+                                                                                tareas.removeAt(index);
+                                                                              });
+                                                                            },
+                                                                            child:
+                                                                                const Text('Eliminar')),
+                                                                      ],
+                                                                    ));
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.delete),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            subtitle: Flexible(
-                                              child: Text(
-                                                tareas[index]['descripcion'],
-                                                overflow: TextOverflow.ellipsis,
+                                              title: Flexible(
+                                                child: Text(
+                                                  tareas[index]['titulo'],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                        ),
+                                              subtitle: Flexible(
+                                                child: Text(
+                                                  tareas[index]['descripcion'],
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            )),
                                       ),
                                       SizedBox(
                                           height: MediaQuery.of(context)
@@ -326,23 +397,14 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text('Hola $nombre, Actualmente No tienes tareas.',
+                          Text('Hola $nombre, Actualmente No tienes Tareas.',
                               style: const TextStyle(fontSize: 20)),
-                          const SizedBox(height: 20),
-                          const Icon(Icons.error, size: 100, color: azulClaro),
-                          const SizedBox(height: 5),
                         ],
                       ),
                     ),
                 ],
               ),
               //SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-              ButtonHome(
-                  color: rosaClaro,
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/createTarea');
-                  },
-                  btntxt: 'Crear Tarea')
             ],
           ),
         ),

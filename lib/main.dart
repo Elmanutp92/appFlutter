@@ -5,6 +5,7 @@ import 'package:new_app/pages/create_note.dart';
 import 'package:new_app/pages/create_tarea.dart';
 
 import 'package:new_app/pages/data_page.dart';
+
 import 'package:new_app/pages/home.dart';
 import 'package:new_app/pages/login.dart';
 
@@ -21,7 +22,7 @@ void main() async {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: MyApp(),
+    home: const MyApp(),
     initialRoute: '/',
     routes: {
       '/login': (context) => const LoginPage(),

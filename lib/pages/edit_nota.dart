@@ -5,20 +5,24 @@ import 'package:flutter/material.dart';
 import '../styles/colors.dart';
 import '../widgets/listtile_drawer.dart';
 
-class CreateNote extends StatefulWidget {
-  const CreateNote({
+class EditNote extends StatefulWidget {
+  final String notaId;
+  final String titulo;
+  final String descripcion;
+  const EditNote({
     super.key,
+    required this.notaId,
+    required this.titulo,
+    required this.descripcion,
   });
 
   @override
-  State<CreateNote> createState() => _CreateNoteState();
+  State<EditNote> createState() => _EditNoteState();
 }
 
-class _CreateNoteState extends State<CreateNote> {
+class _EditNoteState extends State<EditNote> {
   bool isFavorite = false;
   bool isLoading = false;
-  String noteId = '';
-  String notaFavoritaId = '';
   TextEditingController tituloController = TextEditingController();
   TextEditingController descripcionController = TextEditingController();
 
@@ -34,10 +38,18 @@ class _CreateNoteState extends State<CreateNote> {
   String nombre = '';
   String userId = '';
   String email = '';
+  String notaFavoritaId = '';
 
   @override
   void initState() {
     super.initState();
+
+    //********************** */
+    print('Titulo: ${widget.titulo} ');
+    print('Descripción: ${widget.descripcion} ');
+    print('NotaId: ${widget.notaId} ');
+    tituloController.text = widget.titulo;
+    descripcionController.text = widget.descripcion;
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       userId = user.uid;
@@ -46,38 +58,38 @@ class _CreateNoteState extends State<CreateNote> {
   }
 
 // agregar nota
-  Future<void> addDataNote(String titulo, String descripcion) async {
+  Future<void> editDataNote(
+      String titulo, String descripcion, String notaId) async {
     setState(() {
       isLoading = true;
     });
     final dataNote = {
       'titulo': titulo,
       'descripcion': descripcion,
-      'isFavorite': false,
+      'noteId': notaId,
       'clase': 'nota',
-      //'noteId': noteId
+      'isFavorite': false,
     };
 
     try {
-      DocumentReference noteRef = await FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
           .collection('notas')
-          .add(dataNote);
+          .doc(notaId)
+          .set(dataNote);
 
       setState(() {
         isLoading = false;
-        noteId = noteRef.id;
       });
 
-      print('noteId: $noteId');
-
       // Verificar si los datos se agregaron correctamente
+
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
           .collection('notas')
-          .doc(noteId)
+          .doc(notaId)
           .get();
 
       if (snapshot.exists) {
@@ -86,7 +98,7 @@ class _CreateNoteState extends State<CreateNote> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Éxito'),
-            content: const Text('Nota registrada correctamente'),
+            content: const Text('Nota editada correctamente'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pushNamed(context, '/home'),
@@ -101,7 +113,7 @@ class _CreateNoteState extends State<CreateNote> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Error'),
-            content: const Text('Ha ocurrido un error al registrar la nota'),
+            content: const Text('Ha ocurrido un error al editar la nota'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -116,7 +128,81 @@ class _CreateNoteState extends State<CreateNote> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: Text('Ha ocurrido un error al registrar la nota: $e'),
+          content: Text('Ha ocurrido un error al editar la nota: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Ok'),
+            ),
+          ],
+        ),
+      );
+      print(e);
+    }
+  }
+
+//************   */
+  Future<void> deleteDataNote(String notaId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId)
+          .collection('notas')
+          .doc(notaId)
+          .delete();
+
+      // Verificar si la nota se eliminó correctamente
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId)
+          .collection('notas')
+          .doc(notaId)
+          .get();
+
+      //if (snapshot.exists ) {
+      // La nota se eliminó correctamente
+      // ignore: use_build_context_synchronously
+      /* showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Éxito'),
+            content: const Text('La nota se eliminó correctamente.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  //widget.crearNota();
+
+                  Navigator.pop(context);
+                },
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );*/
+      // }
+      if (snapshot.exists) {
+        // La nota no se eliminó correctamente
+        // ignore: use_build_context_synchronously
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Ha ocurrido un error al eliminar la nota'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text('Ha ocurrido un error al eliminar la nota: $e'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -137,8 +223,9 @@ class _CreateNoteState extends State<CreateNote> {
     final dataNoteFavorite = {
       'titulo': titulo,
       'descripcion': descripcion,
-      'isFavorite': true,
+      'notaFavoritaId': notaFavoritaId,
       'clase': 'nota',
+      'isFavorite': true,
     };
 
     try {
@@ -151,6 +238,7 @@ class _CreateNoteState extends State<CreateNote> {
       setState(() {
         isLoading = false;
       });
+
       String notaFavoritaId = noteRef.id;
 
       // Verificar si los datos se agregaron correctamente
@@ -301,11 +389,16 @@ class _CreateNoteState extends State<CreateNote> {
                                     onPressed: () {
                                       if (_formKey.currentState!.validate()) {
                                         !isFavorite
-                                            ? addDataNote(tituloController.text,
-                                                descripcionController.text)
-                                            : addDataNoteFavorite(
+                                            ? editDataNote(
                                                 tituloController.text,
-                                                descripcionController.text);
+                                                descripcionController.text,
+                                                widget.notaId)
+                                            : (
+                                                addDataNoteFavorite(
+                                                    tituloController.text,
+                                                    descripcionController.text),
+                                                deleteDataNote(widget.notaId)
+                                              );
                                       }
                                     },
                                     icon: Icon(
@@ -326,8 +419,8 @@ class _CreateNoteState extends State<CreateNote> {
                                 children: [
                                   Container(
                                     //color: Colors.white,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.95,
+                                    width:
+                                        MediaQuery.of(context).size.width * 1,
                                     height: MediaQuery.of(context).size.height *
                                         0.15,
                                     child: TextFormField(

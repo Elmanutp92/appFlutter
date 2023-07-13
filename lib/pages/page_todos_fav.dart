@@ -1,28 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../styles/colors.dart';
 
-class PageTodos extends StatefulWidget {
-  const PageTodos({super.key});
+class PageTodosFav extends StatefulWidget {
+  const PageTodosFav({super.key});
 
   @override
-  State<PageTodos> createState() => _PageTodosState();
+  State<PageTodosFav> createState() => _PageTodosFavState();
 }
 
-class _PageTodosState extends State<PageTodos> {
+class _PageTodosFavState extends State<PageTodosFav> {
   String nombre = '';
   String userId = '';
   String tareaId = '';
   String notaFavoritaId = '';
-  List<Map<String, dynamic>> tareas = [];
+
   List<Map<String, dynamic>> tareasFavoritas = [];
-  List<Map<String, dynamic>> notas = [];
+
   List<Map<String, dynamic>> notasFavoritas = [];
-  List<Map<String, dynamic>> todos = [];
+  List<Map<String, dynamic>> apuntesFavoritos = [];
 
   Future<void> fetchData() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -41,7 +40,7 @@ class _PageTodosState extends State<PageTodos> {
           nombre = userData['nombre'] ?? '';
         });
       }
-// obtener las notas favoritas
+
       QuerySnapshot snapshotNF = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
@@ -57,23 +56,7 @@ class _PageTodosState extends State<PageTodos> {
           }).toList();
         });
       }
-// obtener las notas
-      QuerySnapshot snapshotNotas = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userId)
-          .collection('notas')
-          .get();
-      if (snapshotNotas.docs.isNotEmpty) {
-        setState(() {
-          notas = snapshotNotas.docs.map((doc) {
-            final data = doc.data() as Map<String, dynamic>;
-            data['notaFavoritaId'] =
-                doc.id; // Agregar el ID de la nota al mapa de datos
-            return data;
-          }).toList();
-        });
-      }
-      // obtener las tareas favoritas
+      // *********
       QuerySnapshot snapshotTF = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
@@ -89,24 +72,9 @@ class _PageTodosState extends State<PageTodos> {
           }).toList();
         });
       }
-// obtener las tareas
-      QuerySnapshot snapshotTareas = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userId)
-          .collection('tareas')
-          .get();
-      if (snapshotTareas.docs.isNotEmpty) {
-        setState(() {
-          tareas = snapshotTareas.docs.map((doc) {
-            final data = doc.data() as Map<String, dynamic>;
-            data['tareaId'] =
-                doc.id; // Agregar el ID de la nota al mapa de datos
-            return data;
-          }).toList();
-        });
-      }
+
       setState(() {
-        todos = [...tareas, ...tareasFavoritas, ...notas, ...notasFavoritas];
+        apuntesFavoritos = [...notasFavoritas, ...tareasFavoritas];
       });
     }
   }
@@ -128,14 +96,14 @@ class _PageTodosState extends State<PageTodos> {
           children: [
             Stack(
               children: [
-                if (todos.isNotEmpty)
+                if (apuntesFavoritos.isNotEmpty)
                   SingleChildScrollView(
                     child: Column(
                       children: [
                         Container(
                           child: Center(
                               child: Text(
-                            'Hola $nombre, Estos son todos tus apuntes.',
+                            'Hola $nombre, Estos son tus apuntes Favoritos.',
                             style: GoogleFonts.poppins(
                                 fontSize:
                                     MediaQuery.of(context).size.width * 0.05),
@@ -146,7 +114,7 @@ class _PageTodosState extends State<PageTodos> {
                           height: MediaQuery.of(context).size.height * 0.43,
                           width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
-                            itemCount: todos.length,
+                            itemCount: apuntesFavoritos.length,
                             itemBuilder: (context, index) {
                               return Container(
                                 //color: Colors.red,
@@ -163,19 +131,7 @@ class _PageTodosState extends State<PageTodos> {
                                             ),
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                  color: todos[index]
-                                                              ['isFavorite'] ==
-                                                          true
-                                                      ? Colors.white
-                                                      : (todos[index]
-                                                                  ['clase'] ==
-                                                              'nota')
-                                                          ? amarilloGolden
-                                                          : (todos[index][
-                                                                      'clase'] ==
-                                                                  'tarea')
-                                                              ? rosaClaro
-                                                              : Colors.red,
+                                                  color: Colors.white,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           20)),
@@ -204,7 +160,8 @@ class _PageTodosState extends State<PageTodos> {
                                                                 .height *
                                                             0.06,
                                                     child: Text(
-                                                      todos[index]['titulo'],
+                                                      apuntesFavoritos[index]
+                                                          ['titulo'],
                                                       textAlign:
                                                           TextAlign.center,
                                                       style: TextStyle(
@@ -241,7 +198,7 @@ class _PageTodosState extends State<PageTodos> {
                                                                   .height *
                                                               0.32,
                                                       child: Text(
-                                                        todos[index]
+                                                        apuntesFavoritos[index]
                                                             ['descripcion'],
                                                         style: TextStyle(
                                                           fontSize: 16.0,
@@ -271,19 +228,13 @@ class _PageTodosState extends State<PageTodos> {
                                       },
                                       child: Card(
                                         elevation: 6,
-                                        color: todos[index]['isFavorite'] ==
-                                                true
-                                            ? Colors.white
-                                            : (todos[index]['clase'] == 'nota')
-                                                ? amarilloGolden
-                                                : (todos[index]['clase'] ==
-                                                        'tarea')
-                                                    ? rosaClaro
-                                                    : Colors.red,
+                                        color: Colors.white,
                                         child: ListTile(
-                                          trailing: todos[index]['isFavorite'] ==
+                                          trailing: apuntesFavoritos[index]
+                                                          ['isFavorite'] ==
                                                       true &&
-                                                  todos[index]['clase'] ==
+                                                  apuntesFavoritos[index]
+                                                          ['clase'] ==
                                                       'nota'
                                               ? Container(
                                                   width: MediaQuery.of(context)
@@ -315,8 +266,11 @@ class _PageTodosState extends State<PageTodos> {
                                                     ],
                                                   ),
                                                 )
-                                              : todos[index]['isFavorite'] == true &&
-                                                      todos[index]['clase'] ==
+                                              : apuntesFavoritos[index]
+                                                              ['isFavorite'] ==
+                                                          true &&
+                                                      apuntesFavoritos[index]
+                                                              ['clase'] ==
                                                           'tarea'
                                                   ? Container(
                                                       width:
@@ -351,37 +305,17 @@ class _PageTodosState extends State<PageTodos> {
                                                         ],
                                                       ),
                                                     )
-                                                  : (todos[index]['clase'] == 'nota'
-                                                      ? Container(
-                                                          width: MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.1,
-                                                          height:
-                                                              MediaQuery.of(context)
-                                                                      .size
-                                                                      .height *
-                                                                  0.1,
-                                                          child: const Text(
-                                                              'Nota'))
-                                                      : (todos[index]['clase'] ==
-                                                              'tarea'
-                                                          ? Container(
-                                                              width: MediaQuery.of(context).size.width * 0.1,
-                                                              height: MediaQuery.of(context).size.height * 0.1,
-                                                              child: const Text('Tarea'))
-                                                          : null)),
+                                                  : null,
                                           title: Flexible(
                                             child: Text(
-                                              todos[index]['titulo'] ??
-                                                  '', // Verifica si 'titulo' es null
+                                              apuntesFavoritos[index]['titulo'],
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                           subtitle: Flexible(
                                             child: Text(
-                                              todos[index]['descripcion'] ??
-                                                  '', // Verifica si 'descripcion' es null
+                                              apuntesFavoritos[index]
+                                                  ['descripcion'],
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
@@ -401,13 +335,13 @@ class _PageTodosState extends State<PageTodos> {
                       ],
                     ),
                   ),
-                if (todos.isEmpty)
+                if (apuntesFavoritos.isEmpty)
                   Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                            'Hola $nombre, Actualmente No tienes ningun item en ninguna de tus listas.',
+                            'Hola $nombre, Actualmente No tienes Apuntes marcados como Favoritos.',
                             style: const TextStyle(fontSize: 20)),
                       ],
                     ),
@@ -415,41 +349,6 @@ class _PageTodosState extends State<PageTodos> {
               ],
             ),
             //SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-            const Spacer(),
-            SpeedDial(
-              direction: SpeedDialDirection.up,
-              backgroundColor: Colors.transparent,
-              foregroundColor: Colors.black,
-              elevation: 0,
-              overlayColor: Colors.black.withOpacity(0.5),
-              overlayOpacity: 0.5,
-              icon: Icons.add,
-              activeIcon: Icons.close,
-              children: [
-                SpeedDialChild(
-                  child: Icon(Icons.task,
-                      color: rosaClaro,
-                      size: MediaQuery.of(context).size.width * 0.1),
-                  backgroundColor: Colors.transparent,
-                  label: 'Crear Tarea',
-                  labelStyle: TextStyle(fontSize: 20),
-                  onTap: () {
-                    Navigator.pushNamed(context, '/createTarea');
-                  },
-                ),
-                SpeedDialChild(
-                  child: Icon(Icons.note,
-                      color: amarilloGolden,
-                      size: MediaQuery.of(context).size.width * 0.1),
-                  backgroundColor: Colors.transparent,
-                  label: 'Crear Nota',
-                  labelStyle: TextStyle(fontSize: 20),
-                  onTap: () {
-                    Navigator.pushNamed(context, '/createNota');
-                  },
-                ),
-              ],
-            ),
           ],
         ),
       ),

@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:new_app/styles/button.dart';
 
 import '../styles/colors.dart';
+import 'edit_nota.dart';
 
 class PageTareas extends StatefulWidget {
   const PageTareas({
@@ -17,6 +17,8 @@ class PageTareas extends StatefulWidget {
 }
 
 class _PageTareasState extends State<PageTareas> {
+  bool deleteEdit = false;
+  bool isLoading = false;
   String nombre = '';
   String userId = '';
   String noteId = '';
@@ -31,6 +33,10 @@ class _PageTareasState extends State<PageTareas> {
           .doc(noteId)
           .delete();
 
+      setState(() {
+        deleteEdit;
+      });
+
       // Verificar si la nota se eliminó correctamente
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection("users")
@@ -39,7 +45,7 @@ class _PageTareasState extends State<PageTareas> {
           .doc(noteId)
           .get();
 
-      if (!snapshot.exists) {
+      if (!snapshot.exists && !deleteEdit) {
         // La nota se eliminó correctamente
         // ignore: use_build_context_synchronously
         showDialog(
@@ -279,30 +285,93 @@ class _PageTareasState extends State<PageTareas> {
                                         );
                                       },
                                       child: Card(
-                                        elevation: 6,
-                                        color: amarilloGolden,
-                                        child: ListTile(
-                                          trailing: IconButton(
-                                            onPressed: () {
-                                              deleteDataNote(
-                                                  notas[index]['notaId']);
-                                            },
-                                            icon: const Icon(Icons.delete),
-                                          ),
-                                          title: Flexible(
-                                            child: Text(
-                                              notas[index]['titulo'],
-                                              overflow: TextOverflow.ellipsis,
+                                          elevation: 6,
+                                          color: amarilloGolden,
+                                          child: ListTile(
+                                            trailing: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.2,
+                                              child: Row(
+                                                children: [
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              EditNote(
+                                                            notaId: notas[index]
+                                                                ['notaId'],
+                                                            titulo: notas[index]
+                                                                ['titulo'],
+                                                            descripcion: notas[
+                                                                    index]
+                                                                ['descripcion'],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.edit),
+                                                  ),
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder:
+                                                              (context) =>
+                                                                  AlertDialog(
+                                                                    title: Text(isLoading
+                                                                        ? 'Espera un momento'
+                                                                        : '¿Estas seguro?'),
+                                                                    content: Text(isLoading
+                                                                        ? 'Estamos eliminando tu nota...'
+                                                                        : '¿Quieres eliminar esta nota?'),
+                                                                    actions: [
+                                                                      TextButton(
+                                                                          onPressed:
+                                                                              () {
+                                                                            Navigator.pop(context);
+                                                                          },
+                                                                          child:
+                                                                              const Text('Cancelar')),
+                                                                      TextButton(
+                                                                          onPressed:
+                                                                              () {
+                                                                            Navigator.pop(context);
+
+                                                                            deleteDataNote(notas[index]['notaId']);
+
+                                                                            setState(() {
+                                                                              notas.removeAt(index);
+                                                                            });
+                                                                          },
+                                                                          child:
+                                                                              const Text('Eliminar')),
+                                                                    ],
+                                                                  ));
+                                                    },
+                                                    icon: const Icon(
+                                                        Icons.delete),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                          subtitle: Flexible(
-                                            child: Text(
-                                              notas[index]['descripcion'],
-                                              overflow: TextOverflow.ellipsis,
+                                            title: Flexible(
+                                              child: Text(
+                                                notas[index]['titulo'],
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      ),
+                                            subtitle: Flexible(
+                                              child: Text(
+                                                notas[index]['descripcion'],
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          )),
                                     ),
                                     SizedBox(
                                         height:
@@ -324,22 +393,12 @@ class _PageTareasState extends State<PageTareas> {
                       children: [
                         Text('Hola $nombre, Actualmente No tienes notas.',
                             style: const TextStyle(fontSize: 20)),
-                        const SizedBox(height: 20),
-                        const Icon(Icons.error, size: 100, color: azulClaro),
-                        const SizedBox(height: 5),
                       ],
                     ),
                   ),
               ],
             ),
             //SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-
-            ButtonHome(
-                color: amarilloGolden,
-                onPressed: () {
-                  Navigator.pushNamed(context, '/createNota');
-                },
-                btntxt: 'Crear Nota')
           ],
         ),
       ),

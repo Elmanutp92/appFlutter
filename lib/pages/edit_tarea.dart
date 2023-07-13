@@ -5,20 +5,24 @@ import 'package:flutter/material.dart';
 import '../styles/colors.dart';
 import '../widgets/listtile_drawer.dart';
 
-class CreateNote extends StatefulWidget {
-  const CreateNote({
+class EditTarea extends StatefulWidget {
+  final String tareaId;
+  final String titulo;
+  final String descripcion;
+  const EditTarea({
     super.key,
+    required this.tareaId,
+    required this.titulo,
+    required this.descripcion,
   });
 
   @override
-  State<CreateNote> createState() => _CreateNoteState();
+  State<EditTarea> createState() => _EditTareaState();
 }
 
-class _CreateNoteState extends State<CreateNote> {
+class _EditTareaState extends State<EditTarea> {
   bool isFavorite = false;
   bool isLoading = false;
-  String noteId = '';
-  String notaFavoritaId = '';
   TextEditingController tituloController = TextEditingController();
   TextEditingController descripcionController = TextEditingController();
 
@@ -34,10 +38,18 @@ class _CreateNoteState extends State<CreateNote> {
   String nombre = '';
   String userId = '';
   String email = '';
+  String tareaFavoritaId = '';
 
   @override
   void initState() {
     super.initState();
+
+    //********************** */
+    print('Titulo: ${widget.titulo} ');
+    print('Descripción: ${widget.descripcion} ');
+    print('NotaId: ${widget.tareaId} ');
+    tituloController.text = widget.titulo;
+    descripcionController.text = widget.descripcion;
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       userId = user.uid;
@@ -46,38 +58,38 @@ class _CreateNoteState extends State<CreateNote> {
   }
 
 // agregar nota
-  Future<void> addDataNote(String titulo, String descripcion) async {
+  Future<void> editDataTarea(
+      String titulo, String descripcion, String tareaId) async {
     setState(() {
       isLoading = true;
     });
-    final dataNote = {
+    final dataTarea = {
       'titulo': titulo,
       'descripcion': descripcion,
-      'isFavorite': false,
+      'noteId': tareaId,
       'clase': 'nota',
-      //'noteId': noteId
+      'isFavorite': false,
     };
 
     try {
-      DocumentReference noteRef = await FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('notas')
-          .add(dataNote);
+          .collection('tareas')
+          .doc(tareaId)
+          .set(dataTarea);
 
       setState(() {
         isLoading = false;
-        noteId = noteRef.id;
       });
 
-      print('noteId: $noteId');
-
       // Verificar si los datos se agregaron correctamente
+
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('notas')
-          .doc(noteId)
+          .collection('tareas')
+          .doc(tareaId)
           .get();
 
       if (snapshot.exists) {
@@ -86,7 +98,7 @@ class _CreateNoteState extends State<CreateNote> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Éxito'),
-            content: const Text('Nota registrada correctamente'),
+            content: const Text('Tarea editada correctamente'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pushNamed(context, '/home'),
@@ -101,7 +113,7 @@ class _CreateNoteState extends State<CreateNote> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Error'),
-            content: const Text('Ha ocurrido un error al registrar la nota'),
+            content: const Text('Ha ocurrido un error al editar la tarea'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -116,7 +128,81 @@ class _CreateNoteState extends State<CreateNote> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: Text('Ha ocurrido un error al registrar la nota: $e'),
+          content: Text('Ha ocurrido un error al editar la tarea: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Ok'),
+            ),
+          ],
+        ),
+      );
+      print(e);
+    }
+  }
+
+//************   */
+  Future<void> deleteDataTarea(String tareaId) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId)
+          .collection('tareas')
+          .doc(tareaId)
+          .delete();
+
+      // Verificar si la nota se eliminó correctamente
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId)
+          .collection('tareas')
+          .doc(tareaId)
+          .get();
+
+      //if (snapshot.exists ) {
+      // La nota se eliminó correctamente
+      // ignore: use_build_context_synchronously
+      /* showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Éxito'),
+            content: const Text('La nota se eliminó correctamente.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  //widget.crearNota();
+
+                  Navigator.pop(context);
+                },
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );*/
+      // }
+      if (snapshot.exists) {
+        // La nota no se eliminó correctamente
+        // ignore: use_build_context_synchronously
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: const Text('Ha ocurrido un error al eliminar la tarea'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Ok'),
+              ),
+            ],
+          ),
+        );
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text('Ha ocurrido un error al eliminar la tarea: $e'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -130,35 +216,37 @@ class _CreateNoteState extends State<CreateNote> {
   }
 
   // Agregar nota favorita
-  Future<void> addDataNoteFavorite(String titulo, String descripcion) async {
+  Future<void> addDataTareaFavorite(String titulo, String descripcion) async {
     setState(() {
       isLoading = true;
     });
-    final dataNoteFavorite = {
+    final dataTareaFavorite = {
       'titulo': titulo,
       'descripcion': descripcion,
+      'notaFavoritaId': tareaFavoritaId,
+      'clase': 'tarea',
       'isFavorite': true,
-      'clase': 'nota',
     };
 
     try {
       DocumentReference noteRef = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('notasFavoritas')
-          .add(dataNoteFavorite);
+          .collection('tareasFavoritas')
+          .add(dataTareaFavorite);
 
       setState(() {
         isLoading = false;
       });
-      String notaFavoritaId = noteRef.id;
+
+      String tareaFavoritaId = noteRef.id;
 
       // Verificar si los datos se agregaron correctamente
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('notasFavoritas')
-          .doc(notaFavoritaId)
+          .collection('tareasFavoritas')
+          .doc(tareaFavoritaId)
           .get();
 
       if (snapshot.exists) {
@@ -167,7 +255,7 @@ class _CreateNoteState extends State<CreateNote> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Éxito'),
-            content: const Text('Nota registrada correctamente en FAVORITOS'),
+            content: const Text('Tarea registrada correctamente en FAVORITOS'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pushNamed(context, '/home'),
@@ -183,7 +271,7 @@ class _CreateNoteState extends State<CreateNote> {
           builder: (context) => AlertDialog(
             title: const Text('Error'),
             content: const Text(
-                'Ha ocurrido un error al registrar la nota en FAVORITOS'),
+                'Ha ocurrido un error al registrar la tarea en FAVORITOS'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -199,7 +287,7 @@ class _CreateNoteState extends State<CreateNote> {
         builder: (context) => AlertDialog(
           title: const Text('Error'),
           content: Text(
-              'Ha ocurrido un error al registrar la nota en FAVORITOS: $e'),
+              'Ha ocurrido un error al registrar la tarea en FAVORITOS: $e'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -251,12 +339,12 @@ class _CreateNoteState extends State<CreateNote> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: amarilloGolden,
+                              color: rosaClaro,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             height: MediaQuery.of(context).size.height * 0.02,
                             width: MediaQuery.of(context).size.width * 0.20,
-                            child: const Text('Nota',
+                            child: const Text('Tarea',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.black,
@@ -301,11 +389,16 @@ class _CreateNoteState extends State<CreateNote> {
                                     onPressed: () {
                                       if (_formKey.currentState!.validate()) {
                                         !isFavorite
-                                            ? addDataNote(tituloController.text,
-                                                descripcionController.text)
-                                            : addDataNoteFavorite(
+                                            ? editDataTarea(
                                                 tituloController.text,
-                                                descripcionController.text);
+                                                descripcionController.text,
+                                                widget.tareaId)
+                                            : (
+                                                addDataTareaFavorite(
+                                                    tituloController.text,
+                                                    descripcionController.text),
+                                                deleteDataTarea(widget.tareaId)
+                                              );
                                       }
                                     },
                                     icon: Icon(

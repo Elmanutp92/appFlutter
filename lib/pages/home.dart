@@ -6,11 +6,13 @@ import 'package:new_app/pages/page_tarea_pink.dart';
 
 import 'package:new_app/pages/page_tareas.dart';
 import 'package:new_app/pages/page_todos.dart';
+import 'package:new_app/pages/page_todos_fav.dart';
 import 'package:new_app/pages/profile.dart';
 
 import 'package:new_app/widgets/buscar.dart';
 import 'package:new_app/widgets/header_home.dart';
 import 'package:new_app/widgets/stack/info_app.dart';
+import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 import '../styles/colors.dart';
 import '../widgets/listtile_drawer.dart';
@@ -30,10 +32,11 @@ class _HomeState extends State<Home> {
   bool crearTarea = false;
   bool crearNota = false;
   // *******************************
-  bool todos = false;
+  bool todos = true;
   bool perfil = false;
   bool tareas = false;
   bool notas = false;
+  bool favoritos = false;
 
   String? email;
   String userId = '';
@@ -97,6 +100,8 @@ class _HomeState extends State<Home> {
                 child: Column(
                   children: [
                     HeaderHome(
+                      perfil: perfil,
+                      cambiarPerfil: cambiarPerfil,
                       nombre: nombre,
                       apellido: apellido,
                     ),
@@ -122,13 +127,13 @@ class _HomeState extends State<Home> {
                     const SizedBox(height: 20),
                     SwitchButtons(
                       todos: todos,
-                      favoritos: perfil,
+                      favoritos: favoritos,
                       tareas: tareas,
                       notas: notas,
-                      cambiarFavoritos: cambiarPerfil,
                       cambiarNotas: cambiarNotas,
                       cambiarTareas: cambiarTareas,
                       cambiarTodos: cambiarTodos,
+                      cambiarFavoritos: cambiarFavoritos,
                     ),
                     const SizedBox(
                       height: 20,
@@ -143,17 +148,18 @@ class _HomeState extends State<Home> {
                       child: Stack(
                         children: [
                           // Lista se Todos
-                          if (todos) const PageTodos(),
+                          if (favoritos) const PageTodosFav(),
                           if (tareas) const PageTareaPink(),
                           if (perfil) const ProfilePage(),
                           if (notas) const PageTareas(),
+                          if (todos) const PageTodos(),
 
                           // NotasHome(nombre: nombre),
                           if (!notas &&
                               !perfil &&
                               !tareas &&
                               !todos &&
-                              !crearNota)
+                              !favoritos)
                             const InfoApp(),
                         ],
                       ),
@@ -196,52 +202,111 @@ class _HomeState extends State<Home> {
   }
 
   void cambiarTodos() {
-    setState(() {
-      !todos ? todos = true : todos = false;
-      perfil = false;
-      tareas = false;
-      notas = false;
+    final ProgressDialog progressDialog = ProgressDialog(context);
+    progressDialog.style(
+      message: 'Cargando...',
+    );
+    progressDialog.show();
+
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() {
+          todos = !todos;
+          perfil = false;
+          tareas = false;
+          notas = false;
+          favoritos = false;
+        });
+        progressDialog.hide();
+      }
     });
   }
 
+//***      */
   void cambiarTareas() {
-    setState(() {
-      crearNota = false;
-      todos = false;
-      perfil = false;
-      !tareas ? tareas = true : tareas = false;
-      notas = false;
+    final ProgressDialog progressDialog = ProgressDialog(context);
+    progressDialog.style(
+      message: 'Cargando...',
+    );
+    progressDialog.show();
+
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() {
+          todos = false;
+          perfil = false;
+          tareas = !tareas;
+          notas = false;
+          favoritos = false;
+        });
+        progressDialog.hide();
+      }
     });
   }
 
+//***      */
   void cambiarNotas() {
-    setState(() {
-      crearTarea = false;
-      todos = false;
-      perfil = false;
-      tareas = false;
-      !notas ? notas = true : notas = false;
+    final ProgressDialog progressDialog = ProgressDialog(context);
+    progressDialog.style(
+      message: 'Cargando...',
+    );
+    progressDialog.show();
+
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() {
+          todos = false;
+          perfil = false;
+          tareas = false;
+          notas = !notas;
+          favoritos = false;
+        });
+        progressDialog.hide();
+      }
     });
   }
+//***      */
 
   void cambiarPerfil() {
-    setState(() {
-      todos = false;
-      !perfil ? perfil = true : perfil = false;
-      tareas = false;
-      notas = false;
+    final ProgressDialog progressDialog = ProgressDialog(context);
+    progressDialog.style(
+      message: 'Cargando...',
+    );
+    progressDialog.show();
+
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() {
+          todos = false;
+          perfil = !perfil;
+          tareas = false;
+          notas = false;
+          favoritos = false;
+        });
+        progressDialog.hide();
+      }
     });
   }
 
-  void crearNotaSet() {
-    setState(() {
-      !crearNota ? crearNota = true : crearNota = false;
-    });
-  }
+  //***      */
+  void cambiarFavoritos() {
+    final ProgressDialog progressDialog = ProgressDialog(context);
+    progressDialog.style(
+      message: 'Cargando...',
+    );
+    progressDialog.show();
 
-  void pageTareas() {
-    setState(() {
-      !notas ? notas = true : notas = false;
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) {
+        setState(() {
+          todos = false;
+          perfil = false;
+          tareas = false;
+          notas = false;
+          favoritos = !favoritos;
+        });
+        progressDialog.hide();
+      }
     });
   }
 }

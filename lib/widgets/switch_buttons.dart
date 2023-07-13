@@ -13,6 +13,7 @@ class SwitchButtons extends StatefulWidget {
   final VoidCallback cambiarFavoritos;
   final VoidCallback cambiarTareas;
   final VoidCallback cambiarNotas;
+
   const SwitchButtons({
     Key? key,
     required this.cambiarTodos,
@@ -36,7 +37,7 @@ class _SwitchButtonsState extends State<SwitchButtons> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Container(
-            width: MediaQuery.of(context).size.width * 0.55,
+            width: MediaQuery.of(context).size.width * 0.99,
             //color: Colors.amber,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -52,8 +53,7 @@ class _SwitchButtonsState extends State<SwitchButtons> {
                         side: BorderSide(color: Colors.white),
                       ),
                     ),
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(azulClaro),
+                    backgroundColor: MaterialStateProperty.all<Color>(azulNavy),
                     overlayColor: MaterialStateProperty.all<Color>(
                       Colors.white.withOpacity(0.1),
                     ),
@@ -61,6 +61,29 @@ class _SwitchButtonsState extends State<SwitchButtons> {
                   onPressed: widget.cambiarTodos,
                   child: const Text(
                     'Todos',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    elevation: widget.favoritos
+                        ? MaterialStateProperty.all<double>(0)
+                        : MaterialStateProperty.all<double>(15),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        side: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(azulClaro),
+                    overlayColor: MaterialStateProperty.all<Color>(
+                      Colors.white.withOpacity(0.1),
+                    ),
+                  ),
+                  onPressed: widget.cambiarFavoritos,
+                  child: const Text(
+                    'Favoritos',
                     style: TextStyle(color: negro),
                   ),
                 ),
@@ -112,24 +135,6 @@ class _SwitchButtonsState extends State<SwitchButtons> {
                 ),
               ],
             )),
-        ElevatedButton(
-            style: ButtonStyle(
-              elevation: widget.favoritos
-                  ? MaterialStateProperty.all<double>(0)
-                  : MaterialStateProperty.all<double>(15),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  side: const BorderSide(color: Colors.white),
-                ),
-              ),
-              backgroundColor: MaterialStateProperty.all<Color>(azulNavy),
-              overlayColor: MaterialStateProperty.all<Color>(
-                Colors.white.withOpacity(0.1),
-              ),
-            ),
-            onPressed: widget.cambiarFavoritos,
-            child: const Icon(Icons.person_2)),
       ],
     );
   }

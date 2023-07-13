@@ -53,7 +53,9 @@ class _CreateTareaState extends State<CreateTarea> {
     final dataTarea = {
       'titulo': titulo,
       'descripcion': descripcion,
-      'tareaId': tareaId
+      'tareaId': tareaId,
+      'clase': 'tarea',
+      'isFavorite': false
     };
 
     try {
@@ -134,7 +136,9 @@ class _CreateTareaState extends State<CreateTarea> {
     final dataTareaFavorite = {
       'titulo': titulo,
       'descripcion': descripcion,
-      'tareaFavoritaId': tareaFavoritaId
+      'tareaFavoritaId': tareaFavoritaId,
+      'clase': 'tarea',
+      'isFavorite': true
     };
 
     try {
