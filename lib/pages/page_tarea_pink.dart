@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:new_app/pages/edit_tarea.dart';
@@ -17,7 +18,7 @@ class PageTareaPink extends StatefulWidget {
 }
 
 class _PageTareaPinkState extends State<PageTareaPink> {
-  bool isLoading = false;
+  bool isLoading = true;
   String nombre = '';
   String userId = '';
   String tareaId = '';
@@ -133,6 +134,9 @@ class _PageTareaPinkState extends State<PageTareaPink> {
         });
       }
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -153,7 +157,19 @@ class _PageTareaPinkState extends State<PageTareaPink> {
             children: [
               Stack(
                 children: [
-                  if (tareas.isNotEmpty)
+                  if (isLoading) // Muestra el indicador de carga mientras isLoading es true
+                    const Center(
+                      child: Column(
+                        children: [
+                          Text('Espere un momento...'),
+                          SpinKitCircle(
+                            color: azulNavy,
+                            size: 50.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (tareas.isNotEmpty && !isLoading)
                     SingleChildScrollView(
                       child: Column(
                         children: [
@@ -326,12 +342,11 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                                                             builder:
                                                                 (context) =>
                                                                     AlertDialog(
-                                                                      title: Text(isLoading
-                                                                          ? 'Espera un momento'
-                                                                          : '¿Estas seguro?'),
-                                                                      content: Text(isLoading
-                                                                          ? 'Estamos eliminando tu tarea...'
-                                                                          : '¿Quieres eliminar esta tarea?'),
+                                                                      title: const Text(
+                                                                          '¿Estas seguro?'),
+                                                                      content:
+                                                                          const Text(
+                                                                              '¿Quieres eliminar esta tarea?'),
                                                                       actions: [
                                                                         TextButton(
                                                                             onPressed:
@@ -392,7 +407,7 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                         ],
                       ),
                     ),
-                  if (tareas.isEmpty)
+                  if (tareas.isEmpty && !isLoading)
                     Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,

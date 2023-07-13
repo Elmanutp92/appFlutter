@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../styles/colors.dart';
@@ -13,6 +14,7 @@ class PageTodosFav extends StatefulWidget {
 }
 
 class _PageTodosFavState extends State<PageTodosFav> {
+  bool isLoading = true;
   String nombre = '';
   String userId = '';
   String tareaId = '';
@@ -75,6 +77,7 @@ class _PageTodosFavState extends State<PageTodosFav> {
 
       setState(() {
         apuntesFavoritos = [...notasFavoritas, ...tareasFavoritas];
+        isLoading = false;
       });
     }
   }
@@ -96,7 +99,19 @@ class _PageTodosFavState extends State<PageTodosFav> {
           children: [
             Stack(
               children: [
-                if (apuntesFavoritos.isNotEmpty)
+                if (isLoading) // Muestra el indicador de carga mientras isLoading es true
+                  const Center(
+                    child: Column(
+                      children: [
+                        Text('Espere un momento...'),
+                        SpinKitCircle(
+                          color: azulNavy,
+                          size: 50.0,
+                        ),
+                      ],
+                    ),
+                  ),
+                if (apuntesFavoritos.isNotEmpty && !isLoading)
                   SingleChildScrollView(
                     child: Column(
                       children: [
@@ -131,7 +146,7 @@ class _PageTodosFavState extends State<PageTodosFav> {
                                             ),
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                  color: Colors.white,
+                                                  color: azulClaro,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           20)),
@@ -159,21 +174,37 @@ class _PageTodosFavState extends State<PageTodosFav> {
                                                                 .size
                                                                 .height *
                                                             0.06,
-                                                    child: Text(
-                                                      apuntesFavoritos[index]
-                                                          ['titulo'],
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontSize: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            0.08,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        Text(
+                                                          apuntesFavoritos[
+                                                              index]['titulo'],
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                            fontSize: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.08,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        Icon(
+                                                          Icons.star,
+                                                          color: Colors.yellow,
+                                                          size: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.08,
+                                                        )
+                                                      ],
                                                     ),
                                                   ),
                                                   SizedBox(
@@ -228,7 +259,7 @@ class _PageTodosFavState extends State<PageTodosFav> {
                                       },
                                       child: Card(
                                         elevation: 6,
-                                        color: Colors.white,
+                                        color: azulClaro,
                                         child: ListTile(
                                           trailing: apuntesFavoritos[index]
                                                           ['isFavorite'] ==
@@ -335,7 +366,7 @@ class _PageTodosFavState extends State<PageTodosFav> {
                       ],
                     ),
                   ),
-                if (apuntesFavoritos.isEmpty)
+                if (apuntesFavoritos.isEmpty && !isLoading)
                   Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,

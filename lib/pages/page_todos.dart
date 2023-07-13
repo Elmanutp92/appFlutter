@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../styles/colors.dart';
 
 class PageTodos extends StatefulWidget {
-  const PageTodos({super.key});
+  const PageTodos({Key? key}) : super(key: key);
 
   @override
   State<PageTodos> createState() => _PageTodosState();
@@ -23,6 +24,7 @@ class _PageTodosState extends State<PageTodos> {
   List<Map<String, dynamic>> notas = [];
   List<Map<String, dynamic>> notasFavoritas = [];
   List<Map<String, dynamic>> todos = [];
+  bool isLoading = true;
 
   Future<void> fetchData() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -41,7 +43,7 @@ class _PageTodosState extends State<PageTodos> {
           nombre = userData['nombre'] ?? '';
         });
       }
-// obtener las notas favoritas
+      // obtener las notas favoritas
       QuerySnapshot snapshotNF = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
@@ -57,7 +59,7 @@ class _PageTodosState extends State<PageTodos> {
           }).toList();
         });
       }
-// obtener las notas
+      // obtener las notas
       QuerySnapshot snapshotNotas = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
@@ -89,7 +91,7 @@ class _PageTodosState extends State<PageTodos> {
           }).toList();
         });
       }
-// obtener las tareas
+      // obtener las tareas
       QuerySnapshot snapshotTareas = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
@@ -107,6 +109,7 @@ class _PageTodosState extends State<PageTodos> {
       }
       setState(() {
         todos = [...tareas, ...tareasFavoritas, ...notas, ...notasFavoritas];
+        isLoading = false; // Finalizó la carga, establece isLoading en false
       });
     }
   }
@@ -128,28 +131,40 @@ class _PageTodosState extends State<PageTodos> {
           children: [
             Stack(
               children: [
-                if (todos.isNotEmpty)
+                if (isLoading) // Muestra el indicador de carga mientras isLoading es true
+                  const Center(
+                    child: Column(
+                      children: [
+                        Text('Espere un momento...'),
+                        SpinKitCircle(
+                          color: azulNavy,
+                          size: 50.0,
+                        ),
+                      ],
+                    ),
+                  ),
+                if (todos.isNotEmpty && !isLoading)
                   SingleChildScrollView(
                     child: Column(
                       children: [
                         Container(
                           child: Center(
-                              child: Text(
-                            'Hola $nombre, Estos son todos tus apuntes.',
-                            style: GoogleFonts.poppins(
+                            child: Text(
+                              'Hola $nombre, Estos son todos tus apuntes.',
+                              style: GoogleFonts.poppins(
                                 fontSize:
-                                    MediaQuery.of(context).size.width * 0.05),
-                          )),
+                                    MediaQuery.of(context).size.width * 0.05,
+                              ),
+                            ),
+                          ),
                         ),
                         Container(
-                          //color: Colors.white,
                           height: MediaQuery.of(context).size.height * 0.43,
                           width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
                             itemCount: todos.length,
                             itemBuilder: (context, index) {
                               return Container(
-                                //color: Colors.red,
                                 child: Column(
                                   children: [
                                     GestureDetector(
@@ -163,22 +178,20 @@ class _PageTodosState extends State<PageTodos> {
                                             ),
                                             child: Container(
                                               decoration: BoxDecoration(
-                                                  color: todos[index]
-                                                              ['isFavorite'] ==
-                                                          true
-                                                      ? Colors.white
-                                                      : (todos[index]
-                                                                  ['clase'] ==
-                                                              'nota')
-                                                          ? amarilloGolden
-                                                          : (todos[index][
-                                                                      'clase'] ==
-                                                                  'tarea')
-                                                              ? rosaClaro
-                                                              : Colors.red,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20)),
+                                                color: todos[index]
+                                                        ['isFavorite']
+                                                    ? azulClaro
+                                                    : todos[index]['clase'] ==
+                                                            'nota'
+                                                        ? amarilloGolden
+                                                        : todos[index]
+                                                                    ['clase'] ==
+                                                                'tarea'
+                                                            ? rosaClaro
+                                                            : Colors.red,
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width *
@@ -192,7 +205,6 @@ class _PageTodosState extends State<PageTodos> {
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Container(
-                                                    //color: Colors.white,
                                                     width:
                                                         MediaQuery.of(context)
                                                                 .size
@@ -203,21 +215,64 @@ class _PageTodosState extends State<PageTodos> {
                                                                 .size
                                                                 .height *
                                                             0.06,
-                                                    child: Text(
-                                                      todos[index]['titulo'],
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontSize: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            0.08,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
+                                                    child: todos[index][
+                                                                'isFavorite'] ==
+                                                            true
+                                                        ? Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceEvenly,
+                                                            children: [
+                                                              Text(
+                                                                todos[index]
+                                                                    ['titulo'],
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .width *
+                                                                      0.08,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .black,
+                                                                ),
+                                                              ),
+                                                              Icon(
+                                                                Icons.star,
+                                                                color: Colors
+                                                                    .yellow,
+                                                                size: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    0.08,
+                                                              )
+                                                            ],
+                                                          )
+                                                        : Text(
+                                                            todos[index]
+                                                                ['titulo'],
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                              fontSize: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  0.08,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                          ),
                                                   ),
                                                   SizedBox(
                                                     height:
@@ -229,7 +284,6 @@ class _PageTodosState extends State<PageTodos> {
                                                   ),
                                                   SingleChildScrollView(
                                                     child: Container(
-                                                      //color: Colors.white,
                                                       width:
                                                           MediaQuery.of(context)
                                                                   .size
@@ -252,17 +306,17 @@ class _PageTodosState extends State<PageTodos> {
                                                   ),
                                                   Spacer(),
                                                   ElevatedButton(
-                                                      style: ButtonStyle(
-                                                        backgroundColor:
-                                                            MaterialStateProperty
-                                                                .all<Color>(
-                                                                    azulNavy),
-                                                      ),
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child:
-                                                          const Text('Cerrar')),
+                                                    style: ButtonStyle(
+                                                      backgroundColor:
+                                                          MaterialStateProperty
+                                                              .all<Color>(
+                                                                  azulNavy),
+                                                    ),
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text('Cerrar'),
+                                                  ),
                                                 ],
                                               ),
                                             ),
@@ -271,18 +325,17 @@ class _PageTodosState extends State<PageTodos> {
                                       },
                                       child: Card(
                                         elevation: 6,
-                                        color: todos[index]['isFavorite'] ==
-                                                true
-                                            ? Colors.white
-                                            : (todos[index]['clase'] == 'nota')
+                                        color: todos[index]['isFavorite']
+                                            ? azulClaro
+                                            : todos[index]['clase'] == 'nota'
                                                 ? amarilloGolden
-                                                : (todos[index]['clase'] ==
-                                                        'tarea')
+                                                : todos[index]['clase'] ==
+                                                        'tarea'
                                                     ? rosaClaro
                                                     : Colors.red,
                                         child: ListTile(
-                                          trailing: todos[index]['isFavorite'] ==
-                                                      true &&
+                                          trailing: todos[index]
+                                                      ['isFavorite'] &&
                                                   todos[index]['clase'] ==
                                                       'nota'
                                               ? Container(
@@ -297,25 +350,28 @@ class _PageTodosState extends State<PageTodos> {
                                                   child: Row(
                                                     children: [
                                                       Container(
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              0.1,
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.1,
-                                                          child: const Text(
-                                                              'Nota')),
-                                                      Icon(Icons.star,
-                                                          color: amarilloGolden,
-                                                          size: 40),
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            0.1,
+                                                        height: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .height *
+                                                            0.1,
+                                                        child:
+                                                            const Text('Nota'),
+                                                      ),
+                                                      Icon(
+                                                        Icons.star,
+                                                        color: amarilloGolden,
+                                                        size: 40,
+                                                      ),
                                                     ],
                                                   ),
                                                 )
-                                              : todos[index]['isFavorite'] == true &&
+                                              : todos[index]['isFavorite'] &&
                                                       todos[index]['clase'] ==
                                                           'tarea'
                                                   ? Container(
@@ -332,6 +388,47 @@ class _PageTodosState extends State<PageTodos> {
                                                       child: Row(
                                                         children: [
                                                           Container(
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.1,
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                0.1,
+                                                            child: const Text(
+                                                                'Tarea'),
+                                                          ),
+                                                          Icon(
+                                                            Icons.star,
+                                                            color:
+                                                                amarilloGolden,
+                                                            size: 40,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : todos[index]['clase'] ==
+                                                          'nota'
+                                                      ? Container(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.1,
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.1,
+                                                          child: const Text(
+                                                              'Nota'),
+                                                        )
+                                                      : todos[index]['clase'] ==
+                                                              'tarea'
+                                                          ? Container(
                                                               width: MediaQuery.of(
                                                                           context)
                                                                       .size
@@ -343,45 +440,18 @@ class _PageTodosState extends State<PageTodos> {
                                                                       .height *
                                                                   0.1,
                                                               child: const Text(
-                                                                  'Tarea')),
-                                                          Icon(Icons.star,
-                                                              color:
-                                                                  amarilloGolden,
-                                                              size: 40),
-                                                        ],
-                                                      ),
-                                                    )
-                                                  : (todos[index]['clase'] == 'nota'
-                                                      ? Container(
-                                                          width: MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.1,
-                                                          height:
-                                                              MediaQuery.of(context)
-                                                                      .size
-                                                                      .height *
-                                                                  0.1,
-                                                          child: const Text(
-                                                              'Nota'))
-                                                      : (todos[index]['clase'] ==
-                                                              'tarea'
-                                                          ? Container(
-                                                              width: MediaQuery.of(context).size.width * 0.1,
-                                                              height: MediaQuery.of(context).size.height * 0.1,
-                                                              child: const Text('Tarea'))
-                                                          : null)),
+                                                                  'Tarea'),
+                                                            )
+                                                          : null,
                                           title: Flexible(
                                             child: Text(
-                                              todos[index]['titulo'] ??
-                                                  '', // Verifica si 'titulo' es null
+                                              todos[index]['titulo'] ?? '',
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                           subtitle: Flexible(
                                             child: Text(
-                                              todos[index]['descripcion'] ??
-                                                  '', // Verifica si 'descripcion' es null
+                                              todos[index]['descripcion'] ?? '',
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
@@ -389,9 +459,10 @@ class _PageTodosState extends State<PageTodos> {
                                       ),
                                     ),
                                     SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.02),
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.02,
+                                    ),
                                   ],
                                 ),
                               );
@@ -401,21 +472,21 @@ class _PageTodosState extends State<PageTodos> {
                       ],
                     ),
                   ),
-                if (todos.isEmpty)
+                if (todos.isEmpty && !isLoading)
                   Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                            'Hola $nombre, Actualmente No tienes ningun item en ninguna de tus listas.',
-                            style: const TextStyle(fontSize: 20)),
+                          'Hola $nombre, Actualmente no tienes ningún item en ninguna de tus listas.',
+                          style: const TextStyle(fontSize: 20),
+                        ),
                       ],
                     ),
                   ),
               ],
             ),
-            //SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-            const Spacer(),
+            Spacer(),
             SpeedDial(
               direction: SpeedDialDirection.up,
               backgroundColor: Colors.transparent,
@@ -427,9 +498,11 @@ class _PageTodosState extends State<PageTodos> {
               activeIcon: Icons.close,
               children: [
                 SpeedDialChild(
-                  child: Icon(Icons.task,
-                      color: rosaClaro,
-                      size: MediaQuery.of(context).size.width * 0.1),
+                  child: Icon(
+                    Icons.task,
+                    color: rosaClaro,
+                    size: MediaQuery.of(context).size.width * 0.1,
+                  ),
                   backgroundColor: Colors.transparent,
                   label: 'Crear Tarea',
                   labelStyle: TextStyle(fontSize: 20),
@@ -438,9 +511,11 @@ class _PageTodosState extends State<PageTodos> {
                   },
                 ),
                 SpeedDialChild(
-                  child: Icon(Icons.note,
-                      color: amarilloGolden,
-                      size: MediaQuery.of(context).size.width * 0.1),
+                  child: Icon(
+                    Icons.note,
+                    color: amarilloGolden,
+                    size: MediaQuery.of(context).size.width * 0.1,
+                  ),
                   backgroundColor: Colors.transparent,
                   label: 'Crear Nota',
                   labelStyle: TextStyle(fontSize: 20),

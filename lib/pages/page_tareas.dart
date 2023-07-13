@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
@@ -18,7 +19,7 @@ class PageTareas extends StatefulWidget {
 
 class _PageTareasState extends State<PageTareas> {
   bool deleteEdit = false;
-  bool isLoading = false;
+  bool isLoading = true;
   String nombre = '';
   String userId = '';
   String noteId = '';
@@ -136,6 +137,9 @@ class _PageTareasState extends State<PageTareas> {
         });
       }
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -155,7 +159,19 @@ class _PageTareasState extends State<PageTareas> {
           children: [
             Stack(
               children: [
-                if (notas.isNotEmpty)
+                if (isLoading) // Muestra el indicador de carga mientras isLoading es true
+                  const Center(
+                    child: Column(
+                      children: [
+                        Text('Espere un momento...'),
+                        SpinKitCircle(
+                          color: azulNavy,
+                          size: 50.0,
+                        ),
+                      ],
+                    ),
+                  ),
+                if (notas.isNotEmpty && !isLoading)
                   SingleChildScrollView(
                     child: Column(
                       children: [
@@ -323,12 +339,11 @@ class _PageTareasState extends State<PageTareas> {
                                                           builder:
                                                               (context) =>
                                                                   AlertDialog(
-                                                                    title: Text(isLoading
-                                                                        ? 'Espera un momento'
-                                                                        : '¿Estas seguro?'),
-                                                                    content: Text(isLoading
-                                                                        ? 'Estamos eliminando tu nota...'
-                                                                        : '¿Quieres eliminar esta nota?'),
+                                                                    title: const Text(
+                                                                        '¿Estas seguro?'),
+                                                                    content:
+                                                                        const Text(
+                                                                            '¿Quieres eliminar esta nota?'),
                                                                     actions: [
                                                                       TextButton(
                                                                           onPressed:
@@ -386,7 +401,7 @@ class _PageTareasState extends State<PageTareas> {
                       ],
                     ),
                   ),
-                if (notas.isEmpty)
+                if (notas.isEmpty && !isLoading)
                   Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
