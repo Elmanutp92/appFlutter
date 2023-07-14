@@ -42,8 +42,8 @@ class HeaderHome extends StatelessWidget {
                 radius: 30,
                 backgroundColor: Colors.white,
                 child: Text(
-                    (nombre.isNotEmpty ? nombre[0] : '?') +
-                        (apellido.isNotEmpty ? apellido[0] : '?'),
+                    (nombre.isNotEmpty ? nombre[0].toUpperCase() : '?') +
+                        (apellido.isNotEmpty ? apellido[0].toUpperCase() : '?'),
                     style: GoogleFonts.poppins(
                       color: Colors.black,
                       fontSize: MediaQuery.of(context).size.width * 0.05,

@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:new_app/pages/edit_tarea.dart';
 
 import '../styles/colors.dart';
+import 'edit_tarea.dart';
 
 class PageTareaPink extends StatefulWidget {
   const PageTareaPink({
@@ -204,7 +204,7 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                                               ),
                                               child: Container(
                                                 decoration: BoxDecoration(
-                                                    color: amarilloGolden,
+                                                    color: rosaClaro,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             20)),

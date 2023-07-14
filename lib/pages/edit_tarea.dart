@@ -67,7 +67,7 @@ class _EditTareaState extends State<EditTarea> {
       'titulo': titulo,
       'descripcion': descripcion,
       'noteId': tareaId,
-      'clase': 'nota',
+      'clase': 'tarea',
       'isFavorite': false,
     };
 

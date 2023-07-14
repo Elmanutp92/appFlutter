@@ -1,16 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:new_app/firebase_options.dart';
-import 'package:new_app/pages/create_note.dart';
-import 'package:new_app/pages/create_tarea.dart';
-
-import 'package:new_app/pages/data_page.dart';
-
-import 'package:new_app/pages/home.dart';
-import 'package:new_app/pages/login.dart';
-
-import 'package:new_app/pages/profile.dart';
-import 'package:new_app/pages/register_page.dart';
+import 'package:lets_note/firebase_options.dart';
+import 'package:lets_note/pages/create_note.dart';
+import 'package:lets_note/pages/create_tarea.dart';
+import 'package:lets_note/pages/data_page.dart';
+import 'package:lets_note/pages/home.dart';
+import 'package:lets_note/pages/login.dart';
+import 'package:lets_note/pages/profile.dart';
+import 'package:lets_note/pages/register_page.dart';
 
 import 'app.dart';
 

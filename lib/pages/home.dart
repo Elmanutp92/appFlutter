@@ -2,21 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:new_app/pages/page_tarea_pink.dart';
+import 'package:lets_note/pages/page_tarea_pink.dart';
+import 'package:lets_note/pages/page_tareas.dart';
+import 'package:lets_note/pages/page_todos.dart';
+import 'package:lets_note/pages/page_todos_fav.dart';
+import 'package:lets_note/pages/profile.dart';
 
-import 'package:new_app/pages/page_tareas.dart';
-import 'package:new_app/pages/page_todos.dart';
-import 'package:new_app/pages/page_todos_fav.dart';
-import 'package:new_app/pages/profile.dart';
-
-import 'package:new_app/widgets/buscar.dart';
-import 'package:new_app/widgets/header_home.dart';
-import 'package:new_app/widgets/stack/info_app.dart';
 import 'package:progress_dialog_null_safe/progress_dialog_null_safe.dart';
 
 import '../styles/colors.dart';
+import '../widgets/buscar.dart';
+import '../widgets/header_home.dart';
 import '../widgets/listtile_drawer.dart';
 
+import '../widgets/stack/info_app.dart';
 import '../widgets/switch_buttons.dart';
 
 class Home extends StatefulWidget {

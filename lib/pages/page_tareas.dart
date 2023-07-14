@@ -234,20 +234,40 @@ class _PageTareasState extends State<PageTareas> {
                                                                 .size
                                                                 .height *
                                                             0.06,
-                                                    child: Text(
-                                                      notas[index]['titulo'],
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                      style: TextStyle(
-                                                        fontSize: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            0.08,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          notas[index]
+                                                              ['titulo'],
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                            fontSize: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width *
+                                                                0.08,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        IconButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          icon: const Icon(
+                                                            Icons.cancel,
+                                                            color:
+                                                                Colors.black45,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                   SizedBox(
@@ -274,7 +294,8 @@ class _PageTareasState extends State<PageTareas> {
                                                       child: Text(
                                                         notas[index]
                                                             ['descripcion'],
-                                                        style: TextStyle(
+                                                        style:
+                                                            GoogleFonts.poppins(
                                                           fontSize: 16.0,
                                                           color: Colors.black,
                                                         ),
@@ -282,35 +303,6 @@ class _PageTareasState extends State<PageTareas> {
                                                     ),
                                                   ),
                                                   Spacer(),
-                                                  ElevatedButton(
-                                                      style: ButtonStyle(
-                                                        backgroundColor:
-                                                            MaterialStateProperty
-                                                                .all<Color>(
-                                                                    azulNavy),
-                                                      ),
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                      },
-                                                      child:
-                                                          const Text('Cerrar')),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Card(
-                                          elevation: 6,
-                                          color: amarilloGolden,
-                                          child: ListTile(
-                                            trailing: Container(
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.2,
-                                              child: Row(
-                                                children: [
                                                   IconButton(
                                                     onPressed: () {
                                                       Navigator.push(
@@ -329,64 +321,138 @@ class _PageTareasState extends State<PageTareas> {
                                                         ),
                                                       );
                                                     },
-                                                    icon:
-                                                        const Icon(Icons.edit),
-                                                  ),
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      showDialog(
-                                                          context: context,
-                                                          builder:
-                                                              (context) =>
-                                                                  AlertDialog(
-                                                                    title: const Text(
-                                                                        '¿Estas seguro?'),
-                                                                    content:
-                                                                        const Text(
-                                                                            '¿Quieres eliminar esta nota?'),
-                                                                    actions: [
-                                                                      TextButton(
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.pop(context);
-                                                                          },
-                                                                          child:
-                                                                              const Text('Cancelar')),
-                                                                      TextButton(
-                                                                          onPressed:
-                                                                              () {
-                                                                            Navigator.pop(context);
-
-                                                                            deleteDataNote(notas[index]['notaId']);
-
-                                                                            setState(() {
-                                                                              notas.removeAt(index);
-                                                                            });
-                                                                          },
-                                                                          child:
-                                                                              const Text('Eliminar')),
-                                                                    ],
-                                                                  ));
-                                                    },
                                                     icon: const Icon(
-                                                        Icons.delete),
+                                                      Icons.edit,
+                                                      color: Colors.black45,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            title: Flexible(
-                                              child: Text(
-                                                notas[index]['titulo'],
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            subtitle: Flexible(
-                                              child: Text(
-                                                notas[index]['descripcion'],
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          )),
+                                          ),
+                                        );
+                                      },
+                                      child: Material(
+                                        borderRadius: BorderRadius.circular(20),
+                                        elevation: 8,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: amarilloGolden,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          //color: Colors.amber,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.15,
+                                          child: Card(
+                                              color: Colors.transparent,
+                                              elevation: 0,
+                                              child: ListTile(
+                                                trailing: Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.2,
+                                                  child: Row(
+                                                    children: [
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      EditNote(
+                                                                notaId: notas[
+                                                                        index]
+                                                                    ['notaId'],
+                                                                titulo: notas[
+                                                                        index]
+                                                                    ['titulo'],
+                                                                descripcion: notas[
+                                                                        index][
+                                                                    'descripcion'],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        icon: const Icon(
+                                                            Icons.edit),
+                                                      ),
+                                                      IconButton(
+                                                        onPressed: () {
+                                                          showDialog(
+                                                              context: context,
+                                                              builder:
+                                                                  (context) =>
+                                                                      AlertDialog(
+                                                                        title: const Text(
+                                                                            '¿Estas seguro?'),
+                                                                        content:
+                                                                            const Text('¿Quieres eliminar esta nota?'),
+                                                                        actions: [
+                                                                          TextButton(
+                                                                              onPressed: () {
+                                                                                Navigator.pop(context);
+                                                                              },
+                                                                              child: const Text('Cancelar')),
+                                                                          TextButton(
+                                                                              onPressed: () {
+                                                                                Navigator.pop(context);
+
+                                                                                deleteDataNote(notas[index]['notaId']);
+
+                                                                                setState(() {
+                                                                                  notas.removeAt(index);
+                                                                                });
+                                                                              },
+                                                                              child: const Text('Eliminar')),
+                                                                        ],
+                                                                      ));
+                                                        },
+                                                        icon: const Icon(
+                                                            Icons.delete),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                title: Flexible(
+                                                  child: Text(
+                                                    notas[index]['titulo'],
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.04,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                subtitle: Expanded(
+                                                  child: Text(
+                                                    notas[index]['descripcion'],
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              0.03,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              )),
+                                        ),
+                                      ),
                                     ),
                                     SizedBox(
                                         height:
