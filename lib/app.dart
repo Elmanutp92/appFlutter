@@ -19,7 +19,8 @@ class MyApp extends StatelessWidget {
             body: SingleChildScrollView(
           child: Container(
             height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(color: azulBackground),
+            //width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(color: azulBackground),
             child: SingleChildScrollView(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,

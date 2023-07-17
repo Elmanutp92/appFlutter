@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../styles/colors.dart';
 import '../widgets/listtile_drawer.dart';
@@ -18,7 +19,7 @@ class _CreateNoteState extends State<CreateNote> {
   bool isFavorite = false;
   bool isLoading = false;
   String noteId = '';
-  String notaFavoritaId = '';
+  String favoritoId = '';
   TextEditingController tituloController = TextEditingController();
   TextEditingController descripcionController = TextEditingController();
 
@@ -82,17 +83,18 @@ class _CreateNoteState extends State<CreateNote> {
 
       if (snapshot.exists) {
         // Los datos se agregaron correctamente
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Éxito'),
-            content: const Text('Nota registrada correctamente'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/home'),
-                child: const Text('Ok'),
+        Navigator.pushNamed(context, '/home');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              '¡Nota creada correctamente!',
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
               ),
-            ],
+            ),
           ),
         );
       } else {
@@ -145,29 +147,31 @@ class _CreateNoteState extends State<CreateNote> {
       DocumentReference noteRef = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('notasFavoritas')
+          .collection('favoritos')
           .add(dataNoteFavorite);
 
       setState(() {
         isLoading = false;
       });
-      String notaFavoritaId = noteRef.id;
+      String favoritoId = noteRef.id;
 
       // Verificar si los datos se agregaron correctamente
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('notasFavoritas')
-          .doc(notaFavoritaId)
+          .collection('favoritos')
+          .doc(favoritoId)
           .get();
 
       if (snapshot.exists) {
         // Los datos se agregaron correctamente
         showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Éxito'),
-            content: const Text('Nota registrada correctamente en FAVORITOS'),
+            content:
+                const Text('Elemento registrado correctamente en FAVORITOS'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pushNamed(context, '/home'),
@@ -183,7 +187,7 @@ class _CreateNoteState extends State<CreateNote> {
           builder: (context) => AlertDialog(
             title: const Text('Error'),
             content: const Text(
-                'Ha ocurrido un error al registrar la nota en FAVORITOS'),
+                'Ha ocurrido un error al registrar el elemento en FAVORITOS'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -199,7 +203,7 @@ class _CreateNoteState extends State<CreateNote> {
         builder: (context) => AlertDialog(
           title: const Text('Error'),
           content: Text(
-              'Ha ocurrido un error al registrar la nota en FAVORITOS: $e'),
+              'Ha ocurrido un error al registrar el elemento en FAVORITOS: $e'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -228,24 +232,17 @@ class _CreateNoteState extends State<CreateNote> {
       onWillPop: () async {
         return false;
       },
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Builder(builder: (context) {
-          return Scaffold(
-            endDrawer: const Drawer(
-              backgroundColor: amarilloGolden,
-              // Agrega el contenido del drawer aquí
-              child: ListTileDrawer(),
-            ),
-            body: Builder(builder: (context) {
-              return Stack(children: [
-                SingleChildScrollView(
-                  child: Container(
+      child: Builder(builder: (context) {
+        return Scaffold(
+          body: Builder(builder: (context) {
+            return Stack(children: [
+              SingleChildScrollView(
+                child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    color: azulBackground,
+                    child: Container(
                       margin: EdgeInsets.only(
                           top: MediaQuery.of(context).size.height * 0.05),
-                      width: MediaQuery.of(context).size.width,
-                      color: azulBackground,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -420,34 +417,34 @@ class _CreateNoteState extends State<CreateNote> {
                                 ],
                               ))
                         ],
-                      )),
-                ),
-                if (isLoading)
-                  Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Guardando nota...',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
-                        ],
                       ),
+                    )),
+              ),
+              if (isLoading)
+                Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Guardando nota...',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
                   ),
-              ]);
-            }),
-          );
-        }),
-      ),
+                ),
+            ]);
+          }),
+        );
+      }),
     );
   }
 }

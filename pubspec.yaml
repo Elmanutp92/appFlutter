@@ -46,6 +46,7 @@ dependencies:
   progress_dialog_null_safe: ^1.0.7
   fluttertoast: ^8.2.2
   flutter_speed_dial: ^7.0.0
+  animated_emoji: ^2.0.0
   
 
 dev_dependencies:

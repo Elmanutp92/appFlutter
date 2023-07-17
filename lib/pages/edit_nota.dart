@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../styles/colors.dart';
 import '../widgets/listtile_drawer.dart';
@@ -38,7 +39,7 @@ class _EditNoteState extends State<EditNote> {
   String nombre = '';
   String userId = '';
   String email = '';
-  String notaFavoritaId = '';
+  String favoritoId = '';
 
   @override
   void initState() {
@@ -94,34 +95,36 @@ class _EditNoteState extends State<EditNote> {
 
       if (snapshot.exists) {
         // Los datos se agregaron correctamente
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Éxito'),
-            content: const Text('Nota editada correctamente'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/home'),
-                child: const Text('Ok'),
+        Navigator.pushNamed(context, '/home');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              '¡Nota editada correctamente!',
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
               ),
-            ],
+            ),
           ),
         );
       } else {
         // Los datos no se agregaron correctamente
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Error'),
-            content: const Text('Ha ocurrido un error al editar la nota'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Ok'),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              '!No pudimos eliminar tu nota, intentalo más tarde!',
+              style: GoogleFonts.poppins(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
               ),
-            ],
+            ),
           ),
         );
+        Navigator.pushNamed(context, '/home');
       }
     } catch (e) {
       showDialog(
@@ -223,7 +226,6 @@ class _EditNoteState extends State<EditNote> {
     final dataNoteFavorite = {
       'titulo': titulo,
       'descripcion': descripcion,
-      'notaFavoritaId': notaFavoritaId,
       'clase': 'nota',
       'isFavorite': true,
     };
@@ -232,21 +234,21 @@ class _EditNoteState extends State<EditNote> {
       DocumentReference noteRef = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('notasFavoritas')
+          .collection('favoritos')
           .add(dataNoteFavorite);
 
       setState(() {
         isLoading = false;
       });
 
-      String notaFavoritaId = noteRef.id;
+      String favoritoId = noteRef.id;
 
       // Verificar si los datos se agregaron correctamente
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('notasFavoritas')
-          .doc(notaFavoritaId)
+          .collection('favoritos')
+          .doc(favoritoId)
           .get();
 
       if (snapshot.exists) {
@@ -316,24 +318,17 @@ class _EditNoteState extends State<EditNote> {
       onWillPop: () async {
         return false;
       },
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Builder(builder: (context) {
-          return Scaffold(
-            endDrawer: const Drawer(
-              backgroundColor: amarilloGolden,
-              // Agrega el contenido del drawer aquí
-              child: ListTileDrawer(),
-            ),
-            body: Builder(builder: (context) {
-              return Stack(children: [
-                SingleChildScrollView(
-                  child: Container(
+      child: Builder(builder: (context) {
+        return Scaffold(
+          body: Builder(builder: (context) {
+            return Stack(children: [
+              SingleChildScrollView(
+                child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    color: azulBackground,
+                    child: Container(
                       margin: EdgeInsets.only(
                           top: MediaQuery.of(context).size.height * 0.05),
-                      width: MediaQuery.of(context).size.width,
-                      color: azulBackground,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -513,34 +508,34 @@ class _EditNoteState extends State<EditNote> {
                                 ],
                               ))
                         ],
-                      )),
-                ),
-                if (isLoading)
-                  Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Guardando nota...',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
-                        ],
                       ),
+                    )),
+              ),
+              if (isLoading)
+                Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Guardando nota...',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
                   ),
-              ]);
-            }),
-          );
-        }),
-      ),
+                ),
+            ]);
+          }),
+        );
+      }),
     );
   }
 }

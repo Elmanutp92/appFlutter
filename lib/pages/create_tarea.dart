@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../styles/colors.dart';
 import '../widgets/listtile_drawer.dart';
@@ -33,7 +34,7 @@ class _CreateTareaState extends State<CreateTarea> {
   String userId = '';
   String email = '';
   String tareaId = '';
-  String tareaFavoritaId = '';
+  String favoritoId = '';
 
   @override
   void initState() {
@@ -81,17 +82,18 @@ class _CreateTareaState extends State<CreateTarea> {
 
       if (snapshot.exists) {
         // Los datos se agregaron correctamente
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Éxito'),
-            content: const Text('Tarea registrada correctamente'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/home'),
-                child: const Text('Ok'),
+        Navigator.pushNamed(context, '/home');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              '¡Tarea creada correctamente!',
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
               ),
-            ],
+            ),
           ),
         );
       } else {
@@ -136,7 +138,6 @@ class _CreateTareaState extends State<CreateTarea> {
     final dataTareaFavorite = {
       'titulo': titulo,
       'descripcion': descripcion,
-      'tareaFavoritaId': tareaFavoritaId,
       'clase': 'tarea',
       'isFavorite': true
     };
@@ -145,21 +146,21 @@ class _CreateTareaState extends State<CreateTarea> {
       DocumentReference noteRef = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('tareasFavoritas')
+          .collection('favoritos')
           .add(dataTareaFavorite);
 
       setState(() {
         isLoading = false;
       });
 
-      String tareaFavoriteId = noteRef.id;
+      String favoritoId = noteRef.id;
 
       // Verificar si los datos se agregaron correctamente
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('tareasFavoritas')
-          .doc(tareaFavoriteId)
+          .collection('favoritos')
+          .doc(favoritoId)
           .get();
 
       if (snapshot.exists) {
@@ -168,7 +169,8 @@ class _CreateTareaState extends State<CreateTarea> {
           context: context,
           builder: (context) => AlertDialog(
             title: const Text('Éxito'),
-            content: const Text('Tarea registrada correctamente en FAVORITOS'),
+            content:
+                const Text('Elemento registrado correctamente en FAVORITOS'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pushNamed(context, '/home'),
@@ -184,7 +186,7 @@ class _CreateTareaState extends State<CreateTarea> {
           builder: (context) => AlertDialog(
             title: const Text('Error'),
             content: const Text(
-                'Ha ocurrido un error al registrar la tarea en FAVORITOS'),
+                'Ha ocurrido un error al registrar el elemento en FAVORITOS'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -200,7 +202,7 @@ class _CreateTareaState extends State<CreateTarea> {
         builder: (context) => AlertDialog(
           title: const Text('Error'),
           content: Text(
-              'Ha ocurrido un error al registrar la tarea en FAVORITOS: $e'),
+              'Ha ocurrido un error al registrar el elemento en FAVORITOS: $e'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -229,25 +231,17 @@ class _CreateTareaState extends State<CreateTarea> {
       onWillPop: () async {
         return false;
       },
-      child: Container(
-        color: azulBackground,
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        child: Builder(builder: (context) {
-          return Scaffold(
-            endDrawer: const Drawer(
-              backgroundColor: amarilloGolden,
-              // Agrega el contenido del drawer aquí
-              child: ListTileDrawer(),
-            ),
-            body: Builder(builder: (context) {
-              return Stack(children: [
-                SingleChildScrollView(
-                  child: Container(
+      child: Builder(builder: (context) {
+        return Scaffold(
+          body: Builder(builder: (context) {
+            return Stack(children: [
+              SingleChildScrollView(
+                child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    color: azulBackground,
+                    child: Container(
                       margin: EdgeInsets.only(
                           top: MediaQuery.of(context).size.height * 0.05),
-                      width: MediaQuery.of(context).size.width,
-                      color: azulBackground,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -423,34 +417,34 @@ class _CreateTareaState extends State<CreateTarea> {
                                 ],
                               ))
                         ],
-                      )),
-                ),
-                if (isLoading)
-                  Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Guardando tarea...',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
-                        ],
                       ),
+                    )),
+              ),
+              if (isLoading)
+                Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Guardando tarea...',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      ],
                     ),
                   ),
-              ]);
-            }),
-          );
-        }),
-      ),
+                ),
+            ]);
+          }),
+        );
+      }),
     );
   }
 }

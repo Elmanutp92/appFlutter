@@ -1,56 +1,61 @@
+import 'package:animated_emoji/animated_emoji.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lets_note/widgets/card_action/gesture_card_detector.dart';
 
 import '../styles/colors.dart';
+import '../widgets/card_action/gesture_card_detector.dart';
 
-class PageTareaPink extends StatefulWidget {
-  const PageTareaPink({
+class PageTareas extends StatefulWidget {
+  const PageTareas({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<PageTareaPink> createState() => _PageTareaPinkState();
+  State<PageTareas> createState() => _PageTareasState();
 }
 
-class _PageTareaPinkState extends State<PageTareaPink> {
+class _PageTareasState extends State<PageTareas> {
+  bool notasVacias = false;
+  bool deleteEdit = false;
   bool isLoading = true;
   String nombre = '';
   String userId = '';
-  String tareaId = '';
-  List<Map<String, dynamic>> tareas = [];
+  String noteId = '';
+  List<Map<String, dynamic>> notas = [];
 
-  Future<void> deleteDataTarea(String tareaId) async {
+  Future<void> deleteDataNote(String noteId) async {
     try {
       await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('tareas')
-          .doc(tareaId)
+          .collection('notas')
+          .doc(noteId)
           .delete();
 
+      setState(() {
+        notas.removeWhere((notas) => notas['notaId'] == noteId);
+      });
+
       // Verificar si la nota se eliminó correctamente
+
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('tareas')
-          .doc(tareaId)
+          .collection('notas')
+          .doc(noteId)
           .get();
-      //widget.pageTareas();
 
-      if (!snapshot.exists) {
+      if (!snapshot.exists && !deleteEdit) {
         // La nota se eliminó correctamente
-        // ignore: use_build_context_synchronously
-        Navigator.pushNamed(context, '/home');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.green,
             content: Text(
-              '¡Tarea eliminada correctamente!',
+              '¡Nota eliminada correctamente!',
               style: GoogleFonts.poppins(
                 color: Colors.white,
                 fontSize: 15,
@@ -59,9 +64,9 @@ class _PageTareaPinkState extends State<PageTareaPink> {
             ),
           ),
         );
+        Navigator.pushNamed(context, '/home');
       } else {
         // La nota no se eliminó correctamente
-        // ignore: use_build_context_synchronously
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -92,9 +97,8 @@ class _PageTareaPinkState extends State<PageTareaPink> {
       );
       print(e);
     }
-    setState(() {
-      fetchData();
-    });
+
+    fetchData();
   }
 
   // obtener datos
@@ -117,16 +121,16 @@ class _PageTareaPinkState extends State<PageTareaPink> {
         });
       }
 
-      QuerySnapshot snapshotTarea = await FirebaseFirestore.instance
+      QuerySnapshot snapshotNote = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('tareas')
+          .collection('notas')
           .get();
-      if (snapshotTarea.docs.isNotEmpty) {
+      if (snapshotNote.docs.isNotEmpty) {
         setState(() {
-          tareas = snapshotTarea.docs.map((doc) {
+          notas = snapshotNote.docs.map((doc) {
             final data = doc.data() as Map<String, dynamic>;
-            data['tareaId'] =
+            data['notaId'] =
                 doc.id; // Agregar el ID de la nota al mapa de datos
             return data;
           }).toList();
@@ -146,11 +150,11 @@ class _PageTareaPinkState extends State<PageTareaPink> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.transparent,
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.6,
-      child: SingleChildScrollView(
+    return Scaffold(
+      body: Container(
+        color: azulBackground,
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.6,
         child: Column(
           children: [
             Stack(
@@ -167,7 +171,7 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                       ],
                     ),
                   ),
-                if (tareas.isNotEmpty && !isLoading)
+                if (notas.isNotEmpty && !isLoading)
                   SingleChildScrollView(
                     child: Column(
                       children: [
@@ -185,19 +189,19 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                           height: MediaQuery.of(context).size.height * 0.45,
                           width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
-                            itemCount: tareas.length,
+                            itemCount: notas.length,
                             itemBuilder: (context, index) {
                               return Container(
                                 //color: Colors.red,
                                 child: Column(
                                   children: [
                                     GestureCardDetector(
-                                      isFavorite: tareas[index]['isFavorite'],
-                                      clase: tareas[index]['clase'],
-                                      tiulo: tareas[index]['titulo'],
-                                      descripcion: tareas[index]['descripcion'],
-                                      itemId: tareas[index]['tareaId'],
-                                      deleteItem: deleteDataTarea,
+                                      isFavorite: notas[index]['isFavorite'],
+                                      clase: notas[index]['clase'],
+                                      tiulo: notas[index]['titulo'],
+                                      descripcion: notas[index]['descripcion'],
+                                      itemId: notas[index]['notaId'],
+                                      deleteItem: deleteDataNote,
                                     ),
                                     SizedBox(
                                         height:
@@ -212,19 +216,23 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                       ],
                     ),
                   ),
-                if (tareas.isEmpty && !isLoading)
+                if (notas.isEmpty && !isLoading)
                   Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('Hola $nombre, Actualmente No tienes Tareas.',
+                        Text('Hola $nombre, Actualmente No tienes notas.',
                             style: const TextStyle(fontSize: 20)),
+                        AnimatedEmoji(
+                          AnimatedEmojis.diagonalMouth,
+                          size: MediaQuery.of(context).size.width * 0.5,
+                        ),
                       ],
                     ),
                   ),
               ],
             ),
-            //SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+            //SizedBox(height: MediaQuery.of(context).size.height * 0.05),
           ],
         ),
       ),
