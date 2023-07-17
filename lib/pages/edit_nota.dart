@@ -1,3 +1,5 @@
+import 'package:animated_emoji/emoji.dart';
+import 'package:animated_emoji/emojis.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +71,7 @@ class _EditNoteState extends State<EditNote> {
       'noteId': notaId,
       'clase': 'nota',
       'isFavorite': false,
+      'fechaCreacion': FieldValue.serverTimestamp(),
     };
 
     try {
@@ -227,6 +230,7 @@ class _EditNoteState extends State<EditNote> {
       'descripcion': descripcion,
       'clase': 'nota',
       'isFavorite': true,
+      'fechaCreacion': FieldValue.serverTimestamp(),
     };
 
     try {
@@ -365,20 +369,28 @@ class _EditNoteState extends State<EditNote> {
                                           0.1,
                                     )),
                                 IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        !isFavorite
-                                            ? isFavorite = true
-                                            : isFavorite = false;
-                                      });
-                                    },
-                                    icon: Icon(Icons.star,
-                                        color: !isFavorite
-                                            ? Colors.grey
-                                            : amarilloGolden,
-                                        size:
-                                            MediaQuery.of(context).size.width *
-                                                0.07)),
+                                  onPressed: () {
+                                    setState(() {
+                                      !isFavorite
+                                          ? isFavorite = true
+                                          : isFavorite = false;
+                                    });
+                                  },
+                                  icon: !isFavorite
+                                      ? Icon(Icons.star,
+                                          color: Colors.grey,
+                                          size: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.07)
+                                      : AnimatedEmoji(
+                                          AnimatedEmojis.glowingStar,
+                                          size: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.07,
+                                        ),
+                                ),
                                 IconButton(
                                     onPressed: () {
                                       if (_formKey.currentState!.validate()) {
@@ -421,6 +433,9 @@ class _EditNoteState extends State<EditNote> {
                                       validator: (value) {
                                         if (value == null || value.isEmpty) {
                                           return 'Por favor ingresa un titulo';
+                                        }
+                                        if (value.length > 30) {
+                                          return 'El titulo debe tener maximo 15 caracteres';
                                         }
                                         return null;
                                       },

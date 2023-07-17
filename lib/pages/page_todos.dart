@@ -1,3 +1,5 @@
+import 'package:animated_emoji/emoji.dart';
+import 'package:animated_emoji/emojis.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -6,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lets_note/pages/create_note.dart';
+import 'package:lets_note/widgets/buscar.dart';
 
 import '../styles/colors.dart';
 import '../widgets/card_action/gesture_card_detector.dart';
@@ -24,12 +27,16 @@ class _PageTodosState extends State<PageTodos> {
   String tareaId = '';
   String favoritoId = '';
   String notaId = '';
+  String searchTerm = '';
+  DateTime fecha = DateTime.now();
 
   List<Map<String, dynamic>> favoritos = [];
   List<Map<String, dynamic>> notas = [];
   List<Map<String, dynamic>> tareas = [];
 
   List<Map<String, dynamic>> todos = [];
+  List<Map<String, dynamic>> itemsFiltrados = [];
+
   bool isLoading = true;
 
   Future<void> fetchData() async {
@@ -101,6 +108,7 @@ class _PageTodosState extends State<PageTodos> {
       }
       setState(() {
         todos = [...tareas, ...notas, ...favoritos];
+        itemsFiltrados = todos;
         isLoading = false; // Finalizó la carga, establece isLoading en false
       });
     }
@@ -114,11 +122,14 @@ class _PageTodosState extends State<PageTodos> {
 
   @override
   Widget build(BuildContext context) {
+    final mh = MediaQuery.of(context).size.height;
+    final mw = MediaQuery.of(context).size.width;
+
     return Scaffold(
       body: Container(
         color: azulBackground,
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.6,
+        height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
             Stack(
@@ -152,26 +163,61 @@ class _PageTodosState extends State<PageTodos> {
                           ),
                         ),
                         Container(
-                          color: Colors.transparent,
-                          height: MediaQuery.of(context).size.height * 0.534,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          child: TextFormField(
+                            onChanged:
+                                // Filtrar la lista de notas en base al valor de búsqueda
+                                filtrarItems,
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(
+                                Icons.search,
+                                color: negro,
+                              ),
+                              filled: true,
+                              fillColor: blanco,
+                              labelStyle: TextStyle(color: negro),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(color: negro),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              labelText: 'Buscar',
+                              hintText: 'Ejemplo: "Mercado"',
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: mh * 0.005,
+                        ),
+                        Container(
+                          //color: Colors.amber,
+                          height: MediaQuery.of(context).size.height * 0.6,
                           width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
-                            itemCount: todos.length,
+                            itemCount: itemsFiltrados.length,
                             itemBuilder: (context, index) {
                               var noId = 'nohayid';
+
                               return Container(
                                 // height: MediaQuery.of(context).size.height * 0.6,
                                 //color: Colors.amber,
                                 child: Column(
                                   children: [
                                     GestureCardDetector(
-                                        clase: todos[index]['clase'],
-                                        tiulo: todos[index]['titulo'],
-                                        descripcion: todos[index]
+                                        fecha: fecha,
+                                        isTodos: true,
+                                        clase: itemsFiltrados[index]['clase'],
+                                        tiulo: itemsFiltrados[index]['titulo'],
+                                        descripcion: itemsFiltrados[index]
                                             ['descripcion'],
                                         itemId: noId,
                                         deleteItem: deleteItem,
-                                        isFavorite: todos[index]['isFavorite']),
+                                        isFavorite: itemsFiltrados[index]
+                                            ['isFavorite']),
                                     SizedBox(
                                       height:
                                           MediaQuery.of(context).size.height *
@@ -191,9 +237,15 @@ class _PageTodosState extends State<PageTodos> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                          'Hola $nombre, Actualmente no tienes ningún item en ninguna de tus listas.',
-                          style: const TextStyle(fontSize: 20),
+                        const Text(
+                            '¡Ups, Parece que aquí no hay nada! \n ¡Buuuu!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 20)),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.1),
+                        AnimatedEmoji(
+                          AnimatedEmojis.ghost,
+                          size: MediaQuery.of(context).size.width * 0.5,
                         ),
                       ],
                     ),
@@ -251,19 +303,19 @@ class _PageTodosState extends State<PageTodos> {
                                   MediaQuery.of(context).size.height * 0.05,
                                 ),
                               ),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  amarilloGolden),
+                              backgroundColor:
+                                  MaterialStateProperty.all<Color>(rosaClaro),
                             ),
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const CreateNote(),
+                                  builder: (context) => const CreateTarea(),
                                 ),
                               );
                             },
                             child: Text(
-                              'Nota',
+                              'Tarea',
                               style: GoogleFonts.poppins(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w300,
@@ -271,9 +323,6 @@ class _PageTodosState extends State<PageTodos> {
                                     MediaQuery.of(context).size.width * 0.06,
                               ),
                             )),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        ),
                         ElevatedButton(
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all<
@@ -288,19 +337,19 @@ class _PageTodosState extends State<PageTodos> {
                                   MediaQuery.of(context).size.height * 0.05,
                                 ),
                               ),
-                              backgroundColor:
-                                  MaterialStateProperty.all<Color>(rosaClaro),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  amarilloGolden),
                             ),
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const CreateTarea(),
+                                  builder: (context) => const CreateNote(),
                                 ),
                               );
                             },
                             child: Text(
-                              'Tarea',
+                              'Nota',
                               style: GoogleFonts.poppins(
                                 color: Colors.black,
                                 fontWeight: FontWeight.w300,
@@ -322,4 +371,20 @@ class _PageTodosState extends State<PageTodos> {
   }
 
   deleteItem() {}
+
+  void filtrarItems(String query) {
+    setState(() {
+      searchTerm = query;
+      if (searchTerm.isEmpty) {
+        itemsFiltrados = todos;
+      } else {
+        itemsFiltrados = todos.where((item) {
+          final titulo = item['titulo'].toString();
+          final descripcion = item['descripcion'].toString();
+          return titulo.contains(searchTerm.toLowerCase()) ||
+              descripcion.contains(searchTerm.toLowerCase());
+        }).toList();
+      }
+    });
+  }
 }

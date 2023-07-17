@@ -1,8 +1,12 @@
+import 'package:animated_emoji/emoji.dart';
+import 'package:animated_emoji/emojis.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../styles/colors.dart';
 
 class SwitchButtons extends StatefulWidget {
+  final bool isButtonEnabled;
   final bool favoritos;
 
   final bool tareas;
@@ -24,6 +28,7 @@ class SwitchButtons extends StatefulWidget {
     required this.cambiarFavoritos,
     required this.cambiarTareas,
     required this.cambiarNotas,
+    required this.isButtonEnabled,
   }) : super(key: key);
 
   @override
@@ -58,11 +63,17 @@ class _SwitchButtonsState extends State<SwitchButtons> {
                       Colors.white.withOpacity(0.1),
                     ),
                   ),
-                  onPressed: widget.cambiarTodos,
-                  child: const Text(
-                    'Todos',
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  onPressed:
+                      widget.isButtonEnabled ? widget.cambiarTodos : null,
+                  child: widget.isButtonEnabled
+                      ? const Text(
+                          'Todos',
+                          style: TextStyle(color: Colors.white),
+                        )
+                      : SpinKitRipple(
+                          color: Colors.white,
+                          size: MediaQuery.of(context).size.width * 0.05,
+                        ),
                 ),
                 ElevatedButton(
                   style: ButtonStyle(
@@ -81,11 +92,17 @@ class _SwitchButtonsState extends State<SwitchButtons> {
                       Colors.white.withOpacity(0.1),
                     ),
                   ),
-                  onPressed: widget.cambiarFavoritos,
-                  child: const Text(
-                    'Favoritos',
-                    style: TextStyle(color: negro),
-                  ),
+                  onPressed:
+                      widget.isButtonEnabled ? widget.cambiarFavoritos : null,
+                  child: widget.isButtonEnabled
+                      ? const Text(
+                          'Favoritos',
+                          style: TextStyle(color: negro),
+                        )
+                      : SpinKitRipple(
+                          color: azulNavy,
+                          size: MediaQuery.of(context).size.width * 0.05,
+                        ),
                 ),
                 ElevatedButton(
                   style: ButtonStyle(
@@ -104,11 +121,17 @@ class _SwitchButtonsState extends State<SwitchButtons> {
                       Colors.white.withOpacity(0.1),
                     ),
                   ),
-                  onPressed: widget.cambiarTareas,
-                  child: const Text(
-                    'Tareas',
-                    style: TextStyle(color: negro),
-                  ),
+                  onPressed:
+                      widget.isButtonEnabled ? widget.cambiarTareas : null,
+                  child: widget.isButtonEnabled
+                      ? const Text(
+                          'Tareas',
+                          style: TextStyle(color: negro),
+                        )
+                      : SpinKitRipple(
+                          color: azulNavy,
+                          size: MediaQuery.of(context).size.width * 0.05,
+                        ),
                 ),
                 ElevatedButton(
                   style: ButtonStyle(
@@ -127,11 +150,17 @@ class _SwitchButtonsState extends State<SwitchButtons> {
                       Colors.white.withOpacity(0.1),
                     ),
                   ),
-                  onPressed: widget.cambiarNotas,
-                  child: const Text(
-                    'Notas',
-                    style: TextStyle(color: negro),
-                  ),
+                  onPressed:
+                      widget.isButtonEnabled ? widget.cambiarNotas : null,
+                  child: widget.isButtonEnabled
+                      ? const Text(
+                          'Notas',
+                          style: TextStyle(color: negro),
+                        )
+                      : SpinKitRipple(
+                          color: azulNavy,
+                          size: MediaQuery.of(context).size.width * 0.05,
+                        ),
                 ),
               ],
             )),

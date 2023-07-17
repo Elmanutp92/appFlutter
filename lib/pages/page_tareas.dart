@@ -1,3 +1,5 @@
+import 'package:animated_emoji/emoji.dart';
+import 'package:animated_emoji/emojis.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -149,7 +151,7 @@ class _PageTareaPinkState extends State<PageTareaPink> {
     return Container(
       color: Colors.transparent,
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.6,
+      height: MediaQuery.of(context).size.height * 0.7,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -174,7 +176,7 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                         Container(
                           child: Center(
                               child: Text(
-                            'Hola $nombre, Estas son tus notas.',
+                            'Hola $nombre, Estas son tus tareas.',
                             style: GoogleFonts.poppins(
                                 fontSize:
                                     MediaQuery.of(context).size.width * 0.05),
@@ -182,7 +184,7 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                         ),
                         Container(
                           //color: Colors.white,
-                          height: MediaQuery.of(context).size.height * 0.45,
+                          height: MediaQuery.of(context).size.height * 0.534,
                           width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
                             itemCount: tareas.length,
@@ -192,6 +194,12 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                                 child: Column(
                                   children: [
                                     GestureCardDetector(
+                                      fecha:
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                        tareas[index]['fechaCreacion']
+                                            .millisecondsSinceEpoch,
+                                      ),
+                                      isTodos: false,
                                       isFavorite: tareas[index]['isFavorite'],
                                       clase: tareas[index]['clase'],
                                       tiulo: tareas[index]['titulo'],
@@ -217,8 +225,16 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('Hola $nombre, Actualmente No tienes Tareas.',
-                            style: const TextStyle(fontSize: 20)),
+                        const Text(
+                            '¡Ups, Parece que aquí no hay nada! \n ¡Buuuu!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 20)),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.15),
+                        AnimatedEmoji(
+                          AnimatedEmojis.ghost,
+                          size: MediaQuery.of(context).size.width * 0.5,
+                        ),
                       ],
                     ),
                   ),

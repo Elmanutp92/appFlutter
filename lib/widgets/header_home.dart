@@ -29,8 +29,9 @@ class HeaderHome extends StatelessWidget {
       );
     }
 
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.1,
+    return Container(
+      //color: Colors.amber,
+      height: MediaQuery.of(context).size.height * 0.07,
       width: MediaQuery.of(context).size.width * 0.95,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

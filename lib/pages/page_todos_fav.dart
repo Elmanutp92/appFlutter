@@ -1,3 +1,5 @@
+import 'package:animated_emoji/emoji.dart';
+import 'package:animated_emoji/emojis.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -161,7 +163,7 @@ class _PageTodosFavState extends State<PageTodosFav> {
       body: Container(
         color: azulBackground,
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.6,
+        height: MediaQuery.of(context).size.height * 0.7,
         child: Column(
           children: [
             Stack(
@@ -185,7 +187,7 @@ class _PageTodosFavState extends State<PageTodosFav> {
                         Container(
                           child: Center(
                               child: Text(
-                            'Hola $nombre, Estos son tus apuntes Favoritos.',
+                            'Hola $nombre, Estos son tus apuntes favoritos.',
                             style: GoogleFonts.poppins(
                                 fontSize:
                                     MediaQuery.of(context).size.width * 0.05),
@@ -193,7 +195,7 @@ class _PageTodosFavState extends State<PageTodosFav> {
                         ),
                         Container(
                           //color: Colors.white,
-                          height: MediaQuery.of(context).size.height * 0.43,
+                          height: MediaQuery.of(context).size.height * 0.534,
                           width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
                             itemCount: favoritos.length,
@@ -203,6 +205,12 @@ class _PageTodosFavState extends State<PageTodosFav> {
                                 child: Column(
                                   children: [
                                     GestureCardDetector(
+                                        fecha:
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                          favoritos[index]['fechaCreacion']
+                                              .millisecondsSinceEpoch,
+                                        ),
+                                        isTodos: false,
                                         clase: favoritos[index]['clase'],
                                         tiulo: favoritos[index]['titulo'],
                                         descripcion: favoritos[index]
@@ -229,9 +237,16 @@ class _PageTodosFavState extends State<PageTodosFav> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                            'Hola $nombre, Actualmente No tienes Apuntes marcados como Favoritos.',
-                            style: const TextStyle(fontSize: 20)),
+                        const Text(
+                            '¡Ups, Parece que aquí no hay nada! \n ¡Buuuu!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 20)),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.15),
+                        AnimatedEmoji(
+                          AnimatedEmojis.ghost,
+                          size: MediaQuery.of(context).size.width * 0.5,
+                        ),
                       ],
                     ),
                   ),

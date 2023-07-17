@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lets_note/widgets/buscar.dart';
 
 import '../styles/colors.dart';
 import '../widgets/card_action/gesture_card_detector.dart';
@@ -154,9 +155,10 @@ class _PageTareasState extends State<PageTareas> {
       body: Container(
         color: azulBackground,
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.6,
+        height: MediaQuery.of(context).size.height * 0.7,
         child: Column(
           children: [
+            //const SearchHome(),
             Stack(
               children: [
                 if (isLoading) // Muestra el indicador de carga mientras isLoading es true
@@ -186,7 +188,7 @@ class _PageTareasState extends State<PageTareas> {
                         ),
                         Container(
                           //color: Colors.white,
-                          height: MediaQuery.of(context).size.height * 0.45,
+                          height: MediaQuery.of(context).size.height * 0.534,
                           width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
                             itemCount: notas.length,
@@ -196,6 +198,12 @@ class _PageTareasState extends State<PageTareas> {
                                 child: Column(
                                   children: [
                                     GestureCardDetector(
+                                      isTodos: false,
+                                      fecha:
+                                          DateTime.fromMillisecondsSinceEpoch(
+                                        notas[index]['fechaCreacion']
+                                            .millisecondsSinceEpoch,
+                                      ),
                                       isFavorite: notas[index]['isFavorite'],
                                       clase: notas[index]['clase'],
                                       tiulo: notas[index]['titulo'],
@@ -221,10 +229,14 @@ class _PageTareasState extends State<PageTareas> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text('Hola $nombre, Actualmente No tienes notas.',
-                            style: const TextStyle(fontSize: 20)),
+                        const Text(
+                            '¡Ups, Parece que aquí no hay nada! \n ¡Buuuu!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 20)),
+                        SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.15),
                         AnimatedEmoji(
-                          AnimatedEmojis.diagonalMouth,
+                          AnimatedEmojis.ghost,
                           size: MediaQuery.of(context).size.width * 0.5,
                         ),
                       ],
