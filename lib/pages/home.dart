@@ -11,7 +11,7 @@ import 'package:lets_note/pages/page_todos_fav.dart';
 import 'package:lets_note/pages/profile.dart';
 
 import '../styles/colors.dart';
-import '../widgets/buscar.dart';
+
 import '../widgets/header_home.dart';
 
 import '../widgets/stack/info_app.dart';
