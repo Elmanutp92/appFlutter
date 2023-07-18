@@ -63,11 +63,15 @@ class _RegisterPageState extends State<RegisterPage> {
       );
 
       if (credential.user != null) {
+        await FirebaseAuth.instance.setLanguageCode("es");
+        credential.user!.sendEmailVerification();
+
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Registro exitoso'),
-            content: Text('El usuario se ha registrado correctamente.'),
+            title: const Text('Registro exitoso'),
+            content: const Text(
+                'El usuario se ha registrado correctamente, debe verificar su correo electrónico para poder iniciar sesión, por lo pronto continua con el registro'),
             actions: [
               TextButton(
                 onPressed: () {

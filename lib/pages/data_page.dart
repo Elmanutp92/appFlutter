@@ -208,6 +208,9 @@ class _DataPageState extends State<DataPage> {
                                   if (value == null || value.isEmpty) {
                                     return 'Ingrese sus nombres';
                                   }
+                                  if (value.length > 20) {
+                                    return 'Debe tener 20 o menos caracteres';
+                                  }
                                   return null;
                                 },
                                 controller: nameController,

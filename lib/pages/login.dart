@@ -37,9 +37,26 @@ class _LoginPageState extends State<LoginPage> {
     try {
       final credential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: emailAddress, password: password);
-      setState(() {});
+      setState(() {
+        credential.user!.reload();
+      });
       if (credential.user != null) {
-        Navigator.pushNamed(context, '/home');
+        print(credential.user!.emailVerified);
+        credential.user!.emailVerified
+            ? Navigator.pushNamed(context, '/home')
+            : ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text(
+                    '¡No has verificado tu correo!',
+                    style: GoogleFonts.poppins(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              );
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
