@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lets_note/widgets/foto_perfil.dart';
 
 import '../styles/colors.dart';
 
@@ -19,16 +18,6 @@ class HeaderHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color getRandomColor() {
-      Random random = Random();
-      return Color.fromRGBO(
-        random.nextInt(256),
-        random.nextInt(256),
-        random.nextInt(256),
-        1.0,
-      );
-    }
-
     return Container(
       //color: Colors.amber,
       height: MediaQuery.of(context).size.height * 0.07,
@@ -39,18 +28,7 @@ class HeaderHome extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.white,
-                child: Text(
-                    (nombre.isNotEmpty ? nombre[0].toUpperCase() : '?') +
-                        (apellido.isNotEmpty ? apellido[0].toUpperCase() : '?'),
-                    style: GoogleFonts.poppins(
-                      color: Colors.black,
-                      fontSize: MediaQuery.of(context).size.width * 0.05,
-                      fontWeight: FontWeight.normal,
-                    )),
-              ),
+              FotoPerfil(nombre: nombre, apellido: apellido),
               const SizedBox(width: 20),
               Text(
                 ' ${nombre.isNotEmpty ? 'Hola, $nombre' : "Cargando..."}',

@@ -2,6 +2,7 @@ import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:lets_note/pages/edit_fav.dart';
 import 'package:lets_note/pages/edit_tarea.dart';
 import 'package:lets_note/styles/colors.dart';
 
@@ -400,7 +401,8 @@ class _CardItemState extends State<CardItem> {
                                       children: [
                                           IconButton(
                                             onPressed: () {
-                                              widget.clase == 'nota'
+                                              widget.clase == 'nota' &&
+                                                      !widget.isFavorite
                                                   ? Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -413,19 +415,40 @@ class _CardItemState extends State<CardItem> {
                                                         ),
                                                       ),
                                                     )
-                                                  : Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            EditTarea(
-                                                          tareaId:
-                                                              widget.itemId,
-                                                          titulo: widget.titulo,
-                                                          descripcion: widget
-                                                              .descripcion,
-                                                        ),
-                                                      ),
-                                                    );
+                                                  : widget.clase == 'tarea' &&
+                                                          !widget.isFavorite
+                                                      ? Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    EditTarea(
+                                                              tareaId:
+                                                                  widget.itemId,
+                                                              titulo:
+                                                                  widget.titulo,
+                                                              descripcion: widget
+                                                                  .descripcion,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    EditFav(
+                                                              clase:
+                                                                  widget.clase,
+                                                              favoritoId:
+                                                                  widget.itemId,
+                                                              titulo:
+                                                                  widget.titulo,
+                                                              descripcion: widget
+                                                                  .descripcion,
+                                                            ),
+                                                          ),
+                                                        );
                                             },
                                             icon: const Icon(Icons.edit),
                                           ),

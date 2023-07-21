@@ -1,5 +1,3 @@
-import 'package:animated_emoji/emoji.dart';
-import 'package:animated_emoji/emojis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 

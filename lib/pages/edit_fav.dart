@@ -6,25 +6,26 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../styles/colors.dart';
-import '../widgets/listtile_drawer.dart';
 
-class EditTarea extends StatefulWidget {
-  final String tareaId;
+class EditFav extends StatefulWidget {
+  final String clase;
+  final String favoritoId;
   final String titulo;
   final String descripcion;
-  const EditTarea({
+  const EditFav({
     super.key,
-    required this.tareaId,
+    required this.favoritoId,
     required this.titulo,
     required this.descripcion,
+    required this.clase,
   });
 
   @override
-  State<EditTarea> createState() => _EditTareaState();
+  State<EditFav> createState() => _EditFavState();
 }
 
-class _EditTareaState extends State<EditTarea> {
-  bool isFavorite = false;
+class _EditFavState extends State<EditFav> {
+  bool isFavorite = true;
   bool isLoading = false;
   TextEditingController tituloController = TextEditingController();
   TextEditingController descripcionController = TextEditingController();
@@ -50,7 +51,7 @@ class _EditTareaState extends State<EditTarea> {
     //********************** */
     print('Titulo: ${widget.titulo} ');
     print('Descripción: ${widget.descripcion} ');
-    print('NotaId: ${widget.tareaId} ');
+    print('NotaId: ${widget.favoritoId} ');
     tituloController.text = widget.titulo;
     descripcionController.text = widget.descripcion;
     User? user = FirebaseAuth.instance.currentUser;
@@ -61,17 +62,17 @@ class _EditTareaState extends State<EditTarea> {
   }
 
 // agregar nota
-  Future<void> editDataTarea(
-      String titulo, String descripcion, String tareaId) async {
+  Future<void> editDataFav(
+      String titulo, String descripcion, String favoritoId) async {
     setState(() {
       isLoading = true;
     });
-    final dataTarea = {
+    final dataNote = {
       'titulo': titulo,
       'descripcion': descripcion,
-      'noteId': tareaId,
-      'clase': 'tarea',
-      'isFavorite': false,
+      'clase': widget.clase == 'nota' ? 'nota' : 'tarea',
+      'favoritoId': favoritoId,
+      'isFavorite': true,
       'fechaCreacion': FieldValue.serverTimestamp(),
     };
 
@@ -79,9 +80,9 @@ class _EditTareaState extends State<EditTarea> {
       await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('tareas')
-          .doc(tareaId)
-          .set(dataTarea);
+          .collection('favoritos')
+          .doc(favoritoId)
+          .set(dataNote);
 
       setState(() {
         isLoading = false;
@@ -92,17 +93,18 @@ class _EditTareaState extends State<EditTarea> {
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('tareas')
-          .doc(tareaId)
+          .collection('favoritos')
+          .doc(favoritoId)
           .get();
 
       if (snapshot.exists) {
         // Los datos se agregaron correctamente
+        Navigator.pushNamed(context, '/home');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.green,
             content: Text(
-              '¡Tarea editada correctamente!',
+              '¡Item editado correctamente!',
               style: GoogleFonts.poppins(
                 color: Colors.white,
                 fontSize: 15,
@@ -111,29 +113,29 @@ class _EditTareaState extends State<EditTarea> {
             ),
           ),
         );
-        Navigator.pushNamed(context, '/home');
       } else {
         // Los datos no se agregaron correctamente
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Error'),
-            content: const Text('Ha ocurrido un error al editar la tarea'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Ok'),
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              '!intentalo más tarde!',
+              style: GoogleFonts.poppins(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
               ),
-            ],
+            ),
           ),
         );
+        Navigator.pushNamed(context, '/home');
       }
     } catch (e) {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: Text('Ha ocurrido un error al editar la tarea: $e'),
+          content: Text('Ha ocurrido un error al editar la nota: $e'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -147,58 +149,56 @@ class _EditTareaState extends State<EditTarea> {
   }
 
 //************   */
-  Future<void> deleteDataTarea(String tareaId) async {
+  Future<void> deleteDataFav(String favoritoId) async {
     try {
       await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('tareas')
-          .doc(tareaId)
+          .collection('favoritos')
+          .doc(favoritoId)
           .delete();
 
       // Verificar si la nota se eliminó correctamente
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('tareas')
-          .doc(tareaId)
+          .collection('favoritos')
+          .doc(favoritoId)
           .get();
 
-      //if (snapshot.exists ) {
-      // La nota se eliminó correctamente
-      // ignore: use_build_context_synchronously
-      /* showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Éxito'),
-            content: const Text('La nota se eliminó correctamente.'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  //widget.crearNota();
-
-                  Navigator.pop(context);
-                },
-                child: const Text('Ok'),
+      /*if (!snapshot.exists) {
+        // La nota se eliminó correctamente
+        // ignore: use_build_context_synchronously
+        Navigator.pushNamed(context, '/home');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              '¡Item eliminado correctamente!',
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
               ),
-            ],
+            ),
           ),
-        );*/
-      // }
+        );
+      }*/
       if (snapshot.exists) {
         // La nota no se eliminó correctamente
         // ignore: use_build_context_synchronously
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Error'),
-            content: const Text('Ha ocurrido un error al eliminar la tarea'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Ok'),
+        Navigator.pushNamed(context, '/home');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              '¡No pudimos eliminar este item de tu lista de favoritos, intentalo mas tarde!',
+              style: GoogleFonts.poppins(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
               ),
-            ],
+            ),
           ),
         );
       }
@@ -207,7 +207,7 @@ class _EditTareaState extends State<EditTarea> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Error'),
-          content: Text('Ha ocurrido un error al eliminar la tarea: $e'),
+          content: Text('Ha ocurrido un error al eliminar la nota: $e'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -221,15 +221,15 @@ class _EditTareaState extends State<EditTarea> {
   }
 
   // Agregar nota favorita
-  Future<void> addDataTareaFavorite(String titulo, String descripcion) async {
+  Future<void> addDataNote(String titulo, String descripcion) async {
     setState(() {
       isLoading = true;
     });
-    final dataTareaFavorite = {
+    final dataNote = {
       'titulo': titulo,
       'descripcion': descripcion,
-      'clase': 'tarea',
-      'isFavorite': true,
+      'clase': 'nota',
+      'isFavorite': false,
       'fechaCreacion': FieldValue.serverTimestamp(),
     };
 
@@ -237,52 +237,54 @@ class _EditTareaState extends State<EditTarea> {
       DocumentReference noteRef = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('favoritos')
-          .add(dataTareaFavorite);
+          .collection('notas')
+          .add(dataNote);
 
       setState(() {
         isLoading = false;
       });
 
-      String favoritoId = noteRef.id;
+      String notaId = noteRef.id;
 
       // Verificar si los datos se agregaron correctamente
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection("users")
           .doc(userId)
-          .collection('favoritos')
-          .doc(favoritoId)
+          .collection('notas')
+          .doc(notaId)
           .get();
 
       if (snapshot.exists) {
+        deleteDataFav(widget.favoritoId);
         // Los datos se agregaron correctamente
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Éxito'),
-            content: const Text('Tarea registrada correctamente en FAVORITOS'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pushNamed(context, '/home'),
-                child: const Text('Ok'),
+        Navigator.pushNamed(context, '/home');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              '¡Item editado correctamente!',
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
               ),
-            ],
+            ),
           ),
         );
       } else {
         // Los datos no se agregaron correctamente
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Error'),
-            content: const Text(
-                'Ha ocurrido un error al registrar la tarea en FAVORITOS'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Ok'),
+        Navigator.pushNamed(context, '/home');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              '¡No pudimos hacer esto, intentalo mas tarde!',
+              style: GoogleFonts.poppins(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
               ),
-            ],
+            ),
           ),
         );
       }
@@ -292,7 +294,7 @@ class _EditTareaState extends State<EditTarea> {
         builder: (context) => AlertDialog(
           title: const Text('Error'),
           content: Text(
-              'Ha ocurrido un error al registrar la tarea en FAVORITOS: $e'),
+              'Ha ocurrido un error al registrar la nota en FAVORITOS: $e'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -304,7 +306,95 @@ class _EditTareaState extends State<EditTarea> {
       print(e);
     }
   }
+
   //************   */
+  Future<void> addDataTarea(String titulo, String descripcion) async {
+    setState(() {
+      isLoading = true;
+    });
+    final dataTarea = {
+      'titulo': titulo,
+      'descripcion': descripcion,
+      'clase': 'tarea',
+      'isFavorite': false,
+      'fechaCreacion': FieldValue.serverTimestamp(),
+    };
+
+    try {
+      DocumentReference noteRef = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId)
+          .collection('tareas')
+          .add(dataTarea);
+
+      setState(() {
+        isLoading = false;
+      });
+
+      String tareaId = noteRef.id;
+
+      // Verificar si los datos se agregaron correctamente
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection("users")
+          .doc(userId)
+          .collection('tareas')
+          .doc(tareaId)
+          .get();
+
+      if (snapshot.exists) {
+        deleteDataFav(widget.favoritoId);
+
+        // Los datos se agregaron correctamente
+        Navigator.pushNamed(context, '/home');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.green,
+            content: Text(
+              '¡Item editado correctamente!',
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        );
+      } else {
+        // Los datos no se agregaron correctamente
+        Navigator.pushNamed(context, '/home');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+              '¡No pudimos hacer esto, intentalo mas tarde!',
+              style: GoogleFonts.poppins(
+                color: Colors.black,
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text(
+              'Ha ocurrido un error al registrar la nota en FAVORITOS: $e'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Ok'),
+            ),
+          ],
+        ),
+      );
+      print(e);
+    }
+  }
+  //************* */
 
   Future<void> fetchData() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -323,11 +413,6 @@ class _EditTareaState extends State<EditTarea> {
       },
       child: Builder(builder: (context) {
         return Scaffold(
-          endDrawer: const Drawer(
-            backgroundColor: amarilloGolden,
-            // Agrega el contenido del drawer aquí
-            child: ListTileDrawer(),
-          ),
           body: Builder(builder: (context) {
             return Stack(children: [
               SingleChildScrollView(
@@ -342,14 +427,17 @@ class _EditTareaState extends State<EditTarea> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: rosaClaro,
+                              color: widget.clase == 'nota'
+                                  ? amarilloGolden
+                                  : rosaClaro,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             height: MediaQuery.of(context).size.height * 0.02,
                             width: MediaQuery.of(context).size.width * 0.20,
-                            child: const Text('Tarea',
+                            child: Text(
+                                widget.clase == 'Nota' ? 'Nota' : 'Tarea',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
+                                style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold)),
@@ -399,17 +487,23 @@ class _EditTareaState extends State<EditTarea> {
                                 IconButton(
                                     onPressed: () {
                                       if (_formKey.currentState!.validate()) {
-                                        !isFavorite
-                                            ? editDataTarea(
+                                        isFavorite
+                                            ? editDataFav(
                                                 tituloController.text,
                                                 descripcionController.text,
-                                                widget.tareaId)
-                                            : (
-                                                addDataTareaFavorite(
+                                                widget.favoritoId)
+                                            : widget.clase == 'nota' &&
+                                                    !isFavorite
+                                                ? addDataNote(
                                                     tituloController.text,
-                                                    descripcionController.text),
-                                                deleteDataTarea(widget.tareaId)
-                                              );
+                                                    descripcionController.text)
+                                                : widget.clase == 'tarea' &&
+                                                        !isFavorite
+                                                    ? addDataTarea(
+                                                        tituloController.text,
+                                                        descripcionController
+                                                            .text)
+                                                    : null;
                                       }
                                     },
                                     icon: Icon(
@@ -430,8 +524,8 @@ class _EditTareaState extends State<EditTarea> {
                                 children: [
                                   Container(
                                     //color: Colors.white,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.95,
+                                    width:
+                                        MediaQuery.of(context).size.width * 1,
                                     height: MediaQuery.of(context).size.height *
                                         0.15,
                                     child: TextFormField(

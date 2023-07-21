@@ -1,13 +1,14 @@
-import 'package:animated_emoji/emoji.dart';
-import 'package:animated_emoji/emojis.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lets_note/widgets/card_action/gesture_card_detector.dart';
+import 'package:lets_note/widgets/lista_vacia.dart';
 
 import '../styles/colors.dart';
+import '../widgets/buscar.dart';
+import '../widgets/no_found.dart';
 
 class PageTodosFav extends StatefulWidget {
   const PageTodosFav({super.key});
@@ -21,8 +22,11 @@ class _PageTodosFavState extends State<PageTodosFav> {
   bool isLoading = true;
   String nombre = '';
   String userId = '';
+  String searchTerm = '';
+  bool buscando = false;
 
   List<Map<String, dynamic>> favoritos = [];
+  List<Map<String, dynamic>> itemsFiltrados = [];
 
 // ******
   Future<void> deleteDataFav(String favoritoId) async {
@@ -146,6 +150,7 @@ class _PageTodosFavState extends State<PageTodosFav> {
 
       setState(() {
         isLoading = false;
+        itemsFiltrados = favoritos;
       });
     }
   }
@@ -193,12 +198,13 @@ class _PageTodosFavState extends State<PageTodosFav> {
                                     MediaQuery.of(context).size.width * 0.05),
                           )),
                         ),
+                        SearchHome(filtrarItems: filtrarItems),
                         Container(
                           //color: Colors.white,
                           height: MediaQuery.of(context).size.height * 0.534,
                           width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
-                            itemCount: favoritos.length,
+                            itemCount: itemsFiltrados.length,
                             itemBuilder: (context, index) {
                               return Container(
                                 //color: Colors.red,
@@ -207,17 +213,18 @@ class _PageTodosFavState extends State<PageTodosFav> {
                                     GestureCardDetector(
                                         fecha:
                                             DateTime.fromMillisecondsSinceEpoch(
-                                          favoritos[index]['fechaCreacion']
+                                          itemsFiltrados[index]['fechaCreacion']
                                               .millisecondsSinceEpoch,
                                         ),
                                         isTodos: false,
-                                        clase: favoritos[index]['clase'],
-                                        tiulo: favoritos[index]['titulo'],
-                                        descripcion: favoritos[index]
+                                        clase: itemsFiltrados[index]['clase'],
+                                        tiulo: itemsFiltrados[index]['titulo'],
+                                        descripcion: itemsFiltrados[index]
                                             ['descripcion'],
-                                        itemId: favoritos[index]['favoritoId'],
+                                        itemId: itemsFiltrados[index]
+                                            ['favoritoId'],
                                         deleteItem: deleteDataFav,
-                                        isFavorite: favoritos[index]
+                                        isFavorite: itemsFiltrados[index]
                                             ['isFavorite']),
                                     SizedBox(
                                         height:
@@ -232,24 +239,9 @@ class _PageTodosFavState extends State<PageTodosFav> {
                       ],
                     ),
                   ),
-                if (favoritos.isEmpty && !isLoading)
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Text(
-                            '¡Ups, Parece que aquí no hay nada! \n ¡Buuuu!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 20)),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.15),
-                        AnimatedEmoji(
-                          AnimatedEmojis.ghost,
-                          size: MediaQuery.of(context).size.width * 0.5,
-                        ),
-                      ],
-                    ),
-                  ),
+                if (favoritos.isEmpty && !isLoading) const ListaVacia(),
+                if (itemsFiltrados.isEmpty && !isLoading && buscando)
+                  const NoFound(),
               ],
             ),
             //SizedBox(height: MediaQuery.of(context).size.height * 0.05),
@@ -257,5 +249,28 @@ class _PageTodosFavState extends State<PageTodosFav> {
         ),
       ),
     );
+  }
+
+  void filtrarItems(String query) {
+    setState(() {
+      searchTerm = query.toLowerCase(); // Convertir a minúsculas
+
+      if (searchTerm.isEmpty) {
+        buscando = false;
+        itemsFiltrados = favoritos;
+      } else {
+        buscando = true;
+        itemsFiltrados = favoritos.where((item) {
+          final titulo =
+              item['titulo'].toString().toLowerCase(); // Convertir a minúsculas
+          final descripcion = item['descripcion']
+              .toString()
+              .toLowerCase(); // Convertir a minúsculas
+
+          return titulo.contains(searchTerm) ||
+              descripcion.contains(searchTerm);
+        }).toList();
+      }
+    });
   }
 }

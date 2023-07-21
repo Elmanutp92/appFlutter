@@ -343,7 +343,7 @@ class _CreateTareaState extends State<CreateTarea> {
                                         if (value == null || value.isEmpty) {
                                           return 'Por favor ingresa un titulo';
                                         }
-                                        if (value.length > 30) {
+                                        if (value.length > 15) {
                                           return 'El titulo debe tener maximo 15 caracteres';
                                         }
                                         return null;

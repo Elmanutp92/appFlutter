@@ -56,6 +56,7 @@ class _DataPageState extends State<DataPage> {
       'nombre': name,
       'apellido': apellido,
       'telefono': telefono,
+      'fotoPerfil': ''
     };
 
     try {
@@ -208,8 +209,8 @@ class _DataPageState extends State<DataPage> {
                                   if (value == null || value.isEmpty) {
                                     return 'Ingrese sus nombres';
                                   }
-                                  if (value.length > 20) {
-                                    return 'Debe tener 20 o menos caracteres';
+                                  if (value.length > 15) {
+                                    return 'El titulo debe tener maximo 15 caracteres';
                                   }
                                   return null;
                                 },

@@ -1,5 +1,3 @@
-import 'package:animated_emoji/emoji.dart';
-import 'package:animated_emoji/emojis.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +7,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lets_note/widgets/card_action/gesture_card_detector.dart';
 
 import '../styles/colors.dart';
+import '../widgets/buscar.dart';
+import '../widgets/lista_vacia.dart';
+import '../widgets/no_found.dart';
 
 class PageTareaPink extends StatefulWidget {
   const PageTareaPink({
@@ -24,7 +25,10 @@ class _PageTareaPinkState extends State<PageTareaPink> {
   String nombre = '';
   String userId = '';
   String tareaId = '';
+  String searchTerm = '';
+  bool buscando = false;
   List<Map<String, dynamic>> tareas = [];
+  List<Map<String, dynamic>> itemsFiltrados = [];
 
   Future<void> deleteDataTarea(String tareaId) async {
     try {
@@ -137,6 +141,7 @@ class _PageTareaPinkState extends State<PageTareaPink> {
     }
     setState(() {
       isLoading = false;
+      itemsFiltrados = tareas;
     });
   }
 
@@ -182,12 +187,13 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                                     MediaQuery.of(context).size.width * 0.05),
                           )),
                         ),
+                        SearchHome(filtrarItems: filtrarItems),
                         Container(
                           //color: Colors.white,
                           height: MediaQuery.of(context).size.height * 0.534,
                           width: MediaQuery.of(context).size.width,
                           child: ListView.builder(
-                            itemCount: tareas.length,
+                            itemCount: itemsFiltrados.length,
                             itemBuilder: (context, index) {
                               return Container(
                                 //color: Colors.red,
@@ -196,15 +202,17 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                                     GestureCardDetector(
                                       fecha:
                                           DateTime.fromMillisecondsSinceEpoch(
-                                        tareas[index]['fechaCreacion']
+                                        itemsFiltrados[index]['fechaCreacion']
                                             .millisecondsSinceEpoch,
                                       ),
                                       isTodos: false,
-                                      isFavorite: tareas[index]['isFavorite'],
-                                      clase: tareas[index]['clase'],
-                                      tiulo: tareas[index]['titulo'],
-                                      descripcion: tareas[index]['descripcion'],
-                                      itemId: tareas[index]['tareaId'],
+                                      isFavorite: itemsFiltrados[index]
+                                          ['isFavorite'],
+                                      clase: itemsFiltrados[index]['clase'],
+                                      tiulo: itemsFiltrados[index]['titulo'],
+                                      descripcion: itemsFiltrados[index]
+                                          ['descripcion'],
+                                      itemId: itemsFiltrados[index]['tareaId'],
                                       deleteItem: deleteDataTarea,
                                     ),
                                     SizedBox(
@@ -220,24 +228,9 @@ class _PageTareaPinkState extends State<PageTareaPink> {
                       ],
                     ),
                   ),
-                if (tareas.isEmpty && !isLoading)
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Text(
-                            '¡Ups, Parece que aquí no hay nada! \n ¡Buuuu!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 20)),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.15),
-                        AnimatedEmoji(
-                          AnimatedEmojis.ghost,
-                          size: MediaQuery.of(context).size.width * 0.5,
-                        ),
-                      ],
-                    ),
-                  ),
+                if (tareas.isEmpty && !isLoading) const ListaVacia(),
+                if (itemsFiltrados.isEmpty && !isLoading && buscando)
+                  const NoFound(),
               ],
             ),
             //SizedBox(height: MediaQuery.of(context).size.height * 0.01),
@@ -245,5 +238,28 @@ class _PageTareaPinkState extends State<PageTareaPink> {
         ),
       ),
     );
+  }
+
+  void filtrarItems(String query) {
+    setState(() {
+      searchTerm = query.toLowerCase(); // Convertir a minúsculas
+
+      if (searchTerm.isEmpty) {
+        buscando = false;
+        itemsFiltrados = tareas;
+      } else {
+        buscando = true;
+        itemsFiltrados = tareas.where((item) {
+          final titulo =
+              item['titulo'].toString().toLowerCase(); // Convertir a minúsculas
+          final descripcion = item['descripcion']
+              .toString()
+              .toLowerCase(); // Convertir a minúsculas
+
+          return titulo.contains(searchTerm) ||
+              descripcion.contains(searchTerm);
+        }).toList();
+      }
+    });
   }
 }
