@@ -108,29 +108,29 @@ class _CardItemState extends State<CardItem> {
                                 ),
                               ),
                               Container(
-                                //color: Colors.green,
-                                width: MediaQuery.of(context).size.width * 0.74,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.02,
-                                child: !widget.isTodos
-                                    ? Text(
-                                        'Ultima modificacion:   ${DateFormat('dd/MM/yyyy hh:mm a').format(
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                            widget.fechaCreacion
-                                                .millisecondsSinceEpoch,
+                                  //color: Colors.green,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.74,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.02,
+                                  child: !widget.isTodos
+                                      ? Text(
+                                          'Ultima modificacion:   ${DateFormat('dd/MM/yyyy hh:mm a').format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                              widget.fechaCreacion
+                                                  .millisecondsSinceEpoch,
+                                            ),
+                                          )}',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.03,
+                                            fontWeight: FontWeight.w400,
                                           ),
-                                        )}',
-                                        style: GoogleFonts.poppins(
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.03,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                        overflow: TextOverflow.clip,
-                                      )
-                                    : null,
-                              )
+                                          overflow: TextOverflow.clip,
+                                        )
+                                      : null)
                             ],
                           )),
                       Container(
@@ -303,29 +303,29 @@ class _CardItemState extends State<CardItem> {
                                 ),
                               ),
                               Container(
-                                //color: Colors.green,
-                                width: MediaQuery.of(context).size.width * 0.74,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.02,
-                                child: !widget.isTodos
-                                    ? Text(
-                                        'Ultima modificacion:   ${DateFormat('dd/MM/yyyy hh:mm a').format(
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                            widget.fechaCreacion
-                                                .millisecondsSinceEpoch,
+                                  //color: Colors.green,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.74,
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.02,
+                                  child: !widget.isTodos
+                                      ? Text(
+                                          'Ultima modificacion:   ${DateFormat('dd/MM/yyyy hh:mm a').format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                              widget.fechaCreacion
+                                                  .millisecondsSinceEpoch,
+                                            ),
+                                          )}',
+                                          style: GoogleFonts.poppins(
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.03,
+                                            fontWeight: FontWeight.w400,
                                           ),
-                                        )}',
-                                        style: GoogleFonts.poppins(
-                                          fontSize: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.03,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                        overflow: TextOverflow.clip,
-                                      )
-                                    : null,
-                              )
+                                          overflow: TextOverflow.clip,
+                                        )
+                                      : null)
                             ],
                           )),
                       Container(

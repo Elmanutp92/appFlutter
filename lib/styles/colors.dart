@@ -11,3 +11,13 @@ const blanco = Color.fromRGBO(255, 255, 255, 1);
 const azulBackground = Color.fromRGBO(85, 230, 194, 0.100);
 const amarillogoldenDegrade = Color.fromRGBO(249, 220, 92, 0.500);
 const rosaClaroDegrade = Color.fromRGBO(255, 193, 193, 0.500);
+
+const LinearGradient azulBackgroundGradient = LinearGradient(
+  colors: [
+    azulBackground, // Color inicial
+    rosaClaro, // Color intermedio
+    // amarilloGolden, // Color final
+  ],
+  begin: Alignment.topCenter, // Punto de inicio del gradiente
+  end: Alignment.bottomCenter, // Punto final del gradiente
+);

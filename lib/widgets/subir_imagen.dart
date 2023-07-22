@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 String userId = '';
+String nameFile = '';
 
 Future<Map<String, Object>> subirImagen(File imagen) async {
   final FirebaseStorage storage = FirebaseStorage.instance;
@@ -40,5 +42,28 @@ Future<Map<String, Object>> subirImagen(File imagen) async {
       'status': false,
       'url': '',
     };
+  }
+}
+
+//***** */
+
+Future<void> eliminarImagen(String userId, String imageUrl) async {
+  try {
+    final FirebaseStorage storage = FirebaseStorage.instance;
+
+    // Convertir la URL en una referencia de Firebase Storage
+    final Reference ref = storage.refFromURL(imageUrl);
+
+    // Eliminar la imagen de Firebase Storage
+    await ref.delete();
+
+    // Actualizar la URL de la foto en la base de datos (opcional)
+    await FirebaseFirestore.instance.collection("users").doc(userId).update({
+      "fotoPerfil": '',
+    });
+
+    print('La imagen se ha eliminado correctamente.');
+  } catch (e) {
+    print('Error al eliminar la imagen: $e');
   }
 }

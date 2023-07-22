@@ -1,9 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FotoCircular extends StatefulWidget {
+  final String foto;
   final String nombre;
   final String apellido;
   final Function? onPressed;
@@ -13,6 +15,7 @@ class FotoCircular extends StatefulWidget {
     required this.nombre,
     required this.apellido,
     this.onPressed,
+    required this.foto,
   });
 
   @override
@@ -20,8 +23,15 @@ class FotoCircular extends StatefulWidget {
 }
 
 class _FotoCircularState extends State<FotoCircular> {
-  String foto = '';
   String userId = '';
+
+  bool isLoading = false;
+  File? imagenPerfil;
+  String? perfilFoto;
+  String? profilePhoto;
+  bool? status = false;
+  String imageUrl = '';
+  String fotoFinal = '';
 
   @override
   void initState() {
@@ -31,36 +41,64 @@ class _FotoCircularState extends State<FotoCircular> {
       setState(() {
         userId = user.uid;
       });
-      fetchData();
     }
   }
 
-  Future<void> fetchData() async {
-    if (userId.isNotEmpty) {
-      DocumentSnapshot snapshot = await FirebaseFirestore.instance
-          .collection("users")
-          .doc(userId)
-          .get();
-      if (snapshot.exists) {
-        Map<String, dynamic> userData = snapshot.data() as Map<String, dynamic>;
-        setState(() {
-          foto = userData['fotoPerfil'];
-        });
-      }
-    }
-  }
+  //*********** */
 
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-        radius: 30,
-        backgroundColor: Colors.grey[300],
-        child: foto.isEmpty
-            ? InkWell(
-                onDoubleTap: () {
-                  fetchData();
-                },
-                child: Text(
+    return InkWell(
+        onTap: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => Dialog(
+                  backgroundColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors
+                            .transparent, // Ajusta el valor de opacidad aquí
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      height: MediaQuery.of(context).size.height * 0.25,
+                      child: CircleAvatar(
+                          radius: 30,
+                          backgroundColor: widget.foto.isEmpty
+                              ? Colors.grey
+                              : Colors.transparent,
+                          child: widget.foto.isEmpty
+                              ? Text(
+                                  (widget.nombre.isNotEmpty
+                                          ? widget.nombre[0].toUpperCase()
+                                          : '?') +
+                                      (widget.apellido.isNotEmpty
+                                          ? widget.apellido[0].toUpperCase()
+                                          : '?'),
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.black,
+                                    fontSize:
+                                        MediaQuery.of(context).size.width *
+                                            0.05,
+                                    fontWeight: FontWeight.normal,
+                                  ))
+                              : ClipOval(
+                                  child: Image.network(widget.foto,
+                                      width: MediaQuery.of(context).size.width,
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      fit: BoxFit.cover),
+                                )))));
+        },
+        child: CircleAvatar(
+            radius: 30,
+            backgroundColor:
+                widget.foto.isEmpty ? Colors.grey : Colors.transparent,
+            child: widget.foto.isEmpty
+                ? Text(
                     (widget.nombre.isNotEmpty
                             ? widget.nombre[0].toUpperCase()
                             : '?') +
@@ -71,16 +109,12 @@ class _FotoCircularState extends State<FotoCircular> {
                       color: Colors.black,
                       fontSize: MediaQuery.of(context).size.width * 0.05,
                       fontWeight: FontWeight.normal,
-                    )),
-              )
-            : InkWell(
-                onDoubleTap: () {
-                  fetchData();
-                },
-                child: Image.network(foto,
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: MediaQuery.of(context).size.height * 0.5,
-                    fit: BoxFit.cover),
-              ));
+                    ))
+                : ClipOval(
+                    child: Image.network(widget.foto,
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        fit: BoxFit.cover),
+                  )));
   }
 }

@@ -1,4 +1,4 @@
-import 'dart:io';
+/*import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -167,12 +167,29 @@ class _FotoPerfilState extends State<FotoPerfil> {
                           leading: const Icon(Icons.remove_red_eye_rounded),
                           title: const Text('Visualizar foto'),
                           onTap: () {
+                            Navigator.pop(context);
                             showDialog(
                                 context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                    content: FotoCircular(
-                                        nombre: widget.nombre,
-                                        apellido: widget.apellido)));
+                                builder: (BuildContext context) => Dialog(
+                                    backgroundColor: Colors.transparent,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors
+                                            .transparent, // Ajusta el valor de opacidad aquí
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.25,
+                                      child: FotoCircular(
+                                          nombre: widget.nombre,
+                                          apellido: widget.apellido),
+                                    )));
                           },
                         ),
                         ListTile(
@@ -185,9 +202,11 @@ class _FotoPerfilState extends State<FotoPerfil> {
                           onTap: imagenPerfil == null
                               ? () async {
                                   final XFile? fotoPerfil = await getCamera();
-                                  setState(() {
-                                    imagenPerfil = File(fotoPerfil!.path);
-                                  });
+                                  fotoPerfil == null
+                                      ? print('No se tomó foto')
+                                      : setState(() {
+                                          imagenPerfil = File(fotoPerfil.path);
+                                        });
                                 }
                               : () async {
                                   Map<String, Object> response =
@@ -208,26 +227,46 @@ class _FotoPerfilState extends State<FotoPerfil> {
                           leading: const Icon(Icons.image),
                           title: const Text('Seleccionar foto'),
                           onTap: () async {
-                            final XFile? FotoPerfil = await getImage();
-                            setState(() {
-                              imagenPerfil = File(FotoPerfil!.path);
-                            });
+                            final XFile? fotoPerfil = await getImage();
+                            fotoPerfil == null
+                                ? print('No se seleccionó foto')
+                                : setState(() {
+                                    imagenPerfil = File(fotoPerfil.path);
+                                  });
                           },
                         ),
                         ListTile(
                           leading: const Icon(Icons.delete),
                           title: const Text('Borrar foto'),
                           onTap: () async {
-                            deleteFoto();
+                            eliminarImagen(userId, imageUrl);
                           },
                         ),
                       ],
                     ),
                   ));
         },
-        child: FotoCircular(
-          nombre: widget.nombre,
-          apellido: widget.apellido,
-        ));
+        child: CircleAvatar(
+        radius: 30,
+        backgroundColor: foto.isEmpty ? Colors.grey : Colors.transparent,
+        child: foto.isEmpty
+            ? Text(
+                (widget.nombre.isNotEmpty
+                        ? widget.nombre[0].toUpperCase()
+                        : '?') +
+                    (widget.apellido.isNotEmpty
+                        ? widget.apellido[0].toUpperCase()
+                        : '?'),
+                style: GoogleFonts.poppins(
+                  color: Colors.black,
+                  fontSize: MediaQuery.of(context).size.width * 0.05,
+                  fontWeight: FontWeight.normal,
+                ))
+            : ClipOval(
+                child: Image.network(foto,
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    fit: BoxFit.cover),
+              ));
   }
-}
+}*/

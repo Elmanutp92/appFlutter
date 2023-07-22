@@ -12,14 +12,26 @@ import 'package:lets_note/pages/profile.dart';
 
 import '../styles/colors.dart';
 
+import '../widgets/foto_circular.dart';
 import '../widgets/header_home.dart';
 
 import '../widgets/stack/info_app.dart';
 import '../widgets/switch_buttons.dart';
 
 class Home extends StatefulWidget {
+  final bool? todos;
+  final bool? perfil;
+  final bool? tareas;
+  final bool? notas;
+  final bool? favoritos;
+
   const Home({
     super.key,
+    this.todos,
+    this.perfil,
+    this.tareas,
+    this.notas,
+    this.favoritos,
   });
 
   @override
@@ -42,6 +54,7 @@ class _HomeState extends State<Home> {
   String nombre = '';
   String apellido = '';
   String telefono = '';
+  String foto = '';
 
   Future<void> fetchData() async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -61,6 +74,7 @@ class _HomeState extends State<Home> {
           nombre = userData['nombre'] ?? '';
           apellido = userData['apellido'] ?? '';
           telefono = userData['telefono'] ?? '';
+          foto = userData['fotoPerfil'] ?? '';
         });
       }
     }
@@ -95,6 +109,7 @@ class _HomeState extends State<Home> {
                   child: Column(
                     children: [
                       HeaderHome(
+                        foto: foto,
                         perfil: perfil,
                         cambiarPerfil: cambiarPerfil,
                         nombre: nombre,

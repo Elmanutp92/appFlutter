@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lets_note/widgets/foto_perfil.dart';
+import 'package:lets_note/widgets/foto_circular.dart';
 
 import '../styles/colors.dart';
 
 class HeaderHome extends StatelessWidget {
+  final String foto;
   final VoidCallback cambiarPerfil;
   final bool perfil;
   final String nombre;
@@ -14,7 +15,8 @@ class HeaderHome extends StatelessWidget {
       required this.nombre,
       required this.apellido,
       required this.cambiarPerfil,
-      required this.perfil});
+      required this.perfil,
+      required this.foto});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +30,7 @@ class HeaderHome extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              FotoPerfil(nombre: nombre, apellido: apellido),
-              const SizedBox(width: 20),
+              FotoCircular(nombre: nombre, apellido: apellido, foto: foto),
               Text(
                 ' ${nombre.isNotEmpty ? 'Hola, $nombre' : "Cargando..."}',
                 style: GoogleFonts.poppins(
@@ -40,24 +41,15 @@ class HeaderHome extends StatelessWidget {
               ),
             ],
           ),
-          ElevatedButton(
-              style: ButtonStyle(
-                elevation: perfil
-                    ? MaterialStateProperty.all<double>(0)
-                    : MaterialStateProperty.all<double>(15),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    side: const BorderSide(color: Colors.white),
-                  ),
-                ),
-                backgroundColor: MaterialStateProperty.all<Color>(azulNavy),
-                overlayColor: MaterialStateProperty.all<Color>(
-                  Colors.white.withOpacity(0.1),
-                ),
-              ),
-              onPressed: cambiarPerfil,
-              child: const Icon(Icons.person_2)),
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/profile');
+              },
+              icon: Icon(
+                Icons.person,
+                color: azulNavy,
+                size: MediaQuery.of(context).size.width * 0.07,
+              )),
         ],
       ),
     );
