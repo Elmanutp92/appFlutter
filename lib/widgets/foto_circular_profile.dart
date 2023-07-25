@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -176,7 +177,9 @@ class _FotoCircularProfileState extends State<FotoCircularProfile> {
 
   @override
   Widget build(BuildContext context) {
-    String actualPage = ModalRoute.of(context)!.settings.name ?? '';
+    double dt = sqrt(pow(MediaQuery.of(context).size.width, 2) +
+        pow(MediaQuery.of(context).size.height, 2));
+
     return InkWell(
         onTap: () {
           !isLoading
@@ -273,45 +276,54 @@ class _FotoCircularProfileState extends State<FotoCircularProfile> {
           child: Column(
             children: [
               Container(
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: MediaQuery.of(context).size.height * 0.22,
-                child: CircleAvatar(
-                    radius: 30,
-                    backgroundColor:
-                        foto.isEmpty ? Colors.grey : Colors.transparent,
-                    child: foto.isEmpty
-                        ? Text(
-                            (widget.nombre.isNotEmpty
-                                    ? widget.nombre[0].toUpperCase()
-                                    : '?') +
-                                (widget.apellido.isNotEmpty
-                                    ? widget.apellido[0].toUpperCase()
-                                    : '?'),
-                            style: GoogleFonts.poppins(
-                              color: Colors.black,
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.05,
-                              fontWeight: FontWeight.normal,
-                            ))
-                        : ClipOval(
-                            child: Image.network(foto,
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height,
-                                fit: BoxFit.cover),
-                          )),
+                //color: Colors.amber,
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.27,
+                child: Column(
+                  children: [
+                    Container(
+                      // color: Colors.amber,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      child: CircleAvatar(
+                          radius: 30,
+                          backgroundColor:
+                              foto.isEmpty ? Colors.grey : Colors.transparent,
+                          child: foto.isEmpty
+                              ? Text(
+                                  (widget.nombre.isNotEmpty
+                                          ? widget.nombre[0].toUpperCase()
+                                          : '?') +
+                                      (widget.apellido.isNotEmpty
+                                          ? widget.apellido[0].toUpperCase()
+                                          : '?'),
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.black,
+                                    fontSize:
+                                        MediaQuery.of(context).size.width *
+                                            0.05,
+                                    fontWeight: FontWeight.normal,
+                                  ))
+                              : ClipOval(
+                                  child: Image.network(foto,
+                                      width: MediaQuery.of(context).size.width,
+                                      height:
+                                          MediaQuery.of(context).size.height,
+                                      fit: BoxFit.cover),
+                                )),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                          fetchData();
+                        },
+                        icon: Icon(
+                          Icons.refresh,
+                          color: azulNavy,
+                          size: dt * 0.03,
+                        ))
+                  ],
+                ),
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.01,
-              ),
-              IconButton(
-                  onPressed: () {
-                    fetchData();
-                  },
-                  icon: Icon(
-                    Icons.refresh,
-                    color: azulNavy,
-                    size: MediaQuery.of(context).size.width * 0.08,
-                  ))
             ],
           ),
         ));

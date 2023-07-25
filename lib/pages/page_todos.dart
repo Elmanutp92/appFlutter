@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -124,6 +126,8 @@ class _PageTodosState extends State<PageTodos> {
   @override
   Widget build(BuildContext context) {
     final mh = MediaQuery.of(context).size.height;
+    double dt = sqrt(pow(MediaQuery.of(context).size.width, 2) +
+        pow(MediaQuery.of(context).size.height, 2));
     // final mw = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -152,13 +156,13 @@ class _PageTodosState extends State<PageTodos> {
                       child: Column(
                         children: [
                           Container(
+                            width: MediaQuery.of(context).size.width * 0.9,
                             //color: Colors.red,
                             child: Center(
                               child: Text(
                                 'Hola $nombre, Estos son todos tus apuntes.',
                                 style: GoogleFonts.poppins(
-                                  fontSize:
-                                      MediaQuery.of(context).size.width * 0.05,
+                                  fontSize: dt * 0.02, // Responsive font size
                                 ),
                               ),
                             ),
@@ -169,7 +173,7 @@ class _PageTodosState extends State<PageTodos> {
                           ),
                           Container(
                             //color: Colors.amber,
-                            height: MediaQuery.of(context).size.height * 0.6,
+                            height: MediaQuery.of(context).size.height * 0.53,
                             width: MediaQuery.of(context).size.width,
                             child: ListView.builder(
                               itemCount: itemsFiltrados.length,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:animated_emoji/animated_emoji.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,11 +36,17 @@ class CardItem extends StatefulWidget {
 }
 
 class _CardItemState extends State<CardItem> {
+  // Reemplaza este valor con el alto de la pantalla
+
   @override
   Widget build(BuildContext context) {
+    double dt = sqrt(pow(MediaQuery.of(context).size.width, 2) +
+        pow(MediaQuery.of(context).size.height, 2));
+
     return Material(
-      borderRadius: BorderRadius.circular(20),
-      elevation: 8,
+      borderRadius:
+          BorderRadius.circular(MediaQuery.of(context).size.width * 0.05),
+      elevation: MediaQuery.of(context).size.width * 0.01,
       child: Stack(children: [
         if (!widget.isFavorite)
           Container(
@@ -59,13 +67,16 @@ class _CardItemState extends State<CardItem> {
               color: Colors.transparent,
               elevation: 0,
               child: Container(
+                  // color: Colors.red,
+                  height: MediaQuery.of(context).size.height * 0.15,
                   width: MediaQuery.of(context).size.width * 0.2,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
                           width: MediaQuery.of(context).size.width * 0.75,
-                          //color: Colors.blue,
+                          height: MediaQuery.of(context).size.height * 0.15,
+                          // color: Colors.blue,
                           child: Column(
                             children: [
                               Container(
@@ -77,9 +88,7 @@ class _CardItemState extends State<CardItem> {
                                   child: Text(
                                     widget.titulo.toUpperCase(),
                                     style: GoogleFonts.poppins(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width *
-                                              0.03,
+                                      fontSize: dt * 0.015,
                                       fontWeight: FontWeight.bold,
                                     ),
                                     overflow: TextOverflow.clip,
@@ -87,10 +96,10 @@ class _CardItemState extends State<CardItem> {
                                 ),
                               ),
                               Container(
-                                //color: Colors.amber,
+                                //color: Colors.black12,
                                 width: MediaQuery.of(context).size.width * 0.74,
                                 height:
-                                    MediaQuery.of(context).size.height * 0.105,
+                                    MediaQuery.of(context).size.height * 0.09,
                                 //color: Colors.red,
                                 child: SingleChildScrollView(
                                   child: Text(
@@ -98,9 +107,7 @@ class _CardItemState extends State<CardItem> {
                                         widget.descripcion.substring(1),
                                     textAlign: TextAlign.justify,
                                     style: GoogleFonts.poppins(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width *
-                                              0.03,
+                                      fontSize: dt * 0.012,
                                       fontWeight: FontWeight.w400,
                                     ),
                                     overflow: TextOverflow.clip,
@@ -122,10 +129,7 @@ class _CardItemState extends State<CardItem> {
                                             ),
                                           )}',
                                           style: GoogleFonts.poppins(
-                                            fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.03,
+                                            fontSize: dt * 0.01,
                                             fontWeight: FontWeight.w400,
                                           ),
                                           overflow: TextOverflow.clip,
@@ -134,102 +138,120 @@ class _CardItemState extends State<CardItem> {
                             ],
                           )),
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.13,
-                        height: MediaQuery.of(context).size.height * 0.15,
-                        //color: Colors.green,
+                        width: MediaQuery.of(context).size.width * 0.12,
+                        height: MediaQuery.of(context).size.height * 0.16,
+                        // color: Colors.green,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
                               height:
                                   MediaQuery.of(context).size.height * 0.019,
-                              //color: Colors.pink,
+                              // color: Colors.pink,
                               child: Center(
                                 child: Text(
                                   widget.clase == 'nota' ? 'Nota' : 'Tarea',
                                   style: GoogleFonts.poppins(
-                                    fontSize:
-                                        MediaQuery.of(context).size.width *
-                                            0.03,
+                                    fontSize: dt * 0.013,
                                   ),
                                 ),
                               ),
                             ),
                             Container(
                               height: MediaQuery.of(context).size.height * 0.12,
-                              margin: EdgeInsets.only(
-                                  top: MediaQuery.of(context).size.height *
-                                      0.001),
-                              //color: Colors.black38,
+                              //color: Colors.blue,
                               child: !widget.isTodos
                                   ? Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              widget.clase == 'nota'
-                                                  ? Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            EditNote(
-                                                          notaId: widget.itemId,
-                                                          titulo: widget.titulo,
-                                                          descripcion: widget
-                                                              .descripcion,
+                                          Container(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.05,
+                                            //color: Colors.red,
+                                            child: IconButton(
+                                              onPressed: () {
+                                                widget.clase == 'nota'
+                                                    ? Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              EditNote(
+                                                            notaId:
+                                                                widget.itemId,
+                                                            titulo:
+                                                                widget.titulo,
+                                                            descripcion: widget
+                                                                .descripcion,
+                                                          ),
                                                         ),
-                                                      ),
-                                                    )
-                                                  : Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            EditTarea(
-                                                          tareaId:
-                                                              widget.itemId,
-                                                          titulo: widget.titulo,
-                                                          descripcion: widget
-                                                              .descripcion,
+                                                      )
+                                                    : Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              EditTarea(
+                                                            tareaId:
+                                                                widget.itemId,
+                                                            titulo:
+                                                                widget.titulo,
+                                                            descripcion: widget
+                                                                .descripcion,
+                                                          ),
                                                         ),
-                                                      ),
-                                                    );
-                                            },
-                                            icon: const Icon(Icons.edit),
+                                                      );
+                                              },
+                                              icon: Icon(
+                                                Icons.edit,
+                                                size: dt * 0.02,
+                                              ),
+                                            ),
                                           ),
-                                          IconButton(
-                                            onPressed: () {
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      AlertDialog(
-                                                        title: const Text(
-                                                            '¿Estas seguro?'),
-                                                        content: const Text(
-                                                            '¿Quieres eliminar esta nota?'),
-                                                        actions: [
-                                                          TextButton(
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              child: const Text(
-                                                                  'Cancelar')),
-                                                          TextButton(
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
+                                          Container(
+                                            //color: Colors.green,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.05,
+                                            child: IconButton(
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                          title: const Text(
+                                                              '¿Estas seguro?'),
+                                                          content: const Text(
+                                                              '¿Quieres eliminar esta nota?'),
+                                                          actions: [
+                                                            TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child: const Text(
+                                                                    'Cancelar')),
+                                                            TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
 
-                                                                widget.deleteItem(
-                                                                    widget
-                                                                        .itemId);
-                                                              },
-                                                              child: const Text(
-                                                                  'Eliminar')),
-                                                        ],
-                                                      ));
-                                            },
-                                            icon: const Icon(Icons.delete),
+                                                                  widget.deleteItem(
+                                                                      widget
+                                                                          .itemId);
+                                                                },
+                                                                child: const Text(
+                                                                    'Eliminar')),
+                                                          ],
+                                                        ));
+                                              },
+                                              icon: Icon(
+                                                Icons.delete,
+                                                size: dt * 0.02,
+                                              ),
+                                            ),
                                           ),
                                         ])
                                   : null,
@@ -282,10 +304,10 @@ class _CardItemState extends State<CardItem> {
                                 ),
                               ),
                               Container(
-                                //color: Colors.amber,
+                                // color: Colors.amber,
                                 width: MediaQuery.of(context).size.width * 0.74,
                                 height:
-                                    MediaQuery.of(context).size.height * 0.105,
+                                    MediaQuery.of(context).size.height * 0.09,
                                 //color: Colors.red,
                                 child: SingleChildScrollView(
                                   child: Text(
@@ -293,9 +315,7 @@ class _CardItemState extends State<CardItem> {
                                         widget.descripcion.substring(1),
                                     textAlign: TextAlign.justify,
                                     style: GoogleFonts.poppins(
-                                      fontSize:
-                                          MediaQuery.of(context).size.width *
-                                              0.03,
+                                      fontSize: dt * 0.015,
                                       fontWeight: FontWeight.w400,
                                     ),
                                     overflow: TextOverflow.clip,
@@ -317,10 +337,7 @@ class _CardItemState extends State<CardItem> {
                                             ),
                                           )}',
                                           style: GoogleFonts.poppins(
-                                            fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.03,
+                                            fontSize: dt * 0.01,
                                             fontWeight: FontWeight.w400,
                                           ),
                                           overflow: TextOverflow.clip,
@@ -329,11 +346,10 @@ class _CardItemState extends State<CardItem> {
                             ],
                           )),
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.13,
-                        height: MediaQuery.of(context).size.height * 0.15,
+                        width: MediaQuery.of(context).size.width * 0.122,
+                        height: MediaQuery.of(context).size.height * 0.16,
                         //color: Colors.green,
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Container(
                               height:
@@ -344,147 +360,145 @@ class _CardItemState extends State<CardItem> {
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Center(
-                                        child: widget.clase == 'nota'
-                                            ? Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.07,
-                                                color: amarilloGolden,
-                                                child: Text(
-                                                  'Nota',
-                                                  textAlign: TextAlign.center,
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.03,
-                                                  ),
-                                                ),
-                                              )
-                                            : Container(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.08,
-                                                color: rosaClaro,
-                                                child: Text(
-                                                  textAlign: TextAlign.center,
-                                                  'Tarea',
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            0.03,
-                                                  ),
-                                                ),
-                                              )),
+                                        child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.085,
+                                      color: widget.clase == 'tarea'
+                                          ? rosaClaro
+                                          : amarilloGolden,
+                                      child: Text(
+                                        widget.clase == 'tarea'
+                                            ? 'Tarea'
+                                            : 'Nota',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.poppins(
+                                          fontSize: dt * 0.013,
+                                        ),
+                                      ),
+                                    )),
                                     AnimatedEmoji(
                                       AnimatedEmojis.glowingStar,
-                                      size: MediaQuery.of(context).size.width *
-                                          0.05,
+                                      size: dt * 0.015,
                                     ),
                                   ]),
                             ),
                             Container(
                               height: MediaQuery.of(context).size.height * 0.12,
-                              margin: EdgeInsets.only(
-                                  top: MediaQuery.of(context).size.height *
-                                      0.001),
                               //color: Colors.black38,
                               child: !widget.isTodos
                                   ? Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceEvenly,
                                       children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              widget.clase == 'nota' &&
-                                                      !widget.isFavorite
-                                                  ? Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            EditNote(
-                                                          notaId: widget.itemId,
-                                                          titulo: widget.titulo,
-                                                          descripcion: widget
-                                                              .descripcion,
+                                          Container(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.04,
+                                            //color: Colors.amber,
+                                            child: IconButton(
+                                              onPressed: () {
+                                                widget.clase == 'nota' &&
+                                                        !widget.isFavorite
+                                                    ? Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              EditNote(
+                                                            notaId:
+                                                                widget.itemId,
+                                                            titulo:
+                                                                widget.titulo,
+                                                            descripcion: widget
+                                                                .descripcion,
+                                                          ),
                                                         ),
-                                                      ),
-                                                    )
-                                                  : widget.clase == 'tarea' &&
-                                                          !widget.isFavorite
-                                                      ? Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    EditTarea(
-                                                              tareaId:
-                                                                  widget.itemId,
-                                                              titulo:
-                                                                  widget.titulo,
-                                                              descripcion: widget
-                                                                  .descripcion,
+                                                      )
+                                                    : widget.clase == 'tarea' &&
+                                                            !widget.isFavorite
+                                                        ? Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      EditTarea(
+                                                                tareaId: widget
+                                                                    .itemId,
+                                                                titulo: widget
+                                                                    .titulo,
+                                                                descripcion: widget
+                                                                    .descripcion,
+                                                              ),
                                                             ),
-                                                          ),
-                                                        )
-                                                      : Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    EditFav(
-                                                              clase:
-                                                                  widget.clase,
-                                                              favoritoId:
-                                                                  widget.itemId,
-                                                              titulo:
-                                                                  widget.titulo,
-                                                              descripcion: widget
-                                                                  .descripcion,
-                                                            ),
-                                                          ),
-                                                        );
-                                            },
-                                            icon: const Icon(Icons.edit),
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (context) =>
-                                                      AlertDialog(
-                                                        title: const Text(
-                                                            '¿Estas seguro?'),
-                                                        content: const Text(
-                                                            '¿Quieres eliminar esta nota?'),
-                                                        actions: [
-                                                          TextButton(
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              child: const Text(
-                                                                  'Cancelar')),
-                                                          TextButton(
-                                                              onPressed: () {
-                                                                Navigator.pop(
-                                                                    context);
-
-                                                                widget.deleteItem(
+                                                          )
+                                                        : Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      EditFav(
+                                                                clase: widget
+                                                                    .clase,
+                                                                favoritoId:
                                                                     widget
-                                                                        .itemId);
-                                                              },
-                                                              child: const Text(
-                                                                  'Eliminar')),
-                                                        ],
-                                                      ));
-                                            },
-                                            icon: const Icon(Icons.delete),
+                                                                        .itemId,
+                                                                titulo: widget
+                                                                    .titulo,
+                                                                descripcion: widget
+                                                                    .descripcion,
+                                                              ),
+                                                            ),
+                                                          );
+                                              },
+                                              icon: Icon(
+                                                Icons.edit,
+                                                size: dt * 0.02,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.04,
+                                            // color: Colors.red,
+                                            child: IconButton(
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                          title: const Text(
+                                                              '¿Estas seguro?'),
+                                                          content: const Text(
+                                                              '¿Quieres eliminar esta nota?'),
+                                                          actions: [
+                                                            TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+                                                                },
+                                                                child: const Text(
+                                                                    'Cancelar')),
+                                                            TextButton(
+                                                                onPressed: () {
+                                                                  Navigator.pop(
+                                                                      context);
+
+                                                                  widget.deleteItem(
+                                                                      widget
+                                                                          .itemId);
+                                                                },
+                                                                child: const Text(
+                                                                    'Eliminar')),
+                                                          ],
+                                                        ));
+                                              },
+                                              icon: Icon(
+                                                Icons.delete,
+                                                size: dt * 0.02,
+                                              ),
+                                            ),
                                           ),
                                         ])
                                   : null,

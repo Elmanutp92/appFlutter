@@ -1,7 +1,9 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lets_note/widgets/foto_circular.dart';
+
 import 'package:lets_note/widgets/foto_circular_profile.dart';
 
 import '../auth/auth.dart';
@@ -52,6 +54,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    double dt = sqrt(pow(MediaQuery.of(context).size.width, 2) +
+        pow(MediaQuery.of(context).size.height, 2));
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -84,8 +88,9 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               children: [
                 Container(
+                    //color: Colors.amber,
                     width: MediaQuery.of(context).size.width * 0.9,
-                    height: MediaQuery.of(context).size.height * 0.29,
+                    height: MediaQuery.of(context).size.height * 0.28,
                     child: Column(
                       children: [
                         Container(
@@ -119,9 +124,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             nombre.isNotEmpty ? nombre : 'Cargando...',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.05,
-                                color: Colors.white),
+                                fontSize: dt * 0.02, color: Colors.white),
                           ),
                         ),
                       ),
@@ -146,9 +149,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             apellido.isNotEmpty ? apellido : 'Cargando...',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.05,
-                                color: Colors.white),
+                                fontSize: dt * 0.02, color: Colors.white),
                           ),
                         ),
                       ),
@@ -173,9 +174,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             telefono.isNotEmpty ? telefono : 'Cargando...',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.05,
-                                color: Colors.white),
+                                fontSize: dt * 0.02, color: Colors.white),
                           ),
                         ),
                       ),
@@ -200,9 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             email!.isNotEmpty ? email! : 'Cargando...',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.05,
-                                color: Colors.white),
+                                fontSize: dt * 0.02, color: Colors.white),
                           ),
                         ),
                       ),
@@ -225,10 +222,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         onPressed: () {
                           logout(context);
                         },
-                        child: const Text(
+                        child: Text(
                           'Cerrar sesión',
                           style: TextStyle(
-                            fontSize: 20,
+                            fontSize: dt * 0.02,
                           ),
                         ))
                   ],

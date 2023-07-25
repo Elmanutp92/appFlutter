@@ -190,6 +190,8 @@ class _PageTodosFavState extends State<PageTodosFav> {
                     child: Column(
                       children: [
                         Container(
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          // color: Colors.amber,
                           child: Center(
                               child: Text(
                             'Hola $nombre, Estos son tus apuntes favoritos.',

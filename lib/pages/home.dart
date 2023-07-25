@@ -12,7 +12,6 @@ import 'package:lets_note/pages/profile.dart';
 
 import '../styles/colors.dart';
 
-import '../widgets/foto_circular.dart';
 import '../widgets/header_home.dart';
 
 import '../widgets/stack/info_app.dart';
@@ -100,86 +99,88 @@ class _HomeState extends State<Home> {
           child: Builder(builder: (context) {
             return SingleChildScrollView(
               child: Container(
-                height: MediaQuery.of(context).size.height,
+                height: MediaQuery.of(context).size.height * 1.07,
                 width: MediaQuery.of(context).size.width,
                 decoration: const BoxDecoration(color: azulBackground),
                 child: Container(
                   margin: EdgeInsets.only(
                       top: MediaQuery.of(context).size.height * 0.05),
-                  child: Column(
-                    children: [
-                      HeaderHome(
-                        foto: foto,
-                        perfil: perfil,
-                        cambiarPerfil: cambiarPerfil,
-                        nombre: nombre,
-                        apellido: apellido,
-                      ),
-                      //const SearchHome(),
+                  child: Flexible(
+                    child: Column(
+                      children: [
+                        HeaderHome(
+                          foto: foto,
+                          perfil: perfil,
+                          cambiarPerfil: cambiarPerfil,
+                          nombre: nombre,
+                          apellido: apellido,
+                        ),
+                        //const SearchHome(),
 
-                      Container(
-                        // color: Colors.red,
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        height: MediaQuery.of(context).size.height * 0.06,
-                        child: FittedBox(
-                          fit: BoxFit.fitWidth,
-                          child: Text(
-                            'Let\'s Note',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize:
-                                  5, // Utiliza un valor relativo como referencia
-                              fontWeight: FontWeight.bold,
+                        Container(
+                          // color: Colors.red,
+                          width: MediaQuery.of(context).size.width * 0.9,
+                          height: MediaQuery.of(context).size.height * 0.06,
+                          child: FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text(
+                              'Let\'s Note',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                fontSize:
+                                    5, // Utiliza un valor relativo como referencia
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      ),
 
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.04,
-                      ),
-                      SwitchButtons(
-                        isButtonEnabled: isButtonEnabled,
-                        todos: todos,
-                        favoritos: favoritos,
-                        tareas: tareas,
-                        notas: notas,
-                        cambiarNotas: cambiarNotas,
-                        cambiarTareas: cambiarTareas,
-                        cambiarTodos: cambiarTodos,
-                        cambiarFavoritos: cambiarFavoritos,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Divider(),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        //color: Colors.amber,
-                        height: MediaQuery.of(context).size.height * 0.6858,
-                        width: MediaQuery.of(context).size.width,
-                        child: Stack(
-                          children: [
-                            // Lista se Todos
-                            if (favoritos) const PageTodosFav(),
-                            if (tareas) const PageTareaPink(),
-                            if (perfil) const ProfilePage(),
-                            if (notas) const PageTareas(),
-                            if (todos) const PageTodos(),
-
-                            // NotasHome(nombre: nombre),
-                            if (!notas &&
-                                !perfil &&
-                                !tareas &&
-                                !todos &&
-                                !favoritos)
-                              const InfoApp(),
-                          ],
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.04,
                         ),
-                      ),
-                    ],
+                        SwitchButtons(
+                          isButtonEnabled: isButtonEnabled,
+                          todos: todos,
+                          favoritos: favoritos,
+                          tareas: tareas,
+                          notas: notas,
+                          cambiarNotas: cambiarNotas,
+                          cambiarTareas: cambiarTareas,
+                          cambiarTodos: cambiarTodos,
+                          cambiarFavoritos: cambiarFavoritos,
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        const Divider(),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        Container(
+                          //color: Colors.amber,
+                          height: MediaQuery.of(context).size.height * 0.6858,
+                          width: MediaQuery.of(context).size.width,
+                          child: Stack(
+                            children: [
+                              // Lista se Todos
+                              if (favoritos) const PageTodosFav(),
+                              if (tareas) const PageTareaPink(),
+                              if (perfil) const ProfilePage(),
+                              if (notas) const PageTareas(),
+                              if (todos) const PageTodos(),
+
+                              // NotasHome(nombre: nombre),
+                              if (!notas &&
+                                  !perfil &&
+                                  !tareas &&
+                                  !todos &&
+                                  !favoritos)
+                                const InfoApp(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
